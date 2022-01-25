@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Switch } from "react-router-dom"
+import NonAuthLayout from "./components/NonAuthLayout"
+import VerticalLayout from "./components/VerticalLayout"
 
-function App() {
+// Import Routes all
+import { authProtectedRoutes, publicRoutes } from "./routes"
+import Authmiddleware from "./routes/route"
+
+// Import scss
+import "./assets/scss/theme.scss"
+
+import fakeBackend from "./helpers/AuthType/fakeBackend"
+// Activating fake backend
+fakeBackend()
+
+const App = props => {
+
+  const Layout = VerticalLayout
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      <Router>
+        <Switch>
+          {publicRoutes.map((route, idx) => (
+            <Authmiddleware
+              path={route.path}
+              layout={NonAuthLayout}
+              component={route.component}
+              key={idx}
+              isAuthProtected={false}
+              exact
+            />
+          ))}
+
+          {authProtectedRoutes.map((route, idx) => (
+            <Authmiddleware
+              path={route.path}
+              layout={Layout}
+              component={route.component}
+              key={idx}
+              isAuthProtected={true}
+              exact
+            />
+          ))}
+        </Switch>
+      </Router>
+  )
 }
 
-export default App;
+export default App
