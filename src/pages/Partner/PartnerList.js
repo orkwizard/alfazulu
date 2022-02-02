@@ -4,6 +4,7 @@ import { MetaTags } from "react-meta-tags";
 import { Link, withRouter } from "react-router-dom";
 import { Button, Card, CardBody, Col, Collapse, Container, Label, Row, Input } from "reactstrap";
 import Breadcrumbs from '../../components/common/Breadcrumb'
+import GlobalTable from "../../components/Tables/GlobalTable";
 import SimpleTable from "../../components/Tables/SimpleTable";
 import dataPartner from '../../data/partner.json'
 import PartnerModal from "./PartnerModal";
@@ -24,7 +25,7 @@ const PartnerList = props => {
         {
           text: "Login ID",
           dataField: "loginID",
-          formatter: (cell, row) => <Link to={`partner-detail/${row.id}`} className="text-dark"><strong>{cell}</strong></Link>          
+          formatter: (cell, row) => <Link to={`partner-detail/${row.id}`} className="text-dark"><u><strong>{cell}</strong></u></Link>          
         },
         {
             text: "Contract Number",
@@ -300,7 +301,7 @@ const PartnerList = props => {
                             </Row> */}
                             <Row>
                                 <Col xl="12">                                    
-                                    <SimpleTable
+                                    <GlobalTable
                                         columns={columns}
                                         items={items} 
                                     />

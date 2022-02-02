@@ -31,8 +31,8 @@ const WelcomeComp = () => {
                   className="img-thumbnail rounded-circle"
                 />
               </div>
-              <h5 className="font-size-15 text-truncate">Henry Price</h5>
-              <p className="text-muted mb-0 text-truncate">UI/UX Designer</p>
+              <h5 className="font-size-15 text-truncate">Demo demo</h5>
+              <p className="text-muted mb-0 text-truncate">Administrator</p>
             </Col>
 
             <Col sm="8">
@@ -47,14 +47,14 @@ const WelcomeComp = () => {
                     <p className="text-muted mb-0">Revenue</p>
                   </Col>
                 </Row>
-                <div className="mt-4">
+                {/* <div className="mt-4">
                   <Link
                     to=""
                     className="btn btn-primary  btn-sm"
                   >
                     View Profile <i className="mdi mdi-arrow-right ms-1"></i>
                   </Link>
-                </div>
+                </div> */}
               </div>
             </Col>
           </Row>
