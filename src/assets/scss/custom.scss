@@ -49,3 +49,27 @@
 .rangeslider-horizontal .rangeslider__fill {
   background-color: #7cb342 !important;
 }
+
+.table-bg-info-light thead {
+  background-color: #b2dbf5;
+}
+.table-tbody-sm tbody {
+  font-size: 0.7rem;
+}
+.fw-100 {
+  font-weight: 100;
+}
+.modal-header-text-primary h5 {
+  color: $primary !important;
+}
+.nav-bg-info {
+  background-color: $cyan-100;
+}
+.nav-pills .nav-partner.active,
+.nav-pills .show > .nav-partner {
+  color: $white;
+  background-color: $menu-active-link;
+}
+.nav-pills .nav-partner {
+  border-radius: 0;
+}

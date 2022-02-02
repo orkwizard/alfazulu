@@ -6,8 +6,8 @@ import { loginUser } from "../../store/actions";
 import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Card, CardBody, Col, Container, Form, Label, Row, Input, FormFeedback, Alert } from "reactstrap";
-import profile from "../../assets/images/profile-img.png"
-import logo from "../../assets/images/logo.svg";
+import profile from "../../assets/images/profile-img2.png"
+import logo from "../../assets/images/logo.png";
 
 const Login = props => {
     const dispatch = useDispatch();
@@ -50,33 +50,33 @@ const Login = props => {
                 <Card className="overflow-hidden">
                   <div className="bg-primary bg-soft">
                     <Row>
-                      <Col xs={7}>
-                        <div className="text-primary p-4">
-                          <h5 className="text-primary">Welcome Back !</h5>
-                          <p>Sign in to continue to AlfaZulu.</p>
+                      <Col lg="12">
+                        <div className="position-relative">
+                          <div className="position-absolute mt-2 ms-2">
+                            <h4 className="text-white">Sistema de Administración</h4>
+                            <h6 className="text-white">Identificate para acceder</h6>
+                          </div>
                         </div>
-                      </Col>
-                      <Col className="col-5 align-self-end">
                         <img src={profile} alt="" className="img-fluid" />
                       </Col>
-                    </Row>
+                    </Row>                    
                   </div>
                   <CardBody className="pt-0">
                     <div>
                       <Link to="/" className="auth-logo-light">
-                        <div className="avatar-md profile-user-wid mb-4">
+                        <div className="avatar-md profile-user-wid mb-4 position-absolute">
                           <span className="avatar-title rounded-circle bg-light">
                             <img
                               src={logo}
                               alt=""
                               className="rounded-circle"
-                              height="34"
+                              height="72"
                             />
                           </span>
                         </div>
                       </Link>
                     </div>
-                    <div className="p-2">
+                    <div className="p-2 py-5">
                       <Form
                         className="form-horizontal"
                         onSubmit={(e) => {
@@ -124,7 +124,7 @@ const Login = props => {
                           ) : null}
                         </div>
   
-                        <div className="form-check">
+                        {/* <div className="form-check">
                           <input
                             type="checkbox"
                             className="form-check-input"
@@ -136,7 +136,7 @@ const Login = props => {
                           >
                             Remember me
                           </label>
-                        </div>
+                        </div> */}
   
                         <div className="mt-3 d-grid">
                           <button
@@ -147,27 +147,27 @@ const Login = props => {
                           </button>
                         </div>
   
-                        <div className="mt-4 text-center">
+                        {/* <div className="mt-4 text-center">
                           <Link to="/forgot-password" className="text-muted">
                             <i className="mdi mdi-lock me-1" />
                             Forgot your password?
                           </Link>
-                        </div>
+                        </div> */}
                       </Form>
                     </div>
                   </CardBody>
                 </Card>
                 <div className="mt-5 text-center">
-                  <p>
+                  {/* <p>
                     Don&#39;t have an account ?{" "}
                     <Link to="/register" className="fw-medium text-primary">
                       {" "}
                       Signup now{" "}
                     </Link>{" "}
-                  </p>
+                  </p> */}
                   <p>
-                    © {new Date().getFullYear()} AlfaZulu. Crafted with{" "}
-                    <i className="mdi mdi-heart text-danger" /> by Spheres
+                    © {new Date().getFullYear()} AlfaZulu. Creado con{" "}
+                    <i className="mdi mdi-heart text-danger" /> por Spheres
                   </p>
                 </div>
               </Col>

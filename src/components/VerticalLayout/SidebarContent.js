@@ -94,38 +94,30 @@ const SidebarContent = props => {
           <ul className="metismenu list-unstyled" id="side-menu">
             <li className="menu-title">{props.t("Menu")} </li>
             <li>
-              <Link to="/#" className="">
+              <Link to="/dashboard" className="">
                 <i className="bx bx-home-circle"></i>
-                <span className="badge rounded-pill bg-info float-end">
-                  01
-                </span>
                 <span>{props.t("Dashboards")}</span>
-              </Link>
-              <ul className="sub-menu" aria-expanded="false">
-                <li>
-                  <Link to="/dashboard">{props.t("Default")}</Link>
-                </li>                
-              </ul>
+              </Link>              
             </li>
 
             <li className="menu-title">{props.t("Apps")}</li>
 
             <li>
               <Link to="/#" className="has-arrow ">
-                <i className="bx bx-receipt"></i>
-                <span>{props.t("Invoices")}</span>
+                <i className='bx bxs-user-badge'></i>
+                <span>{props.t("Partner")}</span>
               </Link>
               <ul className="sub-menu" aria-expanded="false">
                 <li>
-                  <Link to="/invoices-list">{props.t("Invoice List")}</Link>
+                  <Link to="/partner-list">{props.t("Partner List")}</Link>
                 </li>
-                <li>
-                  <Link to="/invoices-detail">{props.t("Invoice Detail")}</Link>
-                </li>
+                {/* <li>
+                  <Link to="/create-partner">{props.t("Create partner")}</Link>
+                </li> */}
               </ul>
             </li>
 
-            <li>
+            {/* <li>
               <Link to="/#" className="has-arrow ">
                 <i className="bx bxs-user-detail"></i>
                 <span>{props.t("Contacts")}</span>
@@ -141,9 +133,9 @@ const SidebarContent = props => {
                   <Link to="/contacts-profile">{props.t("Profile")}</Link>
                 </li>
               </ul>
-            </li>
+            </li> */}
 
-            <li className="menu-title">Actions</li>
+            {/* <li className="menu-title">Actions</li>
             <li>
               <Link to="/#" className="">
                 <i className="bx bx-user-circle"></i>
@@ -392,7 +384,7 @@ const SidebarContent = props => {
               </ul>
             </li>
 
-            
+             */}
           </ul>
         </div>
       </SimpleBar>
