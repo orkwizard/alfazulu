@@ -4,6 +4,7 @@ import { MetaTags } from "react-meta-tags";
 import { Link, withRouter } from "react-router-dom";
 import { Button, Card, CardBody, Col, Collapse, Container, Label, Row, Input } from "reactstrap";
 import Breadcrumbs from '../../components/common/Breadcrumb'
+import SimpleDate from "../../components/DatePicker/SimpleDate";
 import GlobalTable from "../../components/Tables/GlobalTable";
 import SimpleTable from "../../components/Tables/SimpleTable";
 import dataPartner from '../../data/partner.json'
@@ -152,33 +153,28 @@ const PartnerList = props => {
                                                     id="email"
                                                 />
                                                 </div>
-                                            </Col>
+                                            </Col>                                            
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="phoneNumber">Phone Number:</Label>
-                                                <Input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="phoneNumber"
-                                                />
+                                                    <Label htmlFor="creationDate">Creation Date:</Label>
+                                                    <SimpleDate />
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="creationDate">Creation Date:</Label>
-                                                <Input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="creationDate"
-                                                />
+                                                    <Label htmlFor="creationDate">Activation Date:</Label>
+                                                    <SimpleDate />
                                                 </div>
                                             </Col>
-                                        </Row>
-                                        <Row>
-                                            <div className="card-title">Auto sizing</div>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="company">Company:</Label>
+                                                    <Label htmlFor="creationDate">Renewal Date:</Label>
+                                                    <SimpleDate />
+                                                </div>
+                                            </Col>
+                                            <Col md={3} xs='6'>
+                                                <div className="mb-3">
+                                                <Label htmlFor="company">Club/Company::</Label>
                                                 <Input
                                                     type="text"
                                                     className="form-control"
@@ -186,12 +182,10 @@ const PartnerList = props => {
                                                 />
                                                 </div>
                                             </Col>
-                                        </Row>
-                                        <Row>                                            
-                                            <Col md={3} xs='6'>
+                                            <Col md={4} xs='6'>
                                                 <div className="mb-3">
-                                                <div className="card-title">Estatus:</div>
-                                                    <div className="form-check mb-3">
+                                                <Label>Membership Status with Vacancy Rewards:</Label>
+                                                    <div className="form-check form-check-inline me-5">
                                                         <input
                                                             className="form-check-input"
                                                             type="radio"
@@ -203,10 +197,10 @@ const PartnerList = props => {
                                                             className="form-check-label"
                                                             htmlFor="activeMembership"
                                                         >
-                                                        Active membership
+                                                        Active
                                                         </label>
                                                     </div>
-                                                    <div className="form-check mb-3">
+                                                    <div className="form-check form-check-inline">
                                                         <input
                                                             className="form-check-input"
                                                             type="radio"
@@ -218,15 +212,15 @@ const PartnerList = props => {
                                                             className="form-check-label"
                                                             htmlFor="expireMember"
                                                         >
-                                                        Expire member
+                                                        Expire
                                                         </label>
                                                     </div>
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <div className="card-title">Etapas:</div>
-                                                    <div className="form-check mb-3">
+                                                <Label>Calls:</Label>
+                                                    <div className="form-check form-check-inline me-5">
                                                         <input
                                                             className="form-check-input"
                                                             type="radio"
@@ -238,10 +232,10 @@ const PartnerList = props => {
                                                             className="form-check-label"
                                                             htmlFor="tutorials"
                                                         >
-                                                        Tutorials
+                                                        Welcome Call
                                                         </label>
                                                     </div>
-                                                    <div className="form-check mb-3">
+                                                    <div className="form-check form-check-inline">
                                                         <input
                                                             className="form-check-input"
                                                             type="radio"
@@ -253,7 +247,7 @@ const PartnerList = props => {
                                                             className="form-check-label"
                                                             htmlFor="welcomeCall"
                                                         >
-                                                        Welcome Call
+                                                        Tutorial
                                                         </label>
                                                     </div>
                                                 </div>
@@ -268,7 +262,7 @@ const PartnerList = props => {
                                                         onClick={()=>console.log('buscar')}
                                                     >
                                                         <i className="mdi mdi-magnify me-1" />
-                                                        Search
+                                                        Buscar
                                                     </Button>
                                                 </div>
                                             </Col>

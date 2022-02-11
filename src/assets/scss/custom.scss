@@ -73,3 +73,24 @@
 .nav-pills .nav-partner {
   border-radius: 0;
 }
+.wh-3rem {
+  width: 3rem;
+  height: 3rem;
+}
+.bg-blue-1 {
+  background-color: #c7dff0;
+}
+.bg-red-1 {
+  background-color: #e078ab;
+}
+.bg-blue-2 {
+  background-color: #96bedc;
+}
+.card-shadow--animation {
+  cursor: pointer;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.5s;
+}
+.card-shadow--animation:hover {
+  box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.15) !important;
+}
