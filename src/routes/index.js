@@ -4,6 +4,7 @@ import Logout from "../pages/Authentication/Logout"
 import Dashboard from "../pages/Dashboard/index"
 import PartnerDetail from "../pages/Partner/PartnerDetail"
 import PartnerList from "../pages/Partner/PartnerList"
+import WelcomeCall from "../pages/Partner/WelcomeCall"
 
 const authProtectedRoutes = [
     { path: "/dashboard", component: Dashboard },
@@ -13,6 +14,7 @@ const authProtectedRoutes = [
     //partner
     { path: "/partner-list", exact: true, component:  PartnerList},
     { path: "/partner-detail/:id", exact: true, component:  PartnerDetail},
+    { path: "/partner-welcome-call", exact: true, component:  WelcomeCall},
 ]
 
 const publicRoutes = [

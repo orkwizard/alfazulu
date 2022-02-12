@@ -6,7 +6,6 @@ import { Button, Card, CardBody, Col, Collapse, Container, Label, Row, Input } f
 import Breadcrumbs from '../../components/common/Breadcrumb'
 import SimpleDate from "../../components/DatePicker/SimpleDate";
 import GlobalTable from "../../components/Tables/GlobalTable";
-import SimpleTable from "../../components/Tables/SimpleTable";
 import dataPartner from '../../data/partner.json'
 import PartnerModal from "./PartnerModal";
 
@@ -68,14 +67,14 @@ const PartnerList = props => {
             // eslint-disable-next-line react/display-name
             formatter: () => <button className="btn-rounded btn btn-primary btn-sm" onClick={e=>setShowModal(true)}>View details</button>,
           },
-      ];
+    ];
 
     return (
         <>
           
           <div className="page-content">
             <MetaTags>
-              <title>Partner List | AlfaZulu CRM</title>
+              <title>Partner List | AlphaZulu CRM</title>
             </MetaTags>
             <Container fluid>
               {/* Render Breadcrumbs */}

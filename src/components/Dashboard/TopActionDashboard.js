@@ -40,7 +40,7 @@ function TopActionDashboard({t}){
                 </Card>
             </Col>
             <Col xs="4" md="4">
-                <Card className="bg-blue-2 card-shadow--animation">
+                <Card className="bg-blue-2 card-shadow--animation" onClick={e=>navigate.push("/partner-welcome-call")}>
                     <CardBody>
                         <div className="d-flex align-items-center">
                             <div className="pe-2">
