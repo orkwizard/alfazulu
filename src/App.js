@@ -7,6 +7,7 @@ import { authProtectedRoutes, publicRoutes } from "./routes"
 import Authmiddleware from "./routes/route"
 
 // Import scss
+import 'react-toastify/dist/ReactToastify.css';
 import "./assets/scss/theme.scss"
 
 import fakeBackend from "./helpers/AuthType/fakeBackend"

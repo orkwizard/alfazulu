@@ -100,3 +100,18 @@
 .bg-platino {
   background-color: $gray-500;
 }
+.top-canvas {
+  border-bottom: 1px solid #12263f08;
+}
+.top-canvas h5 {
+  text-align: center;
+  color: $primary;
+  width: 100%;
+}
+.Toastify__toast-theme--colored.Toastify__toast--success {
+  background-color: #c2e6d9;
+  color: #1c7152;
+}
+.Toastify__toast--success .Toastify__close-button {
+  color: #1c7152;
+}

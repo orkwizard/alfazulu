@@ -40,12 +40,15 @@ const PartnerList = props => {
             dataField: "lastName",          
         },
         {
-            text: "Creation Date",
-            dataField: "creationDate",          
+            text: "E-mail",
+            dataField: "email",          
         },
         {
-            text: "Activation Date",
-            dataField: "activationDate",          
+            text: "Calls",
+            dataField: "calls",
+            formatter: (cell) => cell === 'Tutorial' ?    <span className="fw-bold bg-warning p-1 rounded text-white">{cell}</span> :  
+            cell === 'PLATINO' ?<span className="fw-bold bg-platino p-1 rounded text-white">{cell}</span>:
+                                <span>{cell}</span>          
         },
         {
             text: "Renewal Date",
@@ -54,10 +57,6 @@ const PartnerList = props => {
                 row.id === 2 ? <strong className="text-success">{cell}</strong> :
                                <strong className="text-danger">{cell}</strong> 
             )          
-        },
-        {
-            text: "Company",
-            dataField: "company",          
         },
         {
             dataField: "menu",

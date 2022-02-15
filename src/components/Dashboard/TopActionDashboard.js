@@ -26,7 +26,7 @@ function TopActionDashboard({t}){
                 </Card>
             </Col>
             <Col xs="4" md="4">
-                <Card className="bg-red-1 card-shadow--animation">
+                <Card className="bg-red-1 card-shadow--animation" onClick={e=>navigate.push("/partner-asigned-call")}>
                     <CardBody>
                         <div className="d-flex align-items-center">
                             <div className="pe-2">

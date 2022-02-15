@@ -16,6 +16,7 @@ import Footer from "./Footer";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
+import { ToastContainer } from "react-toastify";
 
 const Layout = props => {
   const dispatch = useDispatch();
@@ -79,6 +80,18 @@ const Layout = props => {
         />
         <div className="main-content">{props.children}</div>
         <Footer />
+        <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable={false}
+            pauseOnHover
+            theme="colored"
+          />
       </div>
     </>
   );
