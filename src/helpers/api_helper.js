@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_PROD } from "../constant/constant";
 
 //pass new generated access token here
 const token = 'accessToken';
@@ -37,4 +38,22 @@ export async function del(url, config = {}) {
     return await axiosApi
       .delete(url, { ...config })
       .then(response => response.data);
+}
+
+
+
+//PRODUCCION
+const API_DEFAULT = API_PROD
+
+const axiosApiDefault = axios.create({
+    baseURL: API_DEFAULT,
+});
+
+axiosApiDefault.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+axiosApiDefault.interceptors.response.use(
+    response => response,
+    error => Promise.reject(error)
+);
+export async function getApi(url, config = {}) {
+    return await axiosApiDefault.get(url, { ...config }).then(response => response.data);
 }

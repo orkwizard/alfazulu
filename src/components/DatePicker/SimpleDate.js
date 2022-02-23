@@ -4,7 +4,7 @@ import "flatpickr/dist/themes/material_blue.css";
 import Flatpickr from "react-flatpickr";
 import { InputGroup } from "reactstrap";
 
-function SimpleDate(){
+function SimpleDate({date, setDate, element}){
 
 
     return (
@@ -13,10 +13,12 @@ function SimpleDate(){
                 className="form-control d-block"
                 placeholder="dd-MM-YYYY"
                 options={{
-                altInput: true,
-                altFormat: "d-m-Y",
-                dateFormat: "d-m-Y"
+                    altInput: true,
+                    altFormat: "d-m-Y",
+                    dateFormat: "d-m-Y"
                 }}
+                value={date}
+                onChange={date=>setDate(date, element)}
             />
         </InputGroup>
     )

@@ -1,19 +1,77 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MetaTags } from "react-meta-tags";
-import { Link, withRouter } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { Button, Card, CardBody, Col, Collapse, Container, Label, Row, Input } from "reactstrap";
 import Breadcrumbs from '../../components/common/Breadcrumb'
 import SimpleDate from "../../components/DatePicker/SimpleDate";
-import GlobalTable from "../../components/Tables/GlobalTable";
 import dataPartner from '../../data/partner.json'
 import PartnerModal from "./PartnerModal";
+import Select from 'react-select'
 
+import {
+    gePartner as onGetPartners,
+  } from "../../store/partner/actions";
+import moment from "moment";
+import { toast } from "react-toastify";
+import SimpleTable from "../../components/Tables/SimpleTable";
+import SimpleLoad from "../../components/Loader/SimpleLoad";
+import { getClub } from "../../helpers/backend_helper";
 
 const PartnerList = props => {
-    const [items, setItems] = useState(dataPartner)
+    const dispatch = useDispatch();
+    const { partners, partnersErrors, loading } = useSelector(state => ({
+        partners: state.Partner.partners,
+        partnersErrors: state.Partner.error,
+        loading: state.Partner.loadPartner
+      }));
+    const [clubOpt, setClubOpt] = useState([])
     const [accordionSearch, setAccordionSearch] = useState(false);
     const [showModal, setShowModal] = useState(false)
+    const [query, setQuery] = useState({
+        limite: 10,
+        pagina: 0,
+        fechaCreacion: moment(new Date()).format("YYYY-MM-DD")
+    })
+
+    //filters
+    const [creationDate, setCreationdate] = useState(new Date())
+    const [apellido, setApellido] = useState("")
+    const [correo, setCorreo] = useState("")
+    const [fechaRenovacion, setFechaRenovacion] = useState()
+    const [loginId, setLoginId] = useState('')
+    const [nombre, setNombre] = useState("")
+    const [numeroContrato, setNumeroContrato] = useState("")
+    const [club, setClub] = useState(null)
+
+    useEffect(() => {
+        if (partners && !partners.length) {
+            let q = Object.keys(query).map(key=>`${key}=${query[key]}`).join("&")
+          dispatch(onGetPartners(`?${q}`));
+        }
+    }, []);
+
+    //complementos
+    useEffect( () => {
+        async function fetchMyAPI() {
+            let response = await getClub()
+            console.log(response)
+        }
+        fetchMyAPI()
+    }, [])
+
+    const search = () =>{
+        console.log(query)
+        let q = Object.keys(query).map(key=>`${key}=${query[key]}`).join("&")
+        dispatch(onGetPartners(`?${q}`));
+    }
+
+    useEffect(()=>{
+        if(Object.keys(partnersErrors).length > 0){
+            toast.error(partnersErrors.message)
+        }
+    }, [partnersErrors])
 
     const columns = [
         {
@@ -22,51 +80,91 @@ const PartnerList = props => {
           sort: true,
           hidden: true,
         },
+        // {
+        //   text: "Login ID",
+        //   dataField: "loginID",
+        //   formatter: (cell, row) => <Link to={`partner-detail/${row.id}`} className="text-dark"><u><strong>{cell}</strong></u></Link>          
+        // },
+        // {
+        //     text: "Contract Number",
+        //     dataField: "contractNumber",          
+        // },
         {
-          text: "Login ID",
-          dataField: "loginID",
-          formatter: (cell, row) => <Link to={`partner-detail/${row.id}`} className="text-dark"><u><strong>{cell}</strong></u></Link>          
+            text: "Nombre",
+            dataField: "nombre",          
         },
         {
-            text: "Contract Number",
-            dataField: "contractNumber",          
+            text: "Apellido",
+            dataField: "apellido",          
         },
         {
-            text: "Name",
-            dataField: "name",          
+            text: "Correo electrónico",
+            dataField: "correo",          
         },
-        {
-            text: "Last Name",
-            dataField: "lastName",          
-        },
-        {
-            text: "E-mail",
-            dataField: "email",          
-        },
-        {
-            text: "Calls",
-            dataField: "calls",
-            formatter: (cell) => cell === 'Tutorial' ?    <span className="fw-bold bg-warning p-1 rounded text-white">{cell}</span> :  
-            cell === 'PLATINO' ?<span className="fw-bold bg-platino p-1 rounded text-white">{cell}</span>:
-                                <span>{cell}</span>          
-        },
-        {
-            text: "Renewal Date",
-            dataField: "renewalDate",
-            formatter: (cell, row) => (
-                row.id === 2 ? <strong className="text-success">{cell}</strong> :
-                               <strong className="text-danger">{cell}</strong> 
-            )          
-        },
+        // {
+        //     text: "Calls",
+        //     dataField: "calls",
+        //     formatter: (cell) => cell === 'Tutorial' ?    <span className="fw-bold bg-warning p-1 rounded text-white">{cell}</span> :  
+        //     cell === 'PLATINO' ?<span className="fw-bold bg-platino p-1 rounded text-white">{cell}</span>:
+        //                         <span>{cell}</span>          
+        // },
+        // {
+        //     text: "Renewal Date",
+        //     dataField: "renewalDate",
+        //     formatter: (cell, row) => (
+        //         row.id === 2 ? <strong className="text-success">{cell}</strong> :
+        //                        <strong className="text-danger">{cell}</strong> 
+        //     )          
+        // },
         {
             dataField: "menu",
             isDummyField: true,
             editable: false,
-            text: "Action",
+            text: "Acción",
             // eslint-disable-next-line react/display-name
             formatter: () => <button className="btn-rounded btn btn-primary btn-sm" onClick={e=>setShowModal(true)}>View details</button>,
           },
     ];
+
+    const completeFilter = (value, type) =>{
+        console.log(value.length)
+        if(value.length){
+            switch(type){
+                case "fechaCreacion":
+                    setCreationdate(value)
+                    query[type] = moment(value[0]).format("YYYY-MM-DD")
+                    break;
+                case "apellido":
+                    setApellido(value)
+                    query[type] = value
+                    break;
+                case "correo":
+                    setCorreo(value)
+                    query[type] = value
+                    break;
+                case "fechaRenovacion":
+                    setFechaRenovacion(value)
+                    query[type] = moment(value[0]).format("YYYY-MM-DD")
+                    break;
+                case "loginId":
+                    setLoginId(value)
+                    query[type] = value
+                    break;
+                case "nombre":
+                    setNombre(value)
+                    query[type] = value
+                    break;
+                case "numeroContrato":
+                    setNumeroContrato(value)
+                    query[type] = value
+                    break;
+                default: 
+                    return;
+            }
+        }else{
+            delete query[type]
+        }
+    }
 
     return (
         <>
@@ -95,7 +193,7 @@ const PartnerList = props => {
                                     onClick={()=>setAccordionSearch(!accordionSearch)}
                                     style={{ cursor: "pointer" }}
                                     >
-                                    Search
+                                    Filtros
                                     </button>
                                 </h2>
 
@@ -109,78 +207,97 @@ const PartnerList = props => {
                                                     type="text"
                                                     className="form-control"
                                                     id="loginID"
+                                                    value={loginId}
+                                                    onChange={e=>completeFilter(e.target.value, "loginId")}
                                                 />
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="contractNumber">Contract Number:</Label>
+                                                <Label htmlFor="contractNumber">Número Contrato:</Label>
                                                 <Input
                                                     type="text"
                                                     className="form-control"
                                                     id="contractNumber"
+                                                    value={numeroContrato}
+                                                    onChange={e=>completeFilter(e.target.value, "numeroContrato")}
                                                 />
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="name">Name:</Label>
+                                                <Label htmlFor="name">Nombre:</Label>
                                                 <Input
                                                     type="text"
                                                     className="form-control"
                                                     id="name"
+                                                    value={nombre}
+                                                    onChange={e=>completeFilter(e.target.value, "nombre")}
                                                 />
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="lastName">Last Name:</Label>
+                                                <Label htmlFor="lastName">Apellido:</Label>
                                                 <Input
                                                     type="text"
                                                     className="form-control"
                                                     id="lastName"
+                                                    value={apellido}
+                                                    onChange={e=>completeFilter(e.target.value, "apellido")}
                                                 />
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="email">Email:</Label>
+                                                <Label htmlFor="email">Correo electrónico:</Label>
                                                 <Input
                                                     type="text"
                                                     className="form-control"
                                                     id="email"
+                                                    value={correo}
+                                                    onChange={e=>completeFilter(e.target.value, "correo")}
                                                 />
                                                 </div>
                                             </Col>                                            
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                    <Label htmlFor="creationDate">Creation Date:</Label>
-                                                    <SimpleDate />
+                                                    <Label htmlFor="creationDate">Fecha creación:</Label>
+                                                    <SimpleDate 
+                                                        date={creationDate}
+                                                        setDate={completeFilter}
+                                                        element="fechaCreacion"
+                                                    />
                                                 </div>
                                             </Col>
-                                            <Col md={3} xs='6'>
+                                            {/* <Col md={3} xs='6'>
                                                 <div className="mb-3">
                                                     <Label htmlFor="creationDate">Activation Date:</Label>
                                                     <SimpleDate />
                                                 </div>
-                                            </Col>
+                                            </Col> */}
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                    <Label htmlFor="creationDate">Renewal Date:</Label>
-                                                    <SimpleDate />
+                                                    <Label htmlFor="creationDate">Fecha Renovación:</Label>
+                                                    <SimpleDate 
+                                                        date={fechaRenovacion}
+                                                        setDate={completeFilter}
+                                                        element="fechaRenovacion"
+                                                    />
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="company">Club/Company::</Label>
-                                                <Input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="company"
+                                                <Label htmlFor="company">Club/Company:</Label>
+                                                <Select
+                                                    value={club}
+                                                    onChange={(selected) => setClub(selected)}
+                                                    options={clubOpt}
+                                                    classNamePrefix="select2-selection"
                                                 />
                                                 </div>
                                             </Col>
-                                            <Col md={4} xs='6'>
+                                            {/* <Col md={4} xs='6'>
                                                 <div className="mb-3">
                                                 <Label>Membership Status with Vacancy Rewards:</Label>
                                                     <div className="form-check form-check-inline me-5">
@@ -214,10 +331,10 @@ const PartnerList = props => {
                                                         </label>
                                                     </div>
                                                 </div>
-                                            </Col>
-                                            <Col md={3} xs='6'>
+                                            </Col> */}
+                                            {/* <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label>Calls:</Label>
+                                                <Label className="d-block">Calls:</Label>
                                                     <div className="form-check form-check-inline me-5">
                                                         <input
                                                             className="form-check-input"
@@ -249,7 +366,7 @@ const PartnerList = props => {
                                                         </label>
                                                     </div>
                                                 </div>
-                                            </Col>
+                                            </Col> */}
                                         </Row>
                                         <Row>
                                             <Col sm="12">
@@ -257,7 +374,7 @@ const PartnerList = props => {
                                                     <Button
                                                         color="primary"
                                                         className="font-16 btn-block btn btn-primary"
-                                                        onClick={()=>console.log('buscar')}
+                                                        onClick={search}
                                                     >
                                                         <i className="mdi mdi-magnify me-1" />
                                                         Buscar
@@ -292,12 +409,19 @@ const PartnerList = props => {
                                 </Col>
                             </Row> */}
                             <Row>
-                                <Col xl="12">                                    
-                                    <GlobalTable
-                                        columns={columns}
-                                        items={items} 
-                                    />
-                                </Col>
+                                {
+                                    loading ? 
+                                    <Col xs="12" xl="12">
+                                        <SimpleLoad />
+                                    </Col>:
+                                    <Col xl="12">                                    
+                                        <SimpleTable
+                                            columns={columns}
+                                            items={partners.data.socios} 
+                                        />
+                                    </Col>
+                                }
+                                
                             </Row>
                           </CardBody>
                       </Card>

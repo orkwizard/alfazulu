@@ -27,7 +27,7 @@ const PartnerDetail = props =>{
         <>
             <div className="page-content">
                 <MetaTags>
-                    <title>Partner Detail | AlfaZulu CRM</title>
+                    <title>Partner Detail | AlphaZulu CRM</title>
                 </MetaTags>
                 <Container fluid>
                     <Breadcrumbs title="Partner" breadcrumbItem="Partner Detail" />

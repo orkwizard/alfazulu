@@ -5,6 +5,7 @@ import Dashboard from "../pages/Dashboard/index"
 import LLamadasAsignadas from "../pages/Partner/LLamadasAsignadas"
 import PartnerDetail from "../pages/Partner/PartnerDetail"
 import PartnerList from "../pages/Partner/PartnerList"
+import PartnerMembership from "../pages/Partner/PartnerMembership"
 import WelcomeCall from "../pages/Partner/WelcomeCall"
 
 const authProtectedRoutes = [
@@ -17,6 +18,7 @@ const authProtectedRoutes = [
     { path: "/partner-detail/:id", exact: true, component:  PartnerDetail},
     { path: "/partner-welcome-call", exact: true, component:  WelcomeCall},
     { path: "/partner-asigned-call", exact: true, component:  LLamadasAsignadas},
+    { path: "/partner-membership/:id", exact: true, component:  PartnerMembership},
 ]
 
 const publicRoutes = [
