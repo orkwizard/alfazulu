@@ -1,6 +1,7 @@
 {
   "name": "alfazulu",
-  "version": "0.1.2",
+  "homepage": "https://alphazulu.vacancyrewards.com/",
+  "version": "0.1.3",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",

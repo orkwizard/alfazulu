@@ -37,7 +37,7 @@ i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources,
-    lng: localStorage.getItem("I18N_LANGUAGE") || "es",
+    lng: "es", //localStorage.getItem("I18N_LANGUAGE") || "es",
     fallbackLng: "es", // use en if detected lng is not available
 
     keySeparator: false, // we do not use keys in form messages.welcome
