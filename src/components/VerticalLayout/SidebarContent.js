@@ -107,7 +107,7 @@ const SidebarContent = props => {
                 <i className='bx bxs-user-badge'></i>
                 <span>{props.t("Partner")}</span>
               </Link>
-              <ul className="sub-menu" aria-expanded="false">
+              <ul className="sub-menu">
                 <li>
                   <Link to="/partner-list">{props.t("Partner List")}</Link>
                 </li>
