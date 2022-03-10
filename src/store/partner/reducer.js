@@ -20,12 +20,14 @@ const partners = (state = INIT_STATE, action) => {
                 ...state,
                 loadPartner: false,
                 partners: action.payload,
+                error: {}
             }
         case GET_PARTNER_FAIL:
             return {
                 ...state,
                 loadPartner: false,
                 error: action.payload,
+                partners: []
             }
         default:
             return state

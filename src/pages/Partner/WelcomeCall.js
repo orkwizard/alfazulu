@@ -9,6 +9,7 @@ import Select from 'react-select'
 import GlobalTable from "../../components/Tables/GlobalTable"
 import dataPartnerWCall from '../../data/partnerWC.json'
 import WelcomeCallMailCanvas from "../../components/Partner/WelcomeCallMailCanvas"
+import { Link } from "react-router-dom"
 
 //test
 const optionGroup = [
@@ -61,7 +62,9 @@ function WelcomeCall(){
                     <span className="fs-5 text-pink"  onClick={e=>welcomeMailCanvas(row)}><i className="bx bxs-envelope" /></span>
                 </div>
                 <div className="py-1 flex-fill">
-                    <span className="fs-5 text-info"><i className="bx bxs-show" /></span>
+                    <span className="fs-5 text-info">
+                        <Link to={`/partner-membership/${row.id}`}><i className="bx bxs-show" /></Link>
+                    </span>
                 </div>
             </div>
         )

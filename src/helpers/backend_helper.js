@@ -7,3 +7,7 @@ export const getPartners = query => getApi(`${url.GET_PARTNER}${query}`);
 
 //get club
 export const getClub = () => getApi(url.GET_CLUB)
+//https://api-alphazulu.vacancyrewards.com/api/clubes/
+
+//coments from membership
+export const getCommentsMembership = query => getApi(`${url.GET_COMMENTS_PARTNER}${query}`)

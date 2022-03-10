@@ -27,10 +27,10 @@ const PartnerDetail = props =>{
         <>
             <div className="page-content">
                 <MetaTags>
-                    <title>Partner Detail | AlphaZulu CRM</title>
+                    <title>Detalle del socio | AlphaZulu CRM</title>
                 </MetaTags>
                 <Container fluid>
-                    <Breadcrumbs title="Partner" breadcrumbItem="Partner Detail" />
+                    <Breadcrumbs title="Socio" breadcrumbItem="Detalle del socio" />
                     <Row>
                         <Col ls="12">
                             <Card>

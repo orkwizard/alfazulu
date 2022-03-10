@@ -2,11 +2,10 @@ import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { MetaTags } from "react-meta-tags";
 import { useDispatch, useSelector } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Button, Card, CardBody, Col, Collapse, Container, Label, Row, Input } from "reactstrap";
 import Breadcrumbs from '../../components/common/Breadcrumb'
 import SimpleDate from "../../components/DatePicker/SimpleDate";
-import dataPartner from '../../data/partner.json'
 import PartnerModal from "./PartnerModal";
 import Select from 'react-select'
 
@@ -18,6 +17,8 @@ import { toast } from "react-toastify";
 import SimpleTable from "../../components/Tables/SimpleTable";
 import SimpleLoad from "../../components/Loader/SimpleLoad";
 import { getClub } from "../../helpers/backend_helper";
+import Paginate from "../../components/Tables/Paginate";
+import { diffDate } from "../../utils/Date/diffDate";
 
 const PartnerList = props => {
     const dispatch = useDispatch();
@@ -29,14 +30,14 @@ const PartnerList = props => {
     const [clubOpt, setClubOpt] = useState([])
     const [accordionSearch, setAccordionSearch] = useState(false);
     const [showModal, setShowModal] = useState(false)
+    const [page, setPage] = useState(0)
     const [query, setQuery] = useState({
         limite: 10,
-        pagina: 0,
-        fechaCreacion: moment(new Date()).format("YYYY-MM-DD")
+        pagina: page,
     })
 
     //filters
-    const [creationDate, setCreationdate] = useState(new Date())
+    const [creationDate, setCreationdate] = useState()
     const [apellido, setApellido] = useState("")
     const [correo, setCorreo] = useState("")
     const [fechaRenovacion, setFechaRenovacion] = useState()
@@ -45,26 +46,25 @@ const PartnerList = props => {
     const [numeroContrato, setNumeroContrato] = useState("")
     const [club, setClub] = useState(null)
 
-    useEffect(() => {
-        if (partners && !partners.length) {
-            let q = Object.keys(query).map(key=>`${key}=${query[key]}`).join("&")
-          dispatch(onGetPartners(`?${q}`));
-        }
-    }, []);
+    useEffect(() => {   
+        let q = Object.keys(query).map(key=>`${key}=${query[key]}`).join("&")
+        dispatch(onGetPartners(`?${q}`));
+    }, [query]);
 
     //complementos
     useEffect( () => {
         async function fetchMyAPI() {
             let response = await getClub()
-            console.log(response)
+            setClubOpt(response.data.response.map(e=>({label: e.nombre, value: e.id})))
         }
         fetchMyAPI()
     }, [])
-
     const search = () =>{
-        console.log(query)
-        let q = Object.keys(query).map(key=>`${key}=${query[key]}`).join("&")
-        dispatch(onGetPartners(`?${q}`));
+        setPage(0)
+        setQuery(prev=>({
+            ...prev,
+            pagina: 0
+        }))
     }
 
     useEffect(()=>{
@@ -72,7 +72,7 @@ const PartnerList = props => {
             toast.error(partnersErrors.message)
         }
     }, [partnersErrors])
-
+    
     const columns = [
         {
           text: "id",
@@ -80,15 +80,15 @@ const PartnerList = props => {
           sort: true,
           hidden: true,
         },
-        // {
-        //   text: "Login ID",
-        //   dataField: "loginID",
-        //   formatter: (cell, row) => <Link to={`partner-detail/${row.id}`} className="text-dark"><u><strong>{cell}</strong></u></Link>          
-        // },
-        // {
-        //     text: "Contract Number",
-        //     dataField: "contractNumber",          
-        // },
+        {
+          text: "Login ID",
+          dataField: "loginId",
+          formatter: (cell, row) => <Link to={`partner-membership/${row.numeroContrato}`} className="text-dark"><u><strong>{cell}</strong></u></Link>          
+        },
+        {
+            text: "Número contrato",
+            dataField: "numeroContrato",          
+        },
         {
             text: "Nombre",
             dataField: "nombre",          
@@ -101,69 +101,112 @@ const PartnerList = props => {
             text: "Correo electrónico",
             dataField: "correo",          
         },
-        // {
-        //     text: "Calls",
-        //     dataField: "calls",
-        //     formatter: (cell) => cell === 'Tutorial' ?    <span className="fw-bold bg-warning p-1 rounded text-white">{cell}</span> :  
-        //     cell === 'PLATINO' ?<span className="fw-bold bg-platino p-1 rounded text-white">{cell}</span>:
-        //                         <span>{cell}</span>          
-        // },
-        // {
-        //     text: "Renewal Date",
-        //     dataField: "renewalDate",
-        //     formatter: (cell, row) => (
-        //         row.id === 2 ? <strong className="text-success">{cell}</strong> :
-        //                        <strong className="text-danger">{cell}</strong> 
-        //     )          
-        // },
         {
-            dataField: "menu",
-            isDummyField: true,
-            editable: false,
-            text: "Acción",
-            // eslint-disable-next-line react/display-name
-            formatter: () => <button className="btn-rounded btn btn-primary btn-sm" onClick={e=>setShowModal(true)}>View details</button>,
-          },
+            text: "Fecha registro",
+            dataField: "fechaCreacion",
+            formatter: (cell) => moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")          
+        },
+        {
+            text: "Fecha renovación",
+            dataField: "fechaRenovacion",
+            formatter: (cell) => 
+                diffDate(moment(new Date()), moment(cell, "YYYY-MM-DD"), 'months') > 15 ?         
+                <span className="fw-bold text-danger">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
+                diffDate(moment(new Date()), moment(cell, "YYYY-MM-DD"), 'months') > 12 ?         
+                <span className="fw-bold text-danger position-relative">
+                    {moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")} <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">CP <span className="visually-hidden">unread messages</span></span>
+                </span> :
+                diffDate(moment(new Date()), moment(cell, "YYYY-MM-DD"), 'months')  < 9 ?
+                <span className="fw-bold text-success">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
+                <span className="fw-bold text-warning">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span>
+        }
+        // {
+        //     dataField: "menu",
+        //     isDummyField: true,
+        //     editable: false,
+        //     text: "Acción",
+        //     // eslint-disable-next-line react/display-name
+        //     formatter: () => <button className="btn-rounded btn btn-primary btn-sm" onClick={e=>setShowModal(true)}>Ver detalle</button>,
+        //   },
     ];
 
     const completeFilter = (value, type) =>{
-        console.log(value.length)
-        if(value.length){
-            switch(type){
-                case "fechaCreacion":
-                    setCreationdate(value)
+        switch(type){
+            case "fechaCreacion":
+                setCreationdate(value)
+                if(value.length){
                     query[type] = moment(value[0]).format("YYYY-MM-DD")
-                    break;
-                case "apellido":
-                    setApellido(value)
+                }else{
+                    delete query[type]
+                }                
+                break;
+            case "apellido":
+                setApellido(value)
+                if(value.length){
                     query[type] = value
-                    break;
-                case "correo":
-                    setCorreo(value)
+                }else{
+                    delete query[type]
+                }                
+                break;
+            case "correo":
+                setCorreo(value)
+                if(value.length){
                     query[type] = value
-                    break;
-                case "fechaRenovacion":
-                    setFechaRenovacion(value)
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "fechaRenovacion":
+                setFechaRenovacion(value)
+                if(value.length){
                     query[type] = moment(value[0]).format("YYYY-MM-DD")
-                    break;
-                case "loginId":
-                    setLoginId(value)
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "loginId":
+                setLoginId(value)
+                if(value.length){
                     query[type] = value
-                    break;
-                case "nombre":
-                    setNombre(value)
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "nombre":
+                setNombre(value)
+                if(value.length){
                     query[type] = value
-                    break;
-                case "numeroContrato":
-                    setNumeroContrato(value)
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "numeroContrato":
+                setNumeroContrato(value)
+                if(value.length){
                     query[type] = value
-                    break;
-                default: 
-                    return;
-            }
-        }else{
-            delete query[type]
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "idClub":
+                setClub(value)
+                if(value!==null){
+                    query[type] = value.value
+                }else{
+                    delete query[type]
+                }
+                break;
+            default: 
+                return;
         }
+    }
+
+    const handlePageClick = page => {
+        setPage(page)
+        setQuery(prev=>({
+            ...prev,
+            pagina: page
+        }))
     }
 
     return (
@@ -238,11 +281,10 @@ const PartnerList = props => {
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="lastName">Apellido:</Label>
+                                                <Label>Apellido:</Label>
                                                 <Input
                                                     type="text"
                                                     className="form-control"
-                                                    id="lastName"
                                                     value={apellido}
                                                     onChange={e=>completeFilter(e.target.value, "apellido")}
                                                 />
@@ -291,9 +333,11 @@ const PartnerList = props => {
                                                 <Label htmlFor="company">Club/Company:</Label>
                                                 <Select
                                                     value={club}
-                                                    onChange={(selected) => setClub(selected)}
+                                                    onChange={(selected) => completeFilter(selected, "idClub")}
                                                     options={clubOpt}
                                                     classNamePrefix="select2-selection"
+                                                    isClearable
+
                                                 />
                                                 </div>
                                             </Col>
@@ -408,21 +452,31 @@ const PartnerList = props => {
                                     </div>
                                 </Col>
                             </Row> */}
-                            <Row>
-                                {
-                                    loading ? 
+
+                            {
+                                loading ?
+                                <Row>
                                     <Col xs="12" xl="12">
                                         <SimpleLoad />
-                                    </Col>:
+                                    </Col>
+                                </Row> :
+                                <Row>
                                     <Col xl="12">                                    
                                         <SimpleTable
                                             columns={columns}
-                                            items={partners.data.socios} 
+                                            items={partners.data!==undefined ? partners.data.socios : []} 
                                         />
                                     </Col>
-                                }
-                                
-                            </Row>
+                                    {
+                                        partners.data !==undefined && partners.data.totalPaginas > 0 && 
+                                        <Paginate
+                                            page={page}
+                                            totalPaginas={partners.data.totalPaginas}
+                                            handlePageClick={handlePageClick}
+                                        />
+                                    }
+                                </Row>
+                            }                            
                           </CardBody>
                       </Card>
                   </Col>

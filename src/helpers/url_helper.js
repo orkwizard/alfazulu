@@ -7,6 +7,7 @@ export const POST_EDIT_PROFILE = "/post-fake-profile";
 
 //PARTNER
 export const GET_PARTNER = "/socios/buscar"
+export const GET_COMMENTS_PARTNER = "/notas/buscar"
 
 //CLUB
-export const GET_CLUB = "/api/clubes/"
+export const GET_CLUB = "/clubes/"

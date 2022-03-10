@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import "./assets/scss/theme.scss"
 
 import fakeBackend from "./helpers/AuthType/fakeBackend"
+
 // Activating fake backend
 fakeBackend()
 

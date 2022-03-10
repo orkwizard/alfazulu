@@ -115,3 +115,47 @@
 .Toastify__toast--success .Toastify__close-button {
   color: #1c7152;
 }
+.container-scroller {
+  max-width: 100%;
+}
+.tabs-scroller {
+  display: flex;
+}
+.container-scroller {
+  display: flex;
+}
+.scroller-arrows {
+  display: flex;
+}
+.tabs-scroller {
+  overflow: hidden;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+}
+.btn-scroller {
+  padding: 5px 10px;
+  border: 0;
+  background: transparent;
+}
+.tabs-scroller .btn-scroller.active {
+  color: $primary;
+}
+.btn-arrows {
+  border: 0;
+  background-color: #fdfdfd;
+  display: flex;
+  align-items: center !important;
+  justify-content: center;
+  height: 25px;
+  width: 25px;
+  border-radius: 3px;
+}
+.btn-arrows i {
+  line-height: 1;
+}
+.fs-06 {
+  font-size: 0.6rem;
+}
+.fs-08 {
+  font-size: 0.8rem;
+}
