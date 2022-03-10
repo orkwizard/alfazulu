@@ -10,10 +10,13 @@ import modalimage1 from "../../assets/images/product/img-7.png";
 import modalimage2 from "../../assets/images/product/img-4.png";
 
 // Pages Components
-import WelcomeComp from "./WelcomeComp";
+import TopActionDashboard from "../../components/Dashboard/TopActionDashboard";
+import TopLLamadas from "../../components/Dashboard/TopLLamadas";
+import ProductivityChart from "../../components/Dashboard/ProductivityChart";
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/common/Breadcrumb";
+
 
 const Dashboard = props => {
     const [modal, setmodal] = useState(false);
@@ -22,7 +25,7 @@ const Dashboard = props => {
   
     useEffect(() => {
       setTimeout(() => {
-        setSubscribemodal(true);
+        //setSubscribemodal(true);
       }, 2000);
     }, []);
   
@@ -30,7 +33,7 @@ const Dashboard = props => {
       <>
         <div className="page-content">
           <MetaTags>
-            <title>Dashboard | Skote - React Admin & Dashboard Template</title>
+            <title>Dashboard | AlphaZulu - CRM</title>
           </MetaTags>
           <Container fluid>
             {/* Render Breadcrumb */}
@@ -38,20 +41,24 @@ const Dashboard = props => {
               title={'Dashboards'}
               breadcrumbItem={"Dashboard"}
             />
-  
+
             <Row>
+              <Col>
+                <TopActionDashboard />
+              </Col>
+            </Row>
+
+            <Row>
+              <TopLLamadas />
+
+              <ProductivityChart />
+            </Row>
+  
+            {/* <Row>
               <Col xl="4">
                 <WelcomeComp />
               </Col>
-              <Col xl="8">
-                <Row>
-                  {/* Reports Render */}
-                  
-                </Row>
-  
-                
-              </Col>
-            </Row>
+            </Row> */}
   
             <Row>
               <Col xl="4">

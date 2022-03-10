@@ -73,3 +73,89 @@
 .nav-pills .nav-partner {
   border-radius: 0;
 }
+.wh-3rem {
+  width: 3rem;
+  height: 3rem;
+}
+.bg-blue-1 {
+  background-color: #c7dff0;
+}
+.bg-red-1 {
+  background-color: #e078ab;
+}
+.bg-blue-2 {
+  background-color: #96bedc;
+}
+.card-shadow--animation {
+  cursor: pointer;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.5s;
+}
+.card-shadow--animation:hover {
+  box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.15) !important;
+}
+.bg-bronce {
+  background-color: $bronce;
+}
+.bg-platino {
+  background-color: $gray-500;
+}
+.top-canvas {
+  border-bottom: 1px solid #12263f08;
+}
+.top-canvas h5 {
+  text-align: center;
+  color: $primary;
+  width: 100%;
+}
+.Toastify__toast-theme--colored.Toastify__toast--success {
+  background-color: #c2e6d9;
+  color: #1c7152;
+}
+.Toastify__toast--success .Toastify__close-button {
+  color: #1c7152;
+}
+.container-scroller {
+  max-width: 100%;
+}
+.tabs-scroller {
+  display: flex;
+}
+.container-scroller {
+  display: flex;
+}
+.scroller-arrows {
+  display: flex;
+}
+.tabs-scroller {
+  overflow: hidden;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+}
+.btn-scroller {
+  padding: 5px 10px;
+  border: 0;
+  background: transparent;
+}
+.tabs-scroller .btn-scroller.active {
+  color: $primary;
+}
+.btn-arrows {
+  border: 0;
+  background-color: #fdfdfd;
+  display: flex;
+  align-items: center !important;
+  justify-content: center;
+  height: 25px;
+  width: 25px;
+  border-radius: 3px;
+}
+.btn-arrows i {
+  line-height: 1;
+}
+.fs-06 {
+  font-size: 0.6rem;
+}
+.fs-08 {
+  font-size: 0.8rem;
+}

@@ -1,0 +1,1 @@
+export const API_PROD = "https://api-alphazulu.vacancyrewards.com/api"

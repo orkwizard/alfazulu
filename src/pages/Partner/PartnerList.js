@@ -1,20 +1,78 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MetaTags } from "react-meta-tags";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import { Button, Card, CardBody, Col, Collapse, Container, Label, Row, Input } from "reactstrap";
 import Breadcrumbs from '../../components/common/Breadcrumb'
-import GlobalTable from "../../components/Tables/GlobalTable";
-import SimpleTable from "../../components/Tables/SimpleTable";
-import dataPartner from '../../data/partner.json'
+import SimpleDate from "../../components/DatePicker/SimpleDate";
 import PartnerModal from "./PartnerModal";
+import Select from 'react-select'
 
+import {
+    gePartner as onGetPartners,
+  } from "../../store/partner/actions";
+import moment from "moment";
+import { toast } from "react-toastify";
+import SimpleTable from "../../components/Tables/SimpleTable";
+import SimpleLoad from "../../components/Loader/SimpleLoad";
+import { getClub } from "../../helpers/backend_helper";
+import Paginate from "../../components/Tables/Paginate";
+import { diffDate } from "../../utils/Date/diffDate";
 
 const PartnerList = props => {
-    const [items, setItems] = useState(dataPartner)
+    const dispatch = useDispatch();
+    const { partners, partnersErrors, loading } = useSelector(state => ({
+        partners: state.Partner.partners,
+        partnersErrors: state.Partner.error,
+        loading: state.Partner.loadPartner
+      }));
+    const [clubOpt, setClubOpt] = useState([])
     const [accordionSearch, setAccordionSearch] = useState(false);
     const [showModal, setShowModal] = useState(false)
+    const [page, setPage] = useState(0)
+    const [query, setQuery] = useState({
+        limite: 10,
+        pagina: page,
+    })
 
+    //filters
+    const [creationDate, setCreationdate] = useState()
+    const [apellido, setApellido] = useState("")
+    const [correo, setCorreo] = useState("")
+    const [fechaRenovacion, setFechaRenovacion] = useState()
+    const [loginId, setLoginId] = useState('')
+    const [nombre, setNombre] = useState("")
+    const [numeroContrato, setNumeroContrato] = useState("")
+    const [club, setClub] = useState(null)
+
+    useEffect(() => {   
+        let q = Object.keys(query).map(key=>`${key}=${query[key]}`).join("&")
+        dispatch(onGetPartners(`?${q}`));
+    }, [query]);
+
+    //complementos
+    useEffect( () => {
+        async function fetchMyAPI() {
+            let response = await getClub()
+            setClubOpt(response.data.response.map(e=>({label: e.nombre, value: e.id})))
+        }
+        fetchMyAPI()
+    }, [])
+    const search = () =>{
+        setPage(0)
+        setQuery(prev=>({
+            ...prev,
+            pagina: 0
+        }))
+    }
+
+    useEffect(()=>{
+        if(Object.keys(partnersErrors).length > 0){
+            toast.error(partnersErrors.message)
+        }
+    }, [partnersErrors])
+    
     const columns = [
         {
           text: "id",
@@ -24,57 +82,139 @@ const PartnerList = props => {
         },
         {
           text: "Login ID",
-          dataField: "loginID",
-          formatter: (cell, row) => <Link to={`partner-detail/${row.id}`} className="text-dark"><u><strong>{cell}</strong></u></Link>          
+          dataField: "loginId",
+          formatter: (cell, row) => <Link to={`partner-membership/${row.numeroContrato}`} className="text-dark"><u><strong>{cell}</strong></u></Link>          
         },
         {
-            text: "Contract Number",
-            dataField: "contractNumber",          
+            text: "Número contrato",
+            dataField: "numeroContrato",          
         },
         {
-            text: "Name",
-            dataField: "name",          
+            text: "Nombre",
+            dataField: "nombre",          
         },
         {
-            text: "Last Name",
-            dataField: "lastName",          
+            text: "Apellido",
+            dataField: "apellido",          
         },
         {
-            text: "Creation Date",
-            dataField: "creationDate",          
+            text: "Correo electrónico",
+            dataField: "correo",          
         },
         {
-            text: "Activation Date",
-            dataField: "activationDate",          
+            text: "Fecha registro",
+            dataField: "fechaCreacion",
+            formatter: (cell) => moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")          
         },
         {
-            text: "Renewal Date",
-            dataField: "renewalDate",
-            formatter: (cell, row) => (
-                row.id === 2 ? <strong className="text-success">{cell}</strong> :
-                               <strong className="text-danger">{cell}</strong> 
-            )          
-        },
-        {
-            text: "Company",
-            dataField: "company",          
-        },
-        {
-            dataField: "menu",
-            isDummyField: true,
-            editable: false,
-            text: "Action",
-            // eslint-disable-next-line react/display-name
-            formatter: () => <button className="btn-rounded btn btn-primary btn-sm" onClick={e=>setShowModal(true)}>View details</button>,
-          },
-      ];
+            text: "Fecha renovación",
+            dataField: "fechaRenovacion",
+            formatter: (cell) => 
+                diffDate(moment(new Date()), moment(cell, "YYYY-MM-DD"), 'months') > 15 ?         
+                <span className="fw-bold text-danger">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
+                diffDate(moment(new Date()), moment(cell, "YYYY-MM-DD"), 'months') > 12 ?         
+                <span className="fw-bold text-danger position-relative">
+                    {moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")} <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">CP <span className="visually-hidden">unread messages</span></span>
+                </span> :
+                diffDate(moment(new Date()), moment(cell, "YYYY-MM-DD"), 'months')  < 9 ?
+                <span className="fw-bold text-success">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
+                <span className="fw-bold text-warning">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span>
+        }
+        // {
+        //     dataField: "menu",
+        //     isDummyField: true,
+        //     editable: false,
+        //     text: "Acción",
+        //     // eslint-disable-next-line react/display-name
+        //     formatter: () => <button className="btn-rounded btn btn-primary btn-sm" onClick={e=>setShowModal(true)}>Ver detalle</button>,
+        //   },
+    ];
+
+    const completeFilter = (value, type) =>{
+        switch(type){
+            case "fechaCreacion":
+                setCreationdate(value)
+                if(value.length){
+                    query[type] = moment(value[0]).format("YYYY-MM-DD")
+                }else{
+                    delete query[type]
+                }                
+                break;
+            case "apellido":
+                setApellido(value)
+                if(value.length){
+                    query[type] = value
+                }else{
+                    delete query[type]
+                }                
+                break;
+            case "correo":
+                setCorreo(value)
+                if(value.length){
+                    query[type] = value
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "fechaRenovacion":
+                setFechaRenovacion(value)
+                if(value.length){
+                    query[type] = moment(value[0]).format("YYYY-MM-DD")
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "loginId":
+                setLoginId(value)
+                if(value.length){
+                    query[type] = value
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "nombre":
+                setNombre(value)
+                if(value.length){
+                    query[type] = value
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "numeroContrato":
+                setNumeroContrato(value)
+                if(value.length){
+                    query[type] = value
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "idClub":
+                setClub(value)
+                if(value!==null){
+                    query[type] = value.value
+                }else{
+                    delete query[type]
+                }
+                break;
+            default: 
+                return;
+        }
+    }
+
+    const handlePageClick = page => {
+        setPage(page)
+        setQuery(prev=>({
+            ...prev,
+            pagina: page
+        }))
+    }
 
     return (
         <>
           
           <div className="page-content">
             <MetaTags>
-              <title>Partner List | AlfaZulu CRM</title>
+              <title>Partner List | AlphaZulu CRM</title>
             </MetaTags>
             <Container fluid>
               {/* Render Breadcrumbs */}
@@ -96,7 +236,7 @@ const PartnerList = props => {
                                     onClick={()=>setAccordionSearch(!accordionSearch)}
                                     style={{ cursor: "pointer" }}
                                     >
-                                    Search
+                                    Filtros
                                     </button>
                                 </h2>
 
@@ -110,88 +250,101 @@ const PartnerList = props => {
                                                     type="text"
                                                     className="form-control"
                                                     id="loginID"
+                                                    value={loginId}
+                                                    onChange={e=>completeFilter(e.target.value, "loginId")}
                                                 />
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="contractNumber">Contract Number:</Label>
+                                                <Label htmlFor="contractNumber">Número Contrato:</Label>
                                                 <Input
                                                     type="text"
                                                     className="form-control"
                                                     id="contractNumber"
+                                                    value={numeroContrato}
+                                                    onChange={e=>completeFilter(e.target.value, "numeroContrato")}
                                                 />
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="name">Name:</Label>
+                                                <Label htmlFor="name">Nombre:</Label>
                                                 <Input
                                                     type="text"
                                                     className="form-control"
                                                     id="name"
+                                                    value={nombre}
+                                                    onChange={e=>completeFilter(e.target.value, "nombre")}
                                                 />
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="lastName">Last Name:</Label>
+                                                <Label>Apellido:</Label>
                                                 <Input
                                                     type="text"
                                                     className="form-control"
-                                                    id="lastName"
+                                                    value={apellido}
+                                                    onChange={e=>completeFilter(e.target.value, "apellido")}
                                                 />
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="email">Email:</Label>
+                                                <Label htmlFor="email">Correo electrónico:</Label>
                                                 <Input
                                                     type="text"
                                                     className="form-control"
                                                     id="email"
+                                                    value={correo}
+                                                    onChange={e=>completeFilter(e.target.value, "correo")}
                                                 />
+                                                </div>
+                                            </Col>                                            
+                                            <Col md={3} xs='6'>
+                                                <div className="mb-3">
+                                                    <Label htmlFor="creationDate">Fecha creación:</Label>
+                                                    <SimpleDate 
+                                                        date={creationDate}
+                                                        setDate={completeFilter}
+                                                        element="fechaCreacion"
+                                                    />
+                                                </div>
+                                            </Col>
+                                            {/* <Col md={3} xs='6'>
+                                                <div className="mb-3">
+                                                    <Label htmlFor="creationDate">Activation Date:</Label>
+                                                    <SimpleDate />
+                                                </div>
+                                            </Col> */}
+                                            <Col md={3} xs='6'>
+                                                <div className="mb-3">
+                                                    <Label htmlFor="creationDate">Fecha Renovación:</Label>
+                                                    <SimpleDate 
+                                                        date={fechaRenovacion}
+                                                        setDate={completeFilter}
+                                                        element="fechaRenovacion"
+                                                    />
                                                 </div>
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="phoneNumber">Phone Number:</Label>
-                                                <Input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="phoneNumber"
+                                                <Label htmlFor="company">Club/Company:</Label>
+                                                <Select
+                                                    value={club}
+                                                    onChange={(selected) => completeFilter(selected, "idClub")}
+                                                    options={clubOpt}
+                                                    classNamePrefix="select2-selection"
+                                                    isClearable
+
                                                 />
                                                 </div>
                                             </Col>
-                                            <Col md={3} xs='6'>
+                                            {/* <Col md={4} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="creationDate">Creation Date:</Label>
-                                                <Input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="creationDate"
-                                                />
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <div className="card-title">Auto sizing</div>
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                <Label htmlFor="company">Company:</Label>
-                                                <Input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="company"
-                                                />
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <Row>                                            
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                <div className="card-title">Estatus:</div>
-                                                    <div className="form-check mb-3">
+                                                <Label>Membership Status with Vacancy Rewards:</Label>
+                                                    <div className="form-check form-check-inline me-5">
                                                         <input
                                                             className="form-check-input"
                                                             type="radio"
@@ -203,10 +356,10 @@ const PartnerList = props => {
                                                             className="form-check-label"
                                                             htmlFor="activeMembership"
                                                         >
-                                                        Active membership
+                                                        Active
                                                         </label>
                                                     </div>
-                                                    <div className="form-check mb-3">
+                                                    <div className="form-check form-check-inline">
                                                         <input
                                                             className="form-check-input"
                                                             type="radio"
@@ -218,15 +371,15 @@ const PartnerList = props => {
                                                             className="form-check-label"
                                                             htmlFor="expireMember"
                                                         >
-                                                        Expire member
+                                                        Expire
                                                         </label>
                                                     </div>
                                                 </div>
-                                            </Col>
-                                            <Col md={3} xs='6'>
+                                            </Col> */}
+                                            {/* <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <div className="card-title">Etapas:</div>
-                                                    <div className="form-check mb-3">
+                                                <Label className="d-block">Calls:</Label>
+                                                    <div className="form-check form-check-inline me-5">
                                                         <input
                                                             className="form-check-input"
                                                             type="radio"
@@ -238,10 +391,10 @@ const PartnerList = props => {
                                                             className="form-check-label"
                                                             htmlFor="tutorials"
                                                         >
-                                                        Tutorials
+                                                        Welcome Call
                                                         </label>
                                                     </div>
-                                                    <div className="form-check mb-3">
+                                                    <div className="form-check form-check-inline">
                                                         <input
                                                             className="form-check-input"
                                                             type="radio"
@@ -253,11 +406,11 @@ const PartnerList = props => {
                                                             className="form-check-label"
                                                             htmlFor="welcomeCall"
                                                         >
-                                                        Welcome Call
+                                                        Tutorial
                                                         </label>
                                                     </div>
                                                 </div>
-                                            </Col>
+                                            </Col> */}
                                         </Row>
                                         <Row>
                                             <Col sm="12">
@@ -265,10 +418,10 @@ const PartnerList = props => {
                                                     <Button
                                                         color="primary"
                                                         className="font-16 btn-block btn btn-primary"
-                                                        onClick={()=>console.log('buscar')}
+                                                        onClick={search}
                                                     >
                                                         <i className="mdi mdi-magnify me-1" />
-                                                        Search
+                                                        Buscar
                                                     </Button>
                                                 </div>
                                             </Col>
@@ -299,14 +452,31 @@ const PartnerList = props => {
                                     </div>
                                 </Col>
                             </Row> */}
-                            <Row>
-                                <Col xl="12">                                    
-                                    <GlobalTable
-                                        columns={columns}
-                                        items={items} 
-                                    />
-                                </Col>
-                            </Row>
+
+                            {
+                                loading ?
+                                <Row>
+                                    <Col xs="12" xl="12">
+                                        <SimpleLoad />
+                                    </Col>
+                                </Row> :
+                                <Row>
+                                    <Col xl="12">                                    
+                                        <SimpleTable
+                                            columns={columns}
+                                            items={partners.data!==undefined ? partners.data.socios : []} 
+                                        />
+                                    </Col>
+                                    {
+                                        partners.data !==undefined && partners.data.totalPaginas > 0 && 
+                                        <Paginate
+                                            page={page}
+                                            totalPaginas={partners.data.totalPaginas}
+                                            handlePageClick={handlePageClick}
+                                        />
+                                    }
+                                </Row>
+                            }                            
                           </CardBody>
                       </Card>
                   </Col>

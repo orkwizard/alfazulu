@@ -113,22 +113,26 @@ a:hover {
 }
 
 .flatpickr-months .flatpickr-month {
-  background: $primary !important;
+  background: $pink !important;
 }
 .flatpickr-weekdays {
-  background: $primary !important;
+  background: $pink !important;
 }
 span.flatpickr-weekday {
-  background: $primary !important;
+  background: $pink !important;
 }
-.flatpickr-current-month .flatpickr-monthDropdown-months {
-  background: $primary !important;
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month
+  .flatpickr-monthDropdown-months
+  .flatpickr-monthDropdown-month {
+  background: $pink !important;
 }
 span.flatpickr-weekday {
   color: $white !important;
 }
 .flatpickr-day.selected {
-  background: $primary !important;
+  background: $pink !important;
+  border-color: $pink !important;
 }
 
 .bs-select select {
