@@ -11,3 +11,6 @@ export const getClub = () => getApi(url.GET_CLUB)
 
 //coments from membership
 export const getCommentsMembership = query => getApi(`${url.GET_COMMENTS_PARTNER}${query}`)
+
+//get topicos
+export const getTopicos = () => getApi(url.GET_TOPICOS)

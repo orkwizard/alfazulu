@@ -121,6 +121,8 @@ $green: #34c38f;
 $teal: #050505;
 $cyan: #50a5f1;
 $bronce: #aa7d30;
+$pink-primary: #d02276;
+$pink-primary-dark: #bd1666;
 // scss-docs-end color-variables
 
 // scss-docs-start colors-map
@@ -138,6 +140,7 @@ $colors: (
   "white": $white,
   "gray": $gray-600,
   "gray-dark": $gray-800,
+  "pink-primary": $pink-primary,
 );
 // scss-docs-end colors-map
 
@@ -150,6 +153,7 @@ $warning: $yellow;
 $danger: $red;
 $light: $gray-200;
 $dark: $gray-800;
+$pink-primary: $pink-primary;
 // scss-docs-end theme-color-variables
 
 // scss-docs-start theme-colors-map
@@ -163,6 +167,7 @@ $theme-colors: (
   "pink": $pink,
   "light": $light,
   "dark": $dark,
+  "pink-primary": $pink-primary,
 );
 // scss-docs-end theme-colors-map
 

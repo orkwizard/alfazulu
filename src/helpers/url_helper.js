@@ -11,3 +11,6 @@ export const GET_COMMENTS_PARTNER = "/notas/buscar"
 
 //CLUB
 export const GET_CLUB = "/clubes/"
+
+//topicos
+export const GET_TOPICOS = "/notas/topicos"

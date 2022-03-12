@@ -159,3 +159,17 @@
 .fs-08 {
   font-size: 0.8rem;
 }
+.text-pink-primary {
+  color: $pink-primary;
+}
+.btn-pink-primary {
+  color: $white;
+  background-color: $pink-primary;
+  border-color: $pink-primary;
+}
+.btn-pink-primary:hover,
+.btn-pink-primary:focus {
+  background-color: $pink-primary-dark;
+  border-color: $pink-primary-dark;
+  box-shadow: 0 0 0 0.15rem rgba(208, 34, 118, 43%);
+}

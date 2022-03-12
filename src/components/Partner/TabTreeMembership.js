@@ -1,14 +1,16 @@
-import { width } from "dom-helpers";
+import { useFormik } from "formik";
 import moment from "moment";
 import { useState } from "react";
 import { useEffect } from "react";
 import Select from "react-select";
-import { Button, Col, Label, Row, Input } from "reactstrap"
-import { getCommentsMembership } from "../../helpers/backend_helper";
+import { Button, Col, Label, Row, Input, Form, FormFeedback } from "reactstrap"
+import { getCommentsMembership, getTopicos } from "../../helpers/backend_helper";
 import SimpleDate from "../DatePicker/SimpleDate";
 import SimpleLoad from "../Loader/SimpleLoad";
 import Paginate from "../Tables/Paginate";
 import SimpleTable from "../Tables/SimpleTable";
+import * as Yup from "yup";
+import { toast } from "react-toastify";
 
 
 function TabTreeMembership({contractNumber}){
@@ -17,6 +19,11 @@ function TabTreeMembership({contractNumber}){
         totalPaginas: 0,
         totalRegistros: 0,
         loading: true
+    })
+    const [responseFromServer, setResponseFromServer] = useState({
+        message: '',
+        typeError: '',
+        show: false
     })
     const columns = [
         {
@@ -68,12 +75,16 @@ function TabTreeMembership({contractNumber}){
     //form
     const [showForm, setShowForm] = useState(false)
     const [topicoForm, setTopicoForm] = useState(null)
-    const [comentario, setComentario] = useState('')
 
     useEffect(()=>{
+        setNotasResponse(prev=>({
+            ...prev,
+            loading: true
+        }))
         let q = Object.keys(query).map(key=>`${key}=${query[key]}`).join("&")
-            async function fetchMyAPI() {
-                let response = await getCommentsMembership(`?${q}`)
+        async function fetchMyAPI() {
+            let response = await getCommentsMembership(`?${q}`)
+            if(response.state){
                 let data = {
                     data: response.data.notas,
                     totalPaginas: response.data.totalPaginas,
@@ -82,8 +93,10 @@ function TabTreeMembership({contractNumber}){
                 }
                 setNotasResponse(data)
             }
-            fetchMyAPI()
+        }
+        fetchMyAPI()
     }, [query]) 
+    
 
     const handlePageClick = page => {
         setPage(page)
@@ -142,54 +155,160 @@ function TabTreeMembership({contractNumber}){
 
     const cleanForm = () =>{
         setShowForm(false)
-        setComentario('')
         setTopicoForm(null)
     }
+
+    useEffect(()=>{
+        async function fetchMyAPI() {
+            let response = await getTopicos()
+            if(response.state){
+                setTopicoOpt(response.data.response.map(e=>({label: e.nombre, value: e.id})))
+            }
+        }
+        fetchMyAPI()
+    }, [])
+
+    //form add comments
+    const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+    
+        initialValues: {
+          nota: "",
+          tipoNota: "",
+        },
+        validationSchema: Yup.object({
+            nota: Yup.string().required("Campo requerido"),
+            tipoNota: Yup.string().required("Campo requerido"),
+        }),
+        onSubmit: (values) => {
+          let data = {
+            membresiaDTO: {  
+                "id": 35578
+              },
+            nota: values.nota,
+            tipoNota: {id: values.tipoNota}
+          }
+          console.log(data)
+
+          //service here
+          
+
+          setResponseFromServer(prev=>({
+              show: true,
+              typeError: 'error',
+              message: 'meserr'
+          }))
+          setTopicoForm(null)
+          validation.resetForm()
+          
+        }
+    });
+
+    //update toast show message info
+    useEffect(()=>{
+        if(responseFromServer.show){
+            switch(responseFromServer.typeError){
+                case 'success':
+                    toast.success("Salvado correctamente")
+                    break;
+                case 'error':
+                    toast.error(responseFromServer.message)
+                    break;
+                default:
+                    break;
+            }
+            setResponseFromServer(prev=>({
+                show: false,
+            }))
+        }
+        console.log(responseFromServer)
+    }, [responseFromServer])
 
     return (
 
         showForm ?
-        <Row>
-            <Col xs="12" md="12">
-                <div className="mb-2">
-                    <Label htmlFor="company" className="mb-0">Tópico:</Label>
-                    <Select
-                        value={topicoForm}
-                        onChange={(selected) => setTopicoForm(selected)}
-                        options={topicoOpt}
-                        classNamePrefix="select2-selection"
-                        isClearable
-                    />
-                </div>
-            </Col>
-            <Col xs="12" md="12">
-                <div className="mb-2">
-                    <Label htmlFor="comentario" className="mb-0">Comentario:</Label>
-                    <textarea 
-                        className="form-control" 
-                        id="comentario" 
-                        rows="9"
-                        onChange={e=>setComentario(e.target.value)}
-                        value={comentario} 
-                    />
-                </div>
-            </Col>
-            <Col xs="12" md="12">
-                <div className="text-sm-end mb-2">
-                    <Button
-                        color="danger"
-                        className="font-16 btn-block btn btn-primary me-2"
-                        onClick={cleanForm}
-                    >Cancelar
-                    </Button>
-                    <Button
-                        color="primary"
-                        className="font-16 btn-block btn btn-primary"
-                    >Ingresar
-                    </Button>
-                </div>
-            </Col>
-        </Row> :
+        <Form
+            className="needs-validation"
+            id="tooltipForm"
+            onSubmit={(e) => {
+                e.preventDefault();
+                validation.handleSubmit();
+                return false;
+            }}
+        >
+            <Row>
+                <Col xs="12" md="12">
+                    <div className="mb-2">
+                        <Label htmlFor="company" className="mb-0">Tópico:</Label>
+                        <Select
+                            value={topicoForm}
+                            onChange={(selected) => {
+                                setTopicoForm(selected)
+                                if(selected){
+                                    validation.setFieldValue("tipoNota", selected.value)
+                                }else{
+                                    validation.setFieldValue("tipoNota", "")
+                                    validation.validateField("tipoNota")
+                                }
+                                
+                            }}
+                            options={topicoOpt}
+                            classNamePrefix="select2-selection"
+                            isClearable
+                            className={`${validation.errors.tipoNota ? 'is-invalid' : ''}`} 
+                            placeholder="Seleccionar opción"
+                            styles={{
+                                control: (provided, state) => ({
+                                    ...provided,
+                                    borderColor: validation.errors.tipoNota ? '#f46a6a!important' : '',
+                                    boxShadow: validation.errors.tipoNota ? '0 0 0 0.15rem rgb(244 106 106 / 25%)!important' : ''
+                                  })
+                                }
+                            }
+                        />
+                        {
+                            (validation.touched.tipoNota && validation.errors.tipoNota) &&
+                            <div className="invalid-tooltip" name="validate" id="validate1">{validation.errors.tipoNota}</div>
+                        }
+                    </div>
+                </Col>
+                <Col xs="12" md="12">
+                    <div className="mb-2">
+                        <Label htmlFor="nota" className="mb-0">Comentario:</Label>
+                        <textarea 
+                            className={`form-control ${validation.errors.nota ? 'is-invalid' : ''}`} 
+                            id="nota" 
+                            rows="9"
+                            name="nota"
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.nota || ""}                            
+                        />
+                        {
+                            (validation.touched.nota && validation.errors.nota) &&
+                            <div className="invalid-tooltip" name="validate" id="validate1">{validation.errors.nota}</div>
+                        }
+                    </div>
+                </Col>
+                <Col xs="12" md="12">
+                    <div className="text-sm-end mb-2">
+                        <Button
+                            color="danger"
+                            className="font-16 btn-block btn btn-primary me-2"
+                            onClick={cleanForm}
+                        >Cancelar
+                        </Button>
+                        <Button
+                            color="primary"
+                            className="font-16 btn-block btn btn-primary"
+                            type="submit"
+                        >Ingresar
+                        </Button>
+                    </div>
+                </Col>
+            </Row>
+        </Form> :
         
         <Row>
             <Col md="12" xs="12">
@@ -207,9 +326,9 @@ function TabTreeMembership({contractNumber}){
                         </form>   */}
                     </div>
                     <div>
-                    <Button color="light" onClick={e=>setShowForm(true)}>
-                        Agregar comentario
-                    </Button>
+                        <button className="btn btn-pink-primary" onClick={e=>setShowForm(true)}>
+                            Agregar comentario
+                        </button>
                     </div>
                 </div>
             </Col>
@@ -234,6 +353,7 @@ function TabTreeMembership({contractNumber}){
                                 options={agenteOpt}
                                 classNamePrefix="select2-selection"
                                 isClearable
+                                placeholder="Seleccionar opción"
 
                             />
                         </div>
@@ -247,6 +367,7 @@ function TabTreeMembership({contractNumber}){
                                 options={topicoOpt}
                                 classNamePrefix="select2-selection"
                                 isClearable
+                                placeholder="Seleccionar opción"
 
                             />
                         </div>
