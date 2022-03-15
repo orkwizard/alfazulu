@@ -4,13 +4,14 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Select from "react-select";
 import { Button, Col, Label, Row, Input, Form, FormFeedback } from "reactstrap"
-import { getCommentsMembership, getTopicos } from "../../helpers/backend_helper";
+import { getAgents, getCommentsMembership, getTopicos, postComments } from "../../helpers/backend_helper";
 import SimpleDate from "../DatePicker/SimpleDate";
 import SimpleLoad from "../Loader/SimpleLoad";
 import Paginate from "../Tables/Paginate";
 import SimpleTable from "../Tables/SimpleTable";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
+import { ERROR_SERVER } from "../../constant/messages";
 
 
 function TabTreeMembership({contractNumber}){
@@ -41,7 +42,7 @@ function TabTreeMembership({contractNumber}){
           }, 
           formatter: (cell, row) => (
               <div>
-                  <span className="d-block"><strong>Agente: </strong>Demo demo</span>
+                  <span className="d-block"><strong>Agente: </strong>{row.agente}</span>
                   <span className="d-block"><strong>Fecha: </strong>{moment(row.fechaCreacion, "YYYY-MM-DDTHH:mm:ss").format("DD/MM/YYYY HH:mm")} hrs</span>
                   <span className="d-block"><strong>Topic: </strong>{row.tipoNota}</span>
               </div>
@@ -68,7 +69,7 @@ function TabTreeMembership({contractNumber}){
     const [creationDate, setCreationdate] = useState()
     const [texto, setTexto] = useState('')
     const [agente, setAgente] = useState(null)
-    const [agenteOpt, setAgenteOpt] = useState([])
+    const [agentsOpt, setAgentsOpt] = useState([])
     const [topico, setTopico] = useState(null)
     const [topicoOpt, setTopicoOpt] = useState([])
 
@@ -148,6 +149,14 @@ function TabTreeMembership({contractNumber}){
                         delete query[type]
                     }
                     break;
+                case "idAgente":
+                    setAgente(value)
+                    if(value!==null){
+                        query[type] = value.value
+                    }else{
+                        delete query[type]
+                    }
+                    break;
             default: 
                 return;
         }
@@ -159,13 +168,23 @@ function TabTreeMembership({contractNumber}){
     }
 
     useEffect(()=>{
-        async function fetchMyAPI() {
+        //topicos
+        async function fetchTopicoAPI() {
             let response = await getTopicos()
             if(response.state){
                 setTopicoOpt(response.data.response.map(e=>({label: e.nombre, value: e.id})))
             }
         }
-        fetchMyAPI()
+        fetchTopicoAPI()
+
+        //agents
+        async function fetchAgentsAPI() {
+            let response = await getAgents()
+            if(response.state){
+                setAgentsOpt(response.data.response.map(e=>({label: `${e.nombre} ${e.apellidos} - ${e.username}`, value: e.id})))
+            }
+        }
+        fetchAgentsAPI()
     }, [])
 
     //form add comments
@@ -184,7 +203,7 @@ function TabTreeMembership({contractNumber}){
         onSubmit: (values) => {
           let data = {
             membresiaDTO: {  
-                "id": 35578
+                numeroContrato: contractNumber
               },
             nota: values.nota,
             tipoNota: {id: values.tipoNota}
@@ -192,16 +211,35 @@ function TabTreeMembership({contractNumber}){
           console.log(data)
 
           //service here
-          
-
-          setResponseFromServer(prev=>({
-              show: true,
-              typeError: 'error',
-              message: 'meserr'
-          }))
-          setTopicoForm(null)
-          validation.resetForm()
-          
+          try {
+            async function sendCommentsAp() {
+                let response = await postComments(data)
+                if(response.state){
+                    setResponseFromServer(prev=>({
+                        show: true,
+                        typeError: 'success',
+                        message: ''
+                    })) 
+                    setTopicoForm(null)
+                    validation.resetForm()
+                }else{
+                    setResponseFromServer(prev=>({
+                        show: true,
+                        typeError: 'error',
+                        message: ''
+                    }))
+                }
+                console.log(response)
+                
+            }
+            sendCommentsAp()
+          } catch (error) {
+            setResponseFromServer(prev=>({
+                show: true,
+                typeError: 'error',
+                message: ERROR_SERVER
+            }))
+          }
         }
     });
 
@@ -222,7 +260,6 @@ function TabTreeMembership({contractNumber}){
                 show: false,
             }))
         }
-        console.log(responseFromServer)
     }, [responseFromServer])
 
     return (
@@ -350,7 +387,7 @@ function TabTreeMembership({contractNumber}){
                             <Select
                                 value={agente}
                                 onChange={(selected) => completeFilter(selected, "idAgente")}
-                                options={agenteOpt}
+                                options={agentsOpt}
                                 classNamePrefix="select2-selection"
                                 isClearable
                                 placeholder="Seleccionar opción"

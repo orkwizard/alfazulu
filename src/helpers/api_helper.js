@@ -57,3 +57,8 @@ axiosApiDefault.interceptors.response.use(
 export async function getApi(url, config = {}) {
     return await axiosApiDefault.get(url, { ...config }).then(response => response.data);
 }
+export async function postApi(url, data, config = {}) {
+    return axiosApiDefault
+      .post(url, { ...data }, { ...config })
+      .then(response => response.data);
+}

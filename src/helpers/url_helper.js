@@ -7,10 +7,16 @@ export const POST_EDIT_PROFILE = "/post-fake-profile";
 
 //PARTNER
 export const GET_PARTNER = "/socios/buscar"
+
+//notas-comentarios
 export const GET_COMMENTS_PARTNER = "/notas/buscar"
+export const SAVE_COMMENTS_PARTNER = "/notas/save"
 
 //CLUB
 export const GET_CLUB = "/clubes/"
 
 //topicos
 export const GET_TOPICOS = "/notas/topicos"
+
+//agente
+export const GET_AGENTS = "/notas/agentes"
