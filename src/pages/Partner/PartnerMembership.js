@@ -11,22 +11,38 @@ import TabOneMembership from "../../components/Partner/TabOneMembership";
 import TabTwoMembership from "../../components/Partner/TabTwoMembership";
 import TabTreeMembership from "../../components/Partner/TabTreeMembership";
 import { useState } from "react";
+import { getPartnersById } from "../../helpers/backend_helper";
 
 const PartnerMembership = props =>{
     const {
         match: { params },
     } = props;
 
+    const [partner, setPartner] = useState(null)
+
     useEffect(() => {
-        //console.log(params.id)
+        //console.log(params)
     }, [params]);
+
+    useEffect(()=>{
+        async function fetchParnetAPI() {
+            let response = await getPartnersById(params.idPartner)
+            if(response.state){
+                setPartner(response.data)
+            }else{
+
+            }
+            console.log(response)
+        }
+        fetchParnetAPI()
+    },[params.idPartner])
 
     const [activeIndex, setActiveIndex] = useState(0)
     const childrenTabs = [
         {
             id: 1,
             title: 'Detalles',
-            component: <TabOneMembership />
+            component: <TabOneMembership partner={partner}/>
         },
         {
             id: 2,
@@ -36,7 +52,7 @@ const PartnerMembership = props =>{
         {
             id: 3,
             title: 'Comentarios',
-            component: <TabTreeMembership contractNumber={params.id}/>
+            component: <TabTreeMembership contractNumber={params.contractNumber}/>
         }
     ]
 
@@ -50,7 +66,7 @@ const PartnerMembership = props =>{
                     <Breadcrumbs title="Socio" breadcrumbItem="Membresía del socio" />
                     <Row>
                         <Col xs="12" md="4">
-                            <CardTitular />
+                            <CardTitular partner={partner}/>
                             <CardMembershipRequest />
                         </Col>
                         <Col xs="12" md="8">

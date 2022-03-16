@@ -107,7 +107,8 @@ function TabTreeMembership({contractNumber}){
         }))
     }
 
-    const search = () =>{
+    const search = (e) =>{
+        e.preventDefault();
         setPage(0)
         setQuery(prev=>({
             ...prev,
@@ -370,70 +371,75 @@ function TabTreeMembership({contractNumber}){
                 </div>
             </Col>
             <Col xs="12" md="12">
-                <Row className="align-items-end">
-                    <Col xs='6' md="4">
-                        <div className="mb-2">
-                            <Label htmlFor="creationDate" className="mb-0">Fecha creación:</Label>
-                            <SimpleDate 
-                                date={creationDate}
-                                setDate={completeFilter}
-                                element="fechaCreacion"
-                            />
-                        </div>
-                    </Col>
-                    <Col xs='6' md="4">
-                        <div className="mb-2">
-                            <Label htmlFor="company" className="mb-0">Agente:</Label>
-                            <Select
-                                value={agente}
-                                onChange={(selected) => completeFilter(selected, "idAgente")}
-                                options={agentsOpt}
-                                classNamePrefix="select2-selection"
-                                isClearable
-                                placeholder="Seleccionar opción"
+                <Form
+                    onSubmit={search}
+                >
+                    <Row className="align-items-end">
+                        <Col xs='6' md="4">
+                            <div className="mb-2">
+                                <Label htmlFor="creationDate" className="mb-0">Fecha creación:</Label>
+                                <SimpleDate 
+                                    date={creationDate}
+                                    setDate={completeFilter}
+                                    element="fechaCreacion"
+                                />
+                            </div>
+                        </Col>
+                        <Col xs='6' md="4">
+                            <div className="mb-2">
+                                <Label htmlFor="company" className="mb-0">Agente:</Label>
+                                <Select
+                                    value={agente}
+                                    onChange={(selected) => completeFilter(selected, "idAgente")}
+                                    options={agentsOpt}
+                                    classNamePrefix="select2-selection"
+                                    isClearable
+                                    placeholder="Seleccionar opción"
 
-                            />
-                        </div>
-                    </Col>
-                    <Col xs='6' md="4">
-                        <div className="mb-2">
-                            <Label htmlFor="company" className="mb-0">Tópico:</Label>
-                            <Select
-                                value={topico}
-                                onChange={(selected) => completeFilter(selected, "idTipoNota")}
-                                options={topicoOpt}
-                                classNamePrefix="select2-selection"
-                                isClearable
-                                placeholder="Seleccionar opción"
+                                />
+                            </div>
+                        </Col>
+                        <Col xs='6' md="4">
+                            <div className="mb-2">
+                                <Label htmlFor="company" className="mb-0">Tópico:</Label>
+                                <Select
+                                    value={topico}
+                                    onChange={(selected) => completeFilter(selected, "idTipoNota")}
+                                    options={topicoOpt}
+                                    classNamePrefix="select2-selection"
+                                    isClearable
+                                    placeholder="Seleccionar opción"
 
-                            />
-                        </div>
-                    </Col>
-                    <Col xs='6' md="8">
-                        <div className="mb-2">
-                            <Label htmlFor="texto" className="mb-0">Comentario:</Label>
-                            <Input
-                                type="text"
-                                className="form-control"
-                                id="texto"
-                                value={texto}
-                                onChange={e=>completeFilter(e.target.value, "texto")}
-                            />
-                        </div>
-                    </Col>
-                    <Col xs="12" md={{offset: 2, size: 2}}>
-                        <div className="text-sm-end mb-2">
-                            <Button
-                                color="primary"
-                                className="font-16 btn-block btn btn-primary"
-                                onClick={search}
-                            >
-                                <i className="mdi mdi-magnify me-1" />
-                                Buscar
-                            </Button>
-                        </div>
-                    </Col>
-                </Row>
+                                />
+                            </div>
+                        </Col>
+                        <Col xs='6' md="8">
+                            <div className="mb-2">
+                                <Label htmlFor="texto" className="mb-0">Comentario:</Label>
+                                <Input
+                                    type="text"
+                                    className="form-control"
+                                    id="texto"
+                                    value={texto}
+                                    onChange={e=>completeFilter(e.target.value, "texto")}
+                                />
+                            </div>
+                        </Col>
+                        <Col xs="12" md={{offset: 2, size: 2}}>
+                            <div className="text-sm-end mb-2">
+                                <Button
+                                    color="primary"
+                                    className="font-16 btn-block btn btn-primary"
+                                    type="submit"
+                                >
+                                    <i className="mdi mdi-magnify me-1" />
+                                    Buscar
+                                </Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </Form>
+                
             </Col>
             <Col xs="12" md="12">
                 {

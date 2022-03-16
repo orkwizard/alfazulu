@@ -4,6 +4,7 @@ import * as url from "./url_helper";
 
 // get partners
 export const getPartners = query => getApi(`${url.GET_PARTNER}${query}`);
+export const getPartnersById = id => getApi(`${url.GET_PARTNER_BY_ID}/${id}`)
 
 //get club
 export const getClub = () => getApi(url.GET_CLUB)

@@ -1,8 +1,7 @@
 import { Card, CardBody, Col, Row } from "reactstrap"
 import avatar1 from "../../assets/images/users/avatar-1.jpg"
-import profileImg from "../../assets/images/profile-img.png"
 
-function CardTitular(){
+function CardTitular({partner}){
     
 
     return (
@@ -11,8 +10,14 @@ function CardTitular(){
                 <Row className="mb-4">
                     <Col>
                         <div className="text-primary p-3">
-                            <p className="mb-1">Holder information:</p>
-                            <h6 className="text-primary">Demo Demo Demo demo</h6>                    
+                            <p className="mb-1">Información del socio:</p>
+                            {
+                                partner?.informacionPersonal && 
+                                <h6 className="text-primary">
+                                    {`${partner.informacionPersonal.nombre} ${partner.informacionPersonal.segundoNombre} ${partner.informacionPersonal.primerApellido} ${partner.informacionPersonal.segundoApellido}`}
+                                </h6> 
+                            }
+                                               
                         </div>
                     </Col>
                 </Row>
@@ -32,32 +37,32 @@ function CardTitular(){
             <Row>
                 <Col xs="12" md="4">
                     <div className="mb-2">
-                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Contract Number:</label>
-                        <span className="fs-08">CC-013565</span>
+                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Núm. de contrato:</label>
+                        <span className="fs-08">-</span>
                     </div>
                 </Col>
                 <Col xs="12" md="8">
                     <div className="mb-2">
                         <label className="fw-bolder mb-0 fs-06 d-block text-dark">Co-titular:</label>
-                        <span className="fs-08">Demo Demo Demo demo</span>
+                        <span className="fs-08">-</span>
                     </div>
                 </Col>
                 <Col xs="12" md="4">
                     <div className="mb-2">
-                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Last visit:</label>
-                        <span className="fs-08">Feb/02/2022</span>
+                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Última visita:</label>
+                        <span className="fs-08">-</span>
                     </div>
                 </Col>
                 <Col xs="12" md="4">
                     <div className="mb-2">
-                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">First Visit to System:</label>
-                        <span className="fs-08">Ene/02/2022</span>
+                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Primera visita:</label>
+                        <span className="fs-08">-</span>
                     </div>
                 </Col>
                 <Col xs="12" md="4">
                     <div className="mb-2">
-                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Terms & Conditions:</label>
-                        <span className="fs-08 text-success">Yes</span>
+                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Térm. & Cond.</label>
+                        <span className="fs-08 text-success">-</span>
                     </div>
                 </Col>
             </Row>

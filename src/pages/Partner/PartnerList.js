@@ -83,7 +83,7 @@ const PartnerList = props => {
         {
           text: "Login ID",
           dataField: "loginId",
-          formatter: (cell, row) => <Link to={`partner-membership/${row.numeroContrato}`} className="text-dark"><u><strong>{cell}</strong></u></Link>          
+          formatter: (cell, row) => <Link to={`partner-membership/${row.numeroContrato}/${row.id}`} className="text-dark"><u><strong>{cell}</strong></u></Link>          
         },
         {
             text: "Número contrato",
@@ -100,6 +100,10 @@ const PartnerList = props => {
         {
             text: "Correo electrónico",
             dataField: "correo",          
+        },
+        {
+            text: "Club",
+            dataField: "club",          
         },
         {
             text: "Fecha registro",

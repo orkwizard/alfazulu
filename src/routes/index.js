@@ -18,7 +18,7 @@ const authProtectedRoutes = [
     { path: "/partner-detail/:id", exact: true, component:  PartnerDetail},
     { path: "/partner-welcome-call", exact: true, component:  WelcomeCall},
     { path: "/partner-asigned-call", exact: true, component:  LLamadasAsignadas},
-    { path: "/partner-membership/:id", exact: true, component:  PartnerMembership},
+    { path: "/partner-membership/:contractNumber/:idPartner", exact: true, component:  PartnerMembership},
 ]
 
 const publicRoutes = [

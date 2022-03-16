@@ -1,6 +1,6 @@
-import { Button, Col, Row } from "reactstrap"
+import { Col, Row } from "reactstrap"
 
-function TabOneMembership(){
+function TabOneMembership({partner}){
 
 
     return (
@@ -9,83 +9,87 @@ function TabOneMembership(){
             <Col md="12" xs="12">
                 <div className="d-flex justify-content-between align-items-center my-2">
                     <div>
-                        <span className="fw-bolder text-danger">Renewal date: Dic/20/2022</span>
+                        <span className="fw-bolder text-danger">Fecha de renovación: -</span>
                     </div>
                     <div>
-                    <Button color="primary">
-                        Editar
-                    </Button>
+                        <button className="btn btn-pink-primary">Editar</button>
                     </div>
                 </div>
             </Col>
             <Col xs="6" md="6">
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Contract Number:</label>
-                    <span>CC-013565</span>
+                    <label className="fw-bold d-block fs-08 mb-0">Número de contrato:</label>
+                    <span>-</span>
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Login ID:</label>
-                    <span>HLG02385</span>
+                    <span>-</span>
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Company:</label>
-                    <span>Explorers Travelers</span>
+                    <label className="fw-bold d-block fs-08 mb-0">Precio:</label>
+                    <span>-</span>
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Anualidad:</label>
-                    <span>$199</span>
+                    <label className="fw-bold d-block fs-08 mb-0">Fecha compra:</label>
+                    <span>-</span>
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Password:</label>
-                    <span>5678</span>
+                    <label className="fw-bold d-block fs-08 mb-0">Años comprada:</label>
+                    <span>-</span>
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Activation Date:</label>
-                    <span>Ene/20/2021</span>
+                    <label className="fw-bold d-block fs-08 mb-0">Número de semanas compradas:</label>
+                    <span>-</span>
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Years purchase:</label>
-                    <span>99</span>
-                </div>
-                <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Numbers of week per years:</label>
-                    <span>10</span>
-                </div>
-                <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Sales person:</label>
-                    <span>Monica</span>
+                    <label className="fw-bold d-block fs-08 mb-0">Vendida por el asesor:</label>
+                    <span>-</span>
                 </div>
             </Col>
             <Col xs="6" md="6">
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Holder information:</label>
-                    <span>Demo Demo Demo demo</span>
+                    <label className="fw-bold d-block fs-08 mb-0">Información del socio:</label>
+                    {partner.informacionPersonal && <span>{`${partner.informacionPersonal.nombre} ${partner.informacionPersonal.segundoNombre} ${partner.informacionPersonal.primerApellido} ${partner.informacionPersonal.segundoApellido}`}</span>}
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Address:</label>
-                    <span className="d-block">Street: Demo demo</span>
-                    <span className="d-block">Country: Demo demo</span>
-                    <span className="d-block">State: Demo demo</span>
+                    <label className="fw-bold d-block fs-08 mb-0">Dirección:</label>
+                    {
+                        partner.direcciones && 
+                        partner.direcciones.map((item) => (
+                            <div key={item.id}>
+                                <span className="d-block">Calle: {item.calle}</span>
+                                <span className="d-block">CP: {item.codigoPostal}</span>
+                                <span className="d-block">Activa: {item.activo ? 'Si' : 'No'}</span>
+                            </div>
+                        ))
+                    }
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Language:</label>
-                    <span>Español</span>
+                    <label className="fw-bold d-block fs-08 mb-0">Idioma:</label>
+                    {partner.idioma && <span>{partner.idioma.nombre}</span>}
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Currency:</label>
-                    <span>USD</span>
+                    <label className="fw-bold d-block fs-08 mb-0">Correos electrónicos:</label>
+                    {
+                        partner.informacionPersonal && 
+                        partner.informacionPersonal.correos.map(item=>(
+                            <div key={item.id}>
+                                <span className="d-block">{item.correo}</span>
+                                <span className="d-block">Principal: {item.principal ? 'Si' : 'No'}</span>
+                            </div>
+                        ))
+                    }                    
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Primary Email:</label>
-                    <span>demo@demo.com</span>
-                </div>
-                <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Secondary Email:</label>
-                    <span>demo@demo.com</span>
-                </div>
-                <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Phone:</label>
-                    <span>Home: +52 555 5555</span>
+                    <label className="fw-bold d-block fs-08 mb-0">Teléfonos:</label>
+                    {
+                        partner.informacionPersonal.telefonos.map((item, index)=>(
+                            <div key={item.id} className={`${index > 0 ? 'line-break' : ''}`}>
+                                <span className="d-block">{item.tipoTelefono.nombre}: {item.numero}</span>
+                                <span className="d-block">Acivo: {item.activo ? 'Si' : 'No'}</span>
+                            </div>
+                        ))
+                    }
                 </div>
             </Col>
         </Row>
