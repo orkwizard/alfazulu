@@ -3,7 +3,7 @@ import moment from "moment";
 import { useState } from "react";
 import { useEffect } from "react";
 import Select from "react-select";
-import { Button, Col, Label, Row, Input, Form, FormFeedback } from "reactstrap"
+import { Button, Col, Label, Row, Input, Form } from "reactstrap"
 import { getAgents, getCommentsMembership, getTopicos, postComments } from "../../helpers/backend_helper";
 import SimpleDate from "../DatePicker/SimpleDate";
 import SimpleLoad from "../Loader/SimpleLoad";
@@ -205,7 +205,8 @@ function TabTreeMembership({contractNumber}){
           let data = {
             membresiaDTO: {  
                 numeroContrato: contractNumber
-              },
+            },
+            agentt:{id:212},
             nota: values.nota,
             tipoNota: {id: values.tipoNota}
           }
