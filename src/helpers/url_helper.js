@@ -8,6 +8,7 @@ export const POST_EDIT_PROFILE = "/post-fake-profile";
 //PARTNER
 export const GET_PARTNER = "/socios/buscar"
 export const GET_PARTNER_BY_ID = "/socios"
+export const SAVE_PARTNER = "/socios/save"
 
 //notas-comentarios
 export const GET_COMMENTS_PARTNER = "/notas/buscar"

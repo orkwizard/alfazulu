@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { ERROR_SERVER } from "../../constant/messages";
 
 
-function TabTreeMembership({contractNumber}){
+function TabTreeMembership({contractNumber, isActive}){
     const [notasResponse, setNotasResponse] = useState({
         data: [],
         totalPaginas: 0,
@@ -95,8 +95,8 @@ function TabTreeMembership({contractNumber}){
                 setNotasResponse(data)
             }
         }
-        fetchMyAPI()
-    }, [query]) 
+        if(!showForm) fetchMyAPI()
+    }, [query, showForm]) 
     
 
     const handlePageClick = page => {
@@ -120,10 +120,14 @@ function TabTreeMembership({contractNumber}){
         switch(type){
             case "fechaCreacion":
                 setCreationdate(value)
-                if(value.length){
-                    query[type] = moment(value[0]).format("YYYY-MM-DD")
+                if(value.length > 1){
+                    let fechaCreacionInicial = moment(value[0]).format("YYYY-MM-DD")
+                    let fechaCreacionFinal = moment(value[1]).format("YYYY-MM-DD")
+                    query["fechaCreacionInicial"] =fechaCreacionInicial
+                    query["fechaCreacionFinal"] =fechaCreacionFinal
                 }else{
-                    delete query[type]
+                    delete query["fechaCreacionInicial"]
+                    delete query["fechaCreacionFinal"]
                 }                
                 break;
                 case "texto":
@@ -173,7 +177,7 @@ function TabTreeMembership({contractNumber}){
         async function fetchTopicoAPI() {
             let response = await getTopicos()
             if(response.state){
-                setTopicoOpt(response.data.response.map(e=>({label: e.nombre, value: e.id})))
+                setTopicoOpt(response.data.response.map(e=>({label: e.nombre, value: e.id, visible: e.visible})))
             }
         }
         fetchTopicoAPI()
@@ -206,11 +210,10 @@ function TabTreeMembership({contractNumber}){
             membresiaDTO: {  
                 numeroContrato: contractNumber
             },
-            agentt:{id:212},
             nota: values.nota,
             tipoNota: {id: values.tipoNota}
           }
-          console.log(data)
+          //console.log(data)
 
           //service here
           try {
@@ -222,8 +225,8 @@ function TabTreeMembership({contractNumber}){
                         typeError: 'success',
                         message: ''
                     })) 
-                    setTopicoForm(null)
                     validation.resetForm()
+                    cleanForm()
                 }else{
                     setResponseFromServer(prev=>({
                         show: true,
@@ -292,7 +295,7 @@ function TabTreeMembership({contractNumber}){
                                 }
                                 
                             }}
-                            options={topicoOpt}
+                            options={topicoOpt.filter(item=>item.visible)}
                             classNamePrefix="select2-selection"
                             isClearable
                             className={`${validation.errors.tipoNota ? 'is-invalid' : ''}`} 
@@ -365,9 +368,9 @@ function TabTreeMembership({contractNumber}){
                         </form>   */}
                     </div>
                     <div>
-                        <button className="btn btn-pink-primary" onClick={e=>setShowForm(true)}>
+                        {isActive && <button className="btn btn-pink-primary" onClick={e=>setShowForm(true)}>
                             Agregar comentario
-                        </button>
+                        </button>}
                     </div>
                 </div>
             </Col>
@@ -378,11 +381,15 @@ function TabTreeMembership({contractNumber}){
                     <Row className="align-items-end">
                         <Col xs='6' md="4">
                             <div className="mb-2">
-                                <Label htmlFor="creationDate" className="mb-0">Fecha creación:</Label>
+                                <Label htmlFor="creationDate" className="mb-0">Fecha creación por rango:</Label>
                                 <SimpleDate 
                                     date={creationDate}
                                     setDate={completeFilter}
                                     element="fechaCreacion"
+                                    options={{
+                                        mode: "range"
+                                    }}
+                                    placeholder="dd-MM-YYYY a dd-MM-YYYY"
                                 />
                             </div>
                         </Col>

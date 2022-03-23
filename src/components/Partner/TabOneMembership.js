@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Col, Row } from "reactstrap"
 import FormEditMembershipPartner from "./FormEditMembershipPartner"
 
-function TabOneMembership({partner}){
+function TabOneMembership({partner, isActive}){
     const [showForm, setShowForm] = useState(false)
 
     return (
@@ -13,7 +13,7 @@ function TabOneMembership({partner}){
                     <div>
                         <span className="fw-bolder text-danger">Fecha de renovación: -</span>
                     </div>
-                    {!showForm && 
+                    {(!showForm && isActive) &&
                     <div>
                         <button className="btn btn-pink-primary" onClick={e=>setShowForm(true)}>Editar</button>
                     </div>}

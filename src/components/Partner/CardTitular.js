@@ -1,19 +1,18 @@
-import { Card, CardBody, Col, Row } from "reactstrap"
+import { Button, Card, CardBody, CardFooter, Col, Row } from "reactstrap"
 import avatar1 from "../../assets/images/users/avatar-1.jpg"
 
-function CardTitular({partner}){
-    
+function CardTitular({partner, isActive}){ 
 
     return (
         <Card className="overflow-hidden rounded-0">
-            <div className="bg-primary bg-soft">
+            <div className={`${isActive ? 'bg-primary' : 'bg-secondary'} bg-soft`}>
                 <Row className="mb-4">
                     <Col>
-                        <div className="text-primary p-3">
+                        <div className={`${isActive ? 'text-primary' : 'text-secondary'} p-3`}>
                             <p className="mb-1">Información del socio:</p>
                             {
                                 partner?.informacionPersonal && 
-                                <h6 className="text-primary">
+                                <h6 className={`${isActive ? 'text-primary' : 'text-secondary'}`}>
                                     {`${partner.informacionPersonal.nombre} ${partner.informacionPersonal.segundoNombre} ${partner.informacionPersonal.primerApellido} ${partner.informacionPersonal.segundoApellido}`}
                                 </h6> 
                             }
@@ -67,6 +66,20 @@ function CardTitular({partner}){
                 </Col>
             </Row>
             </CardBody>
+            <CardFooter className="p-0">
+                {
+                    isActive ? 
+                    <Button block className="rounded-0" color="primary">
+                        <i className="fas fa-download" />
+                        <span className="d-block">Descargar contrato</span>
+                    </Button> :
+                    <div className="p-3 text-center">
+                        <i className="fas fa-download" />
+                        <span className="d-block">Descargar contrato</span>
+                    </div>
+                }
+                
+            </CardFooter>
         </Card>
     )
 }
