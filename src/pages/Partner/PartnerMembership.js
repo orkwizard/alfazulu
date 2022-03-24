@@ -19,28 +19,32 @@ const PartnerMembership = props =>{
     } = props;
 
     const [partner, setPartner] = useState(null)
-    const [isActive, setIsActive] = useState(false)
+    const [isActive, setIsActive] = useState(true)
     const [activarUsuario, setActivarUsuario] = useState(false);
+    const [reload, setReload] = useState(true)
 
     useEffect(()=>{
         async function fetchParnetAPI() {
             let response = await getPartnersById(params.idPartner)
+            //console.log(response)
             if(response.state){
                 setPartner(response.data)
             }else{
 
             }
-            console.log(response)
         }
-        fetchParnetAPI()
-    },[params.idPartner])
+        if(reload){
+            fetchParnetAPI()
+            setReload(false)
+        }
+    },[params.idPartner, reload])
 
     const [activeIndex, setActiveIndex] = useState(0)
     const childrenTabs = [
         {
             id: 1,
             title: 'Detalles',
-            component: <TabOneMembership partner={partner} isActive={isActive}/>
+            component: <TabOneMembership partner={partner} isActive={isActive} setReload={setReload}/>
         },
         {
             id: 2,

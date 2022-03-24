@@ -1,9 +1,17 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Col, Row } from "reactstrap"
 import FormEditMembershipPartner from "./FormEditMembershipPartner"
 
-function TabOneMembership({partner, isActive}){
+function TabOneMembership({partner, isActive, setReload}){
     const [showForm, setShowForm] = useState(false)
+    const [reloadPartner, setReloadPartner] = useState(false)
+
+    useEffect(()=>{
+        if(reloadPartner){
+            setReload(true)
+            setReloadPartner(false)
+        }
+    }, [reloadPartner])
 
     return (
 
@@ -52,7 +60,7 @@ function TabOneMembership({partner, isActive}){
             {
                 showForm ? 
                 <Col xs="6" md="6">
-                    <FormEditMembershipPartner partner={partner} setShowForm={setShowForm}/>
+                    <FormEditMembershipPartner partner={partner} setShowForm={setShowForm} setReloadPartner={setReloadPartner}/>
                 </Col> :
                 <Col xs="6" md="6">
                     <div className="mb-2">
@@ -104,7 +112,9 @@ function TabOneMembership({partner, isActive}){
                         {
                             partner?.beneficiarios.map((item, index)=>(
                                 <div key={item.id} className={`${index > 0 ? 'line-break' : ''}`}>
+                                    <span className="d-block">{item.cotitular && <strong>Cotitular</strong>}</span>
                                     <span className="d-block">{`${item.informacionPersonal.nombre} ${item.informacionPersonal.segundoNombre} ${item.informacionPersonal.primerApellido} ${item.informacionPersonal.segundoApellido}`}</span>
+                                    <span className="d-block">Parentesco: {item.parentesco?.nombre}</span>
                                 </div>
                             ))
                         }

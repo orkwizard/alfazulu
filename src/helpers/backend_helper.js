@@ -20,3 +20,12 @@ export const getTopicos = () => getApi(url.GET_TOPICOS)
 
 //get agentes
 export const getAgents = () => getApi(url.GET_AGENTS)
+
+//get idiomas
+export const getIdiomas = () => getApi(url.GET_IDIOMAS)
+
+//get parentesco
+export const getParentesco = () => getApi(url.GET_PARENTESCO)
+
+//get tipos de telefonos
+export const getTiposTelefonos = () => getApi(url.GET_TIPOS_TELEFONOS)

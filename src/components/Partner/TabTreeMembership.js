@@ -403,7 +403,6 @@ function TabTreeMembership({contractNumber, isActive}){
                                     classNamePrefix="select2-selection"
                                     isClearable
                                     placeholder="Seleccionar opción"
-
                                 />
                             </div>
                         </Col>

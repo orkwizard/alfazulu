@@ -1,7 +1,19 @@
+import { useEffect, useState } from "react"
 import { Button, Card, CardBody, CardFooter, Col, Row } from "reactstrap"
 import avatar1 from "../../assets/images/users/avatar-1.jpg"
 
-function CardTitular({partner, isActive}){ 
+function CardTitular({partner, isActive}){
+    const [cotitular, setCotitular] = useState('-') 
+
+    useEffect(()=>{
+        if(partner){
+            let cot = partner.beneficiarios.filter(benef=>benef.cotitular);
+            if(cot.length > 0){
+                let nameCot = `${cot[0].informacionPersonal?.nombre} ${cot[0].informacionPersonal?.segundoNombre} ${cot[0].informacionPersonal?.primerApellido} ${cot[0].informacionPersonal?.segundoApellido}`
+                setCotitular(nameCot)
+            }
+        }
+    }, [partner])
 
     return (
         <Card className="overflow-hidden rounded-0">
@@ -43,7 +55,7 @@ function CardTitular({partner, isActive}){
                 <Col xs="12" md="8">
                     <div className="mb-2">
                         <label className="fw-bolder mb-0 fs-06 d-block text-dark">Co-titular:</label>
-                        <span className="fs-08">-</span>
+                        <span className="fs-08">{cotitular}</span>
                     </div>
                 </Col>
                 <Col xs="12" md="4">

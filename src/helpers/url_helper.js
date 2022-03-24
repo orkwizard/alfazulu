@@ -22,3 +22,12 @@ export const GET_TOPICOS = "/notas/topicos"
 
 //agente
 export const GET_AGENTS = "/notas/agentes"
+
+//idiomas
+export const GET_IDIOMAS = "/idioma/"
+
+//TIPOS de telefonos
+export const GET_TIPOS_TELEFONOS = "/tipo_telefono/"
+
+//parentezco
+export const GET_PARENTESCO = "/parentesco/"

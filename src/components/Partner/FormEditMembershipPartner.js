@@ -1,11 +1,65 @@
 import { Field, FieldArray, FormikProvider, useFormik } from "formik"
+import { useEffect, useState } from "react";
 import { Button, Card, CardBody, Col, Form, Input, Label, Row } from "reactstrap"
 import * as Yup from "yup";
-import { savePartner } from "../../helpers/backend_helper";
+import { getIdiomas, getParentesco, getTiposTelefonos, savePartner } from "../../helpers/backend_helper";
+import Select from "react-select";
+import { toast } from "react-toastify";
+import { ERROR_SERVER } from "../../constant/messages";
 
-function FormEditMembershipPartner({partner, setShowForm}){
+function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
     //console.log(partner)
     //form edit partnet
+    const [idioma, setIdioma] = useState()
+    const [idiomasOpt, setIdiomasOpt] = useState([])
+    const [tipoTelefonosOpt, setTipoTelefonosOpt] = useState([])
+    const [parentescoOpt, setParentescoOpt] = useState([])
+    
+
+    //default data
+    useEffect(()=>{
+        if(partner && Object.keys(partner.idioma).length > 0){
+            let data = {
+                value: partner.idioma.id,
+                label: partner.idioma.nombre
+            }
+            setIdioma(data)
+        }
+    }, [partner])
+    
+    //idiomas
+    useEffect(()=>{
+        async function fetchIdiomas() {
+            let response = await getIdiomas()
+            if(response.state){
+                setIdiomasOpt(response.data.response.map(item=>({value: item.id, label: item.nombre})))
+            }
+        }
+        fetchIdiomas()
+    },[])    
+
+    //tipos de telefonos
+    useEffect(()=>{
+        async function fetchTipoTelefonos() {
+            let response = await getTiposTelefonos()
+            if(response.state){
+                setTipoTelefonosOpt(response.data.response.map(item=>({value: item.id, label: item.nombre})))
+            }
+        }
+        fetchTipoTelefonos()
+    },[])
+
+    //parentesco
+    useEffect(()=>{
+        async function fetchParentesco() {
+            let response = await getParentesco()
+            if(response.state){
+                setParentescoOpt(response.data.response.map(item=>({value: item.id, label: item.nombre})))
+            }
+        }
+        fetchParentesco()
+    },[])
+    
     const validation = useFormik({
         enableReinitialize: true,
         initialValues: {
@@ -37,6 +91,7 @@ function FormEditMembershipPartner({partner, setShowForm}){
             beneficiarios: partner.beneficiarios.map(item=>({
                 id: item.id,
                 idSocio: item.idSocio,
+                cotitular: item.cotitular,
                 informacionPersonal: {
                     id: item.informacionPersonal.id,
                     nombre: item.informacionPersonal.nombre,
@@ -45,7 +100,8 @@ function FormEditMembershipPartner({partner, setShowForm}){
                     segundoApellido: item.informacionPersonal.segundoApellido
                 },
                 parentesco: item.parentesco
-            }))
+            })),
+            idioma: partner.idioma
         },
         validationSchema: Yup.object({
             informacionPersonal: Yup.object().shape({
@@ -75,25 +131,39 @@ function FormEditMembershipPartner({partner, setShowForm}){
                         primerApellido: Yup.string().required('Campo requerido'),
                     })
                 })
-            )
+            ),
+            idioma: Yup.object().shape({
+                nombre: Yup.string().required('Campo requerido'),
+            })
         }),
         onSubmit: (values) => {
             console.log(values)
-
+            //validaciones antes de enviarlo
+            //1. Solo tenga un beneficiario como cotitular
+            if(values.beneficiarios.filter(item=>item.cotitular).length > 1){
+                toast.error("No puede existir más de un beneficiario como cotitular")
+                return false;
+            }
             //service here
             try {
                 async function savePartnerApi() {
                     let response = await savePartner(values)
                     console.log(response)
-                    
+                    if(response.state){
+                        toast.success("Actualizado correctamente");
+                        setReloadPartner(true)
+                        setShowForm(false)
+                    }else{
+                        toast.error(ERROR_SERVER);
+                    }
                 }
                 savePartnerApi()
             }catch(error) {
-                console.log(error)   
+                console.log(error)  
+                toast.error(ERROR_SERVER); 
             }
         }
     })
-
 
     return (
         <Form
@@ -161,7 +231,8 @@ function FormEditMembershipPartner({partner, setShowForm}){
                 </Row>
             </div>
             <div className="mb-2">
-                {console.log(validation.errors)}
+                {/* {console.log(validation.errors)}
+                {console.log(validation.values)} */}
                 <label className="fw-bold d-block fs-08 mb-0">Direcciones:</label>
                 <FormikProvider value={validation}>
                     <FieldArray
@@ -176,7 +247,7 @@ function FormEditMembershipPartner({partner, setShowForm}){
                                                 <CardBody>
                                                     <div className="d-flex justify-content-between align-items-end mt-1">
                                                     <Label className="mb-0">Calle:</Label>
-                                                    <Button color="danger" size="sm" onClick={() => arrayHelper.remove(index)}>Eliminar</Button>
+                                                    {/* <Button color="danger" size="sm" onClick={() => arrayHelper.remove(index)}>Eliminar</Button> */}
                                                     </div>
                                                     <Field
                                                         className={`form-control ${validation.errors?.direcciones?.length > 0 && validation.errors.direcciones[index]?.calle ? 'is-invalid' : ''}`}
@@ -220,6 +291,32 @@ function FormEditMembershipPartner({partner, setShowForm}){
             </div>
             <div className="mb-2">
                 <label className="fw-bold d-block fs-08 mb-0">Idioma:</label>
+                <Select
+                    value={idioma}
+                    onChange={(selected) => {
+                        setIdioma(selected)
+                        if(selected){
+                            validation.setFieldValue("idioma.id", selected.value)
+                            validation.setFieldValue("idioma.nombre", selected.label)
+                        }else{
+                            validation.setFieldValue("idioma.id", null)
+                            validation.setFieldValue("idioma.nombre", "")
+                            validation.validateField("idioma")
+                        }
+                    }}
+                    options={idiomasOpt}
+                    classNamePrefix="select2-selection"
+                    className={`${validation.errors.idioma?.nombre ? 'is-invalid' : ''}`}
+                    placeholder="Seleccionar opción"
+                    styles={{
+                        control: (provided, state) => ({
+                            ...provided,
+                            borderColor: validation.errors.idioma?.nombre ? '#f46a6a!important' : '',
+                            boxShadow: validation.errors.idioma?.nombre ? '0 0 0 0.15rem rgb(244 106 106 / 25%)!important' : ''
+                          })
+                        }
+                    }
+                />
             </div>
             <div className="mb-2">
                 <label className="fw-bold d-block fs-08 mb-0">Correos electrónicos:</label>
@@ -236,7 +333,7 @@ function FormEditMembershipPartner({partner, setShowForm}){
                                                 <CardBody>
                                                     <div className="d-flex justify-content-between align-items-end mt-1">
                                                         <Label className="mb-0">Correo electrónico:</Label>
-                                                        <Button color="danger" size="sm" onClick={() => arrayHelperCorreo.remove(index)}>Eliminar</Button>
+                                                        {/* <Button color="danger" size="sm" onClick={() => arrayHelperCorreo.remove(index)}>Eliminar</Button> */}
                                                     </div>
                                                     <Field
                                                         className={`form-control ${validation.errors?.informacionPersonal?.correos?.length > 0 && validation.errors.informacionPersonal.correos[index]?.correo ? 'is-invalid' : ''}`}
@@ -285,7 +382,7 @@ function FormEditMembershipPartner({partner, setShowForm}){
                                                 <CardBody>
                                                     <div className="d-flex justify-content-between align-items-end mt-1">
                                                         <Label className="mb-0">Número:</Label>
-                                                        <Button color="danger" size="sm" onClick={() => arrayHelper.remove(index)}>Eliminar</Button>
+                                                        {/* <Button color="danger" size="sm" onClick={() => arrayHelper.remove(index)}>Eliminar</Button> */}
                                                     </div>
                                                     <Field
                                                         className={`form-control ${validation.errors?.informacionPersonal?.telefonos?.length > 0 && validation.errors.informacionPersonal.telefonos[index]?.numero ? 'is-invalid' : ''}`}
@@ -294,10 +391,24 @@ function FormEditMembershipPartner({partner, setShowForm}){
                                                     <Row>    
                                                         <Col xs="12" md="8">
                                                             <Label className="mb-0">Tipo de número:</Label>
-                                                            {/* <Field
-                                                                className={`form-control ${validation.errors?.direcciones?.length > 0 && validation.errors.direcciones[index]?.codigoPostal ? 'is-invalid' : ''}`}
-                                                                name={`direcciones.${index}.codigoPostal`} 
-                                                            /> */}
+                                                            <Select
+                                                                value={{
+                                                                        value: validation.values.informacionPersonal.telefonos[index].tipoTelefono?.id, 
+                                                                        label: validation.values.informacionPersonal.telefonos[index].tipoTelefono?.nombre
+                                                                    }}
+                                                                onChange={(selected) => {
+                                                                    if(selected){
+                                                                        validation.setFieldValue(`informacionPersonal.telefonos.${index}.tipoTelefono.id`, selected.value)
+                                                                        validation.setFieldValue(`informacionPersonal.telefonos.${index}.tipoTelefono.nombre`, selected.label)
+                                                                    }else{
+                                                                        validation.setFieldValue(`informacionPersonal.telefonos.${index}.tipoTelefono.id`, null)
+                                                                        validation.setFieldValue(`informacionPersonal.telefonos.${index}.tipoTelefono.nombre`)
+                                                                    }
+                                                                }}
+                                                                options={tipoTelefonosOpt}
+                                                                classNamePrefix="select2-selection"
+                                                                placeholder="Seleccionar opción"
+                                                            />
                                                         </Col>                                                  
                                                         <Col xs="12" md="4" className="align-self-end">
                                                             <Field
@@ -339,9 +450,9 @@ function FormEditMembershipPartner({partner, setShowForm}){
                                         <div key={index}>
                                             <Card>
                                                 <CardBody>
-                                                    <div className="mt-1 text-end">
+                                                    {/* <div className="mt-1 text-end">
                                                         <Button color="danger" size="sm" onClick={() => arrayHelper.remove(index)}>Eliminar</Button>
-                                                    </div>
+                                                    </div> */}
                                                     <Row>
                                                         <Col xs="12" md="6">
                                                             <Label className="mb-0">Nombre:</Label>
@@ -370,6 +481,38 @@ function FormEditMembershipPartner({partner, setShowForm}){
                                                                 className={`form-control`}
                                                                 name={`beneficiarios.${index}.informacionPersonal.segundoApellido`} 
                                                             />
+                                                        </Col>
+                                                    </Row>
+                                                    <Row>
+                                                        <Col xs="12" md="8">
+                                                            <Label className="mb-0">Parentesco:</Label>
+                                                            <Select
+                                                                value={{
+                                                                        value: validation.values.beneficiarios[index].parentesco?.id, 
+                                                                        label: validation.values.beneficiarios[index].parentesco?.nombre
+                                                                    }}
+                                                                onChange={(selected) => {
+                                                                    if(selected){
+                                                                        validation.setFieldValue(`beneficiarios.${index}.parentesco.id`, selected.value)
+                                                                        validation.setFieldValue(`beneficiarios.${index}.parentesco.nombre`, selected.label)
+                                                                    }else{
+                                                                        validation.setFieldValue(`beneficiarios.${index}.parentesco.id`, null)
+                                                                        validation.setFieldValue(`beneficiarios.${index}.parentesco.nombre`)
+                                                                    }
+                                                                }}
+                                                                options={parentescoOpt}
+                                                                classNamePrefix="select2-selection"
+                                                                placeholder="Seleccionar opción"
+                                                            />
+                                                        </Col>
+                                                        <Col xs="12" md="4" className="align-self-end">
+                                                            <Field
+                                                                className="form-check-Input form-check-input"
+                                                                id={`check_cotitular_${index}`} 
+                                                                type="checkbox"
+                                                                name={`beneficiarios.${index}.cotitular`} 
+                                                            />
+                                                            <Label htmlFor={`check_telefono_${index}`} className="mb-0 ms-2">Cotitular: </Label>
                                                         </Col>
                                                     </Row>
                                                 </CardBody>
@@ -403,7 +546,10 @@ function FormEditMembershipPartner({partner, setShowForm}){
                 <Button
                     color="danger"
                     className="font-16 btn-block btn btn-primary"
-                    onClick={e=>setShowForm(false)}
+                    onClick={e=>{
+                        setReloadPartner(true)
+                        setShowForm(false)
+                    }}
                 >Cancelar
                 </Button>
             </div>
