@@ -468,6 +468,7 @@ function TabTreeMembership({contractNumber, isActive}){
                             <Paginate
                                 page={page}
                                 totalPaginas={notasResponse.totalPaginas}
+                                totalRegistros={notasResponse.totalRegistros}
                                 handlePageClick={handlePageClick}
                             />
                         }
