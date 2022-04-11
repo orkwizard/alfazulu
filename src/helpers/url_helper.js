@@ -31,3 +31,6 @@ export const GET_TIPOS_TELEFONOS = "/tipo_telefono/"
 
 //parentezco
 export const GET_PARENTESCO = "/parentesco/"
+
+//email
+export const SAVE_EMAIL_TEMPLATE = "/plantilla_correo/save"

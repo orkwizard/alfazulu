@@ -18,7 +18,6 @@ import SimpleTable from "../../components/Tables/SimpleTable";
 import SimpleLoad from "../../components/Loader/SimpleLoad";
 import { getClub } from "../../helpers/backend_helper";
 import Paginate from "../../components/Tables/Paginate";
-import { diffDate } from "../../utils/Date/diffDate";
 
 const PartnerList = props => {
     const dispatch = useDispatch();
@@ -26,7 +25,7 @@ const PartnerList = props => {
         partners: state.Partner.partners,
         partnersErrors: state.Partner.error,
         loading: state.Partner.loadPartner
-      }));
+    }));
     const [clubOpt, setClubOpt] = useState([])
     const [accordionSearch, setAccordionSearch] = useState(false);
     const [showModal, setShowModal] = useState(false)
@@ -114,16 +113,14 @@ const PartnerList = props => {
         {
             text: "Fecha renovación",
             dataField: "fechaRenovacion",
-            formatter: (cell) => 
-                diffDate(moment(new Date()), moment(cell, "YYYY-MM-DD"), 'months') > 15 ?         
+            formatter: (cell, row) => 
+                row.vencimientoSemaforo === 'ROJO' ?
                 <span className="fw-bold text-danger">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
-                diffDate(moment(new Date()), moment(cell, "YYYY-MM-DD"), 'months') > 12 ?         
-                <span className="fw-bold text-danger position-relative">
-                    {moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")} <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">CP <span className="visually-hidden">unread messages</span></span>
-                </span> :
-                diffDate(moment(new Date()), moment(cell, "YYYY-MM-DD"), 'months')  < 9 ?
+                row.vencimientoSemaforo === 'VERDE' ?
                 <span className="fw-bold text-success">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
-                <span className="fw-bold text-warning">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span>
+                row.vencimientoSemaforo === 'AMARILLO' ?
+                <span className="fw-bold text-warning">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
+                <span className="fw-bold">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span>
         }
         // {
         //     dataField: "menu",
@@ -216,14 +213,13 @@ const PartnerList = props => {
 
     return (
         <>
-          
           <div className="page-content">
             <MetaTags>
-              <title>Partner List | AlphaZulu CRM</title>
+              <title>Listado de socios | AlphaZulu CRM</title>
             </MetaTags>
             <Container fluid>
               {/* Render Breadcrumbs */}
-              <Breadcrumbs title="Partner" breadcrumbItem="Partner List" />
+              <Breadcrumbs title="Socio" breadcrumbItem="Listado de socios" />
               <Row className="mb-2">
                   <Col lg="12">
                       <Card>

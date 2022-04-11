@@ -92,24 +92,35 @@ const SidebarContent = props => {
       <SimpleBar className="h-100" ref={ref}>
         <div id="sidebar-menu">
           <ul className="metismenu list-unstyled" id="side-menu">
-            <li className="menu-title">{props.t("Menu")} </li>
+            <li className="menu-title">Menú </li>
             <li>
               <Link to="/dashboard" className="">
                 <i className="bx bx-home-circle"></i>
                 <span>{props.t("Dashboards")}</span>
               </Link>              
             </li>
-
-            <li className="menu-title">{props.t("Apps")}</li>
-
             <li>
               <Link to="/#" className="has-arrow ">
                 <i className='bx bxs-user-badge'></i>
-                <span>{props.t("Partner")}</span>
+                <span>Socios</span>
               </Link>
               <ul className="sub-menu">
                 <li>
-                  <Link to="/partner-list">{props.t("Partner List")}</Link>
+                  <Link to="/partner-list">Lisado de socios</Link>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <Link to="/#" className="has-arrow ">
+                <i className='mdi mdi-email-search-outline'></i>
+                <span>Plantillas de correo</span>
+              </Link>
+              <ul className="sub-menu">
+                <li>
+                  <Link to="/email-templates-list">Listado de plantillas de correo</Link>
+                </li>
+                <li>
+                  <Link to="/create-email-templates">Crear plantilla de correo</Link>
                 </li>
               </ul>
             </li>

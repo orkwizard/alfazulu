@@ -29,3 +29,6 @@ export const getParentesco = () => getApi(url.GET_PARENTESCO)
 
 //get tipos de telefonos
 export const getTiposTelefonos = () => getApi(url.GET_TIPOS_TELEFONOS)
+
+// email tamplates
+export const saveEmailTemplate = (data) =>postApi(url.SAVE_EMAIL_TEMPLATE, data)

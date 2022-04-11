@@ -2,6 +2,8 @@ import { Redirect } from "react-router"
 import Login from "../pages/Authentication/Login"
 import Logout from "../pages/Authentication/Logout"
 import Dashboard from "../pages/Dashboard/index"
+import EmailTemplateCreate from "../pages/EmailTemplate/EmailTemplateCreate"
+import EmailTemplateList from "../pages/EmailTemplate/EmailTemplateList"
 import LLamadasAsignadas from "../pages/Partner/LLamadasAsignadas"
 import PartnerDetail from "../pages/Partner/PartnerDetail"
 import PartnerList from "../pages/Partner/PartnerList"
@@ -19,6 +21,10 @@ const authProtectedRoutes = [
     { path: "/partner-welcome-call", exact: true, component:  WelcomeCall},
     { path: "/partner-asigned-call", exact: true, component:  LLamadasAsignadas},
     { path: "/partner-membership/:contractNumber/:idPartner", exact: true, component:  PartnerMembership},
+
+    //email template managment
+    { path: "/email-templates-list", exact: true, component:  EmailTemplateList},
+    { path: "/create-email-templates", exact: true, component:  EmailTemplateCreate},
 ]
 
 const publicRoutes = [
