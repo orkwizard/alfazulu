@@ -198,6 +198,14 @@ const PartnerList = props => {
                     delete query[type]
                 }
                 break;
+            case "estaVigente":
+                setMembresiaEstado(value)
+                if(value!==null){
+                    query[type] = value.value
+                }else{
+                    delete query[type]
+                }
+                break;
             default: 
                 return;
         }
@@ -336,20 +344,20 @@ const PartnerList = props => {
                                                 />
                                                 </div>
                                             </Col>
-                                            {/* <Col md={3} xs='6'>
+                                            <Col md={3} xs='6'>
                                                 <div className="mb-3">
                                                 <Label htmlFor="company">Estado de la membresía:</Label>
                                                 <Select
                                                     value={membresiaEstado}
-                                                    onChange={(selected) => completeFilter(selected, "membresia")}
+                                                    onChange={(selected) => completeFilter(selected, "estaVigente")}
                                                     options={[
                                                         {
-                                                            value: 'expirado',
-                                                            label: 'Membresía expirada'
+                                                            value: 'true',
+                                                            label: 'Membresía vigente'
                                                         },
                                                         {
-                                                            value: 'vigente',
-                                                            label: 'Membresía vigente'
+                                                            value: 'false',
+                                                            label: 'Membresía expirada'
                                                         }
                                                     ]}
                                                     classNamePrefix="select2-selection"
@@ -357,7 +365,7 @@ const PartnerList = props => {
                                                     placeholder="Seleccionar opción"
                                                 />
                                                 </div>
-                                            </Col> */}
+                                            </Col>
                                         </Row>
                                         <Row>
                                             <Col sm="12">

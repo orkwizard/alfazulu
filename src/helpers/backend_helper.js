@@ -32,3 +32,4 @@ export const getTiposTelefonos = () => getApi(url.GET_TIPOS_TELEFONOS)
 
 // email tamplates
 export const saveEmailTemplate = (data) =>postApi(url.SAVE_EMAIL_TEMPLATE, data)
+export const getEmailTemplateById = id => getApi(`${url.GET_EMAIL_TEMPLATE_BY_ID}/${id}`)

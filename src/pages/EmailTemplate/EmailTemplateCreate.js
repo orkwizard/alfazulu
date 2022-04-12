@@ -1,12 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MetaTags } from "react-meta-tags";
-import { withRouter } from "react-router-dom";
+import { useParams, withRouter } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import Breadcrumbs from '../../components/common/Breadcrumb'
 import EmailTemplateForm from "../../components/EmailTemplate/EmailTemplateForm";
+import { ERROR_SERVER } from "../../constant/messages";
+import { getEmailTemplateById } from "../../helpers/backend_helper";
 
 function EmailTemplateCreate(){
     const [emailTemplate, setEmailTemplate] = useState()
+    const { id } = useParams();
+    const [loading,setLoading] = useState(id ? true : false)
+
+    useEffect(()=>{
+        if(id && id!==undefined){
+            async function fetchEmailTemplateAPI() {
+                let response = await getEmailTemplateById(id)
+                if(response.state){
+                    setEmailTemplate(response.data)
+                    setLoading(false)
+                }else{
+                    toast.error(ERROR_SERVER)
+                }
+            }
+            fetchEmailTemplateAPI()
+        }
+    },[id])
+
+
+
     return (
         <>
             <div className="page-content">
@@ -19,7 +42,10 @@ function EmailTemplateCreate(){
                         <Col xs="12" lg="12">
                             <Card>
                                 <CardBody>
-                                    <EmailTemplateForm emailTemplate={emailTemplate} />
+                                    {
+                                        loading ? 'loading' :
+                                        <EmailTemplateForm emailTemplate={emailTemplate} />
+                                    }
                                 </CardBody>
                             </Card>
                         </Col>

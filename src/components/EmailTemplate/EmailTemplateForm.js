@@ -46,7 +46,7 @@ function EmailTemplateForm({emailTemplate}){
                             toast.success("Salvado correctamente");
                             setTimeout(()=>{
                                 setIsSubmit(false)
-                                history.push("/email-templates-list")
+                                history.push("/email-templates/list")
                             }, 2000)
                         }else{
                             toast.error(ERROR_SERVER);
@@ -57,17 +57,18 @@ function EmailTemplateForm({emailTemplate}){
                 });
             }catch(error) {
                 setIsSubmit(false)
-                console.log(error)  
                 toast.error(ERROR_SERVER); 
             }
         }
     })
 
     const onLoad = () => {
-        // editor instance is created
-        // you can load your template here;
-        // const templateJson = {};
-        // emailEditorRef.current.editor.loadDesign(templateJson);
+        if(emailTemplate?.designJson){
+            // editor instance is created
+            // you can load your template here;
+            const templateJson = JSON.parse(emailTemplate.designJson);
+            emailEditorRef.current.editor.loadDesign(templateJson);
+        }
     }
 
     return (

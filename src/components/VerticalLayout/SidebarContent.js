@@ -117,10 +117,10 @@ const SidebarContent = props => {
               </Link>
               <ul className="sub-menu">
                 <li>
-                  <Link to="/email-templates-list">Listado de plantillas de correo</Link>
+                  <Link to="/email-templates/list">Listado de plantillas de correo</Link>
                 </li>
                 <li>
-                  <Link to="/create-email-templates">Crear plantilla de correo</Link>
+                  <Link to="/email-templates/add">Crear plantilla de correo</Link>
                 </li>
               </ul>
             </li>

@@ -32,5 +32,6 @@ export const GET_TIPOS_TELEFONOS = "/tipo_telefono/"
 //parentezco
 export const GET_PARENTESCO = "/parentesco/"
 
-//email
+//email templates
+export const GET_EMAIL_TEMPLATE_BY_ID = "/plantilla_correo"
 export const SAVE_EMAIL_TEMPLATE = "/plantilla_correo/save"

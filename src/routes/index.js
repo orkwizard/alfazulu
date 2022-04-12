@@ -23,8 +23,9 @@ const authProtectedRoutes = [
     { path: "/partner-membership/:contractNumber/:idPartner", exact: true, component:  PartnerMembership},
 
     //email template managment
-    { path: "/email-templates-list", exact: true, component:  EmailTemplateList},
-    { path: "/create-email-templates", exact: true, component:  EmailTemplateCreate},
+    { path: "/email-templates/list", exact: true, component:  EmailTemplateList},
+    { path: "/email-templates/add", exact: true, component:  EmailTemplateCreate},
+    { path: "/email-templates/edit/:id", exact: true, component:  EmailTemplateCreate},
 ]
 
 const publicRoutes = [
