@@ -122,14 +122,6 @@ const PartnerList = props => {
                 <span className="fw-bold text-warning">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
                 <span className="fw-bold">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span>
         }
-        // {
-        //     dataField: "menu",
-        //     isDummyField: true,
-        //     editable: false,
-        //     text: "Acción",
-        //     // eslint-disable-next-line react/display-name
-        //     formatter: () => <button className="btn-rounded btn btn-primary btn-sm" onClick={e=>setShowModal(true)}>Ver detalle</button>,
-        //   },
     ];
 
     const completeFilter = (value, type) =>{

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getApi, postApi } from "./api_helper";
+import { deleteApi, getApi, postApi } from "./api_helper";
 import * as url from "./url_helper";
 
 // get partners
@@ -34,3 +34,5 @@ export const getTiposTelefonos = () => getApi(url.GET_TIPOS_TELEFONOS)
 export const saveEmailTemplate = (data) =>postApi(url.SAVE_EMAIL_TEMPLATE, data)
 export const getEmailTemplateById = id => getApi(`${url.GET_EMAIL_TEMPLATE_BY_ID}/${id}`)
 export const getEmailTemplatesTypes = () => getApi(url.GET_EMAIL_TEMPLATE_TYPES)
+export const getEmailTemplates = query => getApi(`${url.GET_EMAIL_TEMPLATE}${query}`)
+export const deleteEmailTemplate = (id) => deleteApi(`${url.DELETE_EMAIL_TEMPLATE}/${id}`)

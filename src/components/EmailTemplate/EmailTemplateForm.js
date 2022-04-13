@@ -59,7 +59,7 @@ function EmailTemplateForm({emailTemplate}){
             })
         }),
         onSubmit: async (values) => {
-            //setIsSubmit(true)
+            setIsSubmit(true)
             try{
                 emailEditorRef.current.editor.exportHtml((data) => {
                     const { design, html } = data;
@@ -68,22 +68,20 @@ function EmailTemplateForm({emailTemplate}){
                     values.designJson = JSON.stringify(design)
                     values.paramCuerpo = html
 
-                    console.log(values);
-
-                    // async function saveEmailTemplateApi() {
-                    //     let response = await saveEmailTemplate(values)
-                    //     if(response.state){
-                    //         toast.success("Salvado correctamente");
-                    //         setTimeout(()=>{
-                    //             setIsSubmit(false)
-                    //             history.push("/email-templates/list")
-                    //         }, 2000)
-                    //     }else{
-                    //         toast.error(ERROR_SERVER);
-                    //         setIsSubmit(false)
-                    //     }
-                    // }
-                    // saveEmailTemplateApi()
+                    async function saveEmailTemplateApi() {
+                        let response = await saveEmailTemplate(values)
+                        if(response.state){
+                            toast.success("Salvado correctamente");
+                            setTimeout(()=>{
+                                setIsSubmit(false)
+                                history.push("/email-templates/list")
+                            }, 2000)
+                        }else{
+                            toast.error(ERROR_SERVER);
+                            setIsSubmit(false)
+                        }
+                    }
+                    saveEmailTemplateApi()
                 });
             }catch(error) {
                 setIsSubmit(false)
@@ -97,7 +95,14 @@ function EmailTemplateForm({emailTemplate}){
             // editor instance is created
             // you can load your template here;
             const templateJson = JSON.parse(emailTemplate.designJson);
-            emailEditorRef.current.editor.loadDesign(templateJson);
+            try{
+                setTimeout(()=>{
+                    emailEditorRef.current.editor.loadDesign(templateJson);
+                }, 3000)
+            }catch(error){
+                toast.error("En este momento no podemos cargar la plantilla. Por favor refresque la página")
+            }
+            
         }
     }
 

@@ -27,9 +27,7 @@ function EmailTemplateCreate(){
             fetchEmailTemplateAPI()
         }
     },[id])
-
-
-
+    
     return (
         <>
             <div className="page-content">

@@ -1,16 +1,87 @@
 import { useEffect, useState } from "react";
 import { MetaTags } from "react-meta-tags";
-import { withRouter } from "react-router-dom";
-import { Container, Row, Col, Card, CardBody } from "reactstrap";
+import { Link, withRouter } from "react-router-dom";
+import { Container, Row, Col, Card, CardBody, Button, Collapse, Label, Input } from "reactstrap";
 import Breadcrumbs from '../../components/common/Breadcrumb'
 import SimpleTable from "../../components/Tables/SimpleTable";
 import SimpleLoad from "../../components/Loader/SimpleLoad";
+import { deleteEmailTemplate, getEmailTemplates, getEmailTemplatesTypes } from "../../helpers/backend_helper";
+import Paginate from "../../components/Tables/Paginate";
+import { toast } from "react-toastify";
+import { ERROR_SERVER } from "../../constant/messages";
+import classNames from "classnames";
+import Select from 'react-select'
+import DeleteModal from "../../components/common/DeleteModal";
 
 const EmailTemplateList = props => {
-    const [loading, setLoading] = useState(true)
+    const [response, setResponse] = useState({
+        data: [],
+        totalPaginas: 0,
+        totalRegistros: 0,
+        loading: true
+    })
+    const [idTemplate, setIdTemplate] = useState()
+    const [showModalDelete, setShowModalDelete] = useState(false)
+    const [accordionSearch, setAccordionSearch] = useState(false);
+    const [page, setPage] = useState(0)
+    const [query, setQuery] = useState({
+        limite: 10,
+        pagina: page,
+    })
 
-    useEffect(()=>{
-        setLoading(false)
+    //filters
+    const [nombre, setNombre] = useState("")
+    const [asunto, setAsunto] = useState("")
+    const [emailTemplateTypesOpt, setEmailTemplateTypesOpt] = useState([])
+    const [emailTemplateTypes, setEmailTemplateTypes] = useState(null)
+
+    useEffect(() => {  
+        setResponse(prev=>({
+            ...prev,
+            loading: true
+        })) 
+        let q = Object.keys(query).map(key=>`${key}=${query[key]}`).join("&")
+        async function fetchETAPI() {
+            try{
+                let response = await getEmailTemplates(`?${q}`)
+                if(response.state){
+                    let data = {
+                        data: response.data.plantillas,
+                        totalPaginas: response.data.totalPaginas,
+                        totalRegistros: response.data.totalRegistros,
+                        loading: false
+                    }
+                    setResponse(data)
+                }else{
+                    toast.error(response.error.message)
+                    setResponse({
+                        data: [],
+                        totalPaginas: 0,
+                        totalRegistros: 0,
+                        loading: false
+                    })
+                }
+            }catch(error){
+                console.log('catch')
+                setResponse({
+                    data: [],
+                    totalPaginas: 0,
+                    totalRegistros: 0,
+                    loading: false
+                })
+                toast.error(ERROR_SERVER)
+            }
+        }
+        fetchETAPI()
+    }, [query]);
+
+    useEffect( () => {
+        //tipos de emails
+        async function fetccEmailTypeAPI() {
+            let response = await getEmailTemplatesTypes();
+            setEmailTemplateTypesOpt(response.data.response.map(e=>({label: e, value: e})))
+        }
+        fetccEmailTypeAPI()
     }, [])
 
     const columns  =[
@@ -22,11 +93,123 @@ const EmailTemplateList = props => {
         },
         {
             text: "Nombre",
-            dataField: "numeroContrato",          
+            dataField: "nombre", 
+            style: {
+                width: "40%"
+            },       
+            formatter: (cell, row) => <Link to={`/email-templates/edit/${row.id}`} className="text-dark"><u><strong>{cell}</strong></u></Link>            
+        },
+        {
+            text: "Asunto del correo",
+            dataField: "asunto", 
+            style: {
+                width: "40%"
+            },         
+        },
+        {
+            text: "Tipo plantilla",
+            dataField: "tipoCarta", 
+            style: {
+                width: "20%"
+            }         
+        },
+        {
+            dataField: "menu",
+            isDummyField: true,
+            editable: false,
+            text: "Acción",
+            // eslint-disable-next-line react/display-name
+            formatter: (cellContent, row) => (
+                <Link className="text-danger" to="#">
+                    <i
+                    className="mdi mdi-delete font-size-18"
+                    id="deletetooltip"
+                    onClick={() => {
+                        setIdTemplate(row.id)
+                        setShowModalDelete(true)
+                    }}
+                    ></i>
+                </Link>
+            ),
         },
     ]
+
+    const search = () =>{
+        setPage(0)
+        setQuery(prev=>({
+            ...prev,
+            pagina: 0
+        }))
+    }
+
+    const handlePageClick = page => {
+        setPage(page)
+        setQuery(prev=>({
+            ...prev,
+            pagina: page
+        }))
+    }
+
+    const completeFilter = (value, type) =>{
+        switch(type){
+            case "nombre":
+                setNombre(value)
+                if(value.length){
+                    query[type] = value
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "asunto":
+                setAsunto(value)
+                if(value.length){
+                    query[type] = value
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "tipoCarta":
+                setEmailTemplateTypes(value)
+                if(value!==null){
+                    query[type] = value.value
+                }else{
+                    delete query[type]
+                }
+                break;
+            default: 
+                return;
+        }
+    }
+
+    const handleDelete = () => {
+        //delete plantilla
+        async function deleteTemplateApi() {
+            try{
+                let response = await deleteEmailTemplate(idTemplate)
+                if(response.state){
+                    setPage(0)
+                    setQuery(prev=>({
+                        ...prev,
+                        pagina: 0
+                    }))
+                    setShowModalDelete(false);
+                }else{
+                    toast.error(ERROR_SERVER)
+                }
+            }catch(error){
+                toast.error(ERROR_SERVER)
+            }
+        }
+        deleteTemplateApi()
+    };
+
     return (
         <>
+          <DeleteModal
+            show={showModalDelete}
+            onDeleteClick={handleDelete}
+            onCloseClick={() => setShowModalDelete(false)}
+          />
           <div className="page-content">
             <MetaTags>
               <title>Listado de plantillas de correo | AlphaZulu CRM</title>
@@ -34,11 +217,95 @@ const EmailTemplateList = props => {
             <Container fluid>
                 <Breadcrumbs title="Plantilla de correo" breadcrumbItem="Listado de plantillas de correo" />
                 <Row className="mb-2">
+                  <Col lg="12">
+                      <Card>
+                        <CardBody className="p-0">
+                            <div className="accordion">
+                                <div className="accordion-item">
+                                <h2 className="accordion-header">
+                                    <button
+                                    className={classNames(
+                                        "accordion-button",
+                                        "fw-medium",
+                                        { collapsed: !accordionSearch }
+                                    )}
+                                    type="button"
+                                    onClick={()=>setAccordionSearch(!accordionSearch)}
+                                    style={{ cursor: "pointer" }}
+                                    >
+                                    Filtros
+                                    </button>
+                                </h2>
+
+                                <Collapse isOpen={accordionSearch} className="accordion-collapse">
+                                    <div className="accordion-body">
+                                        <Row>
+                                            <Col md={3} xs='6'>
+                                                <div className="mb-3">
+                                                    <Label htmlFor="nombre">Nombre:</Label>
+                                                    <Input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="nombre"
+                                                        value={nombre}
+                                                        onChange={e=>completeFilter(e.target.value, "nombre")}
+                                                    />
+                                                </div>
+                                            </Col>
+                                            <Col md={3} xs='6'>
+                                                <div className="mb-3">
+                                                    <Label htmlFor="asunto">Asunto del correo:</Label>
+                                                    <Input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="asunto"
+                                                        value={asunto}
+                                                        onChange={e=>completeFilter(e.target.value, "asunto")}
+                                                    />
+                                                </div>
+                                            </Col>
+                                            <Col md={3} xs='6'>
+                                                <div className="mb-3">
+                                                <Label htmlFor="company">Club/Company:</Label>
+                                                <Select
+                                                    value={emailTemplateTypes}
+                                                    onChange={(selected) => completeFilter(selected, "tipoCarta")}
+                                                    options={emailTemplateTypesOpt}
+                                                    classNamePrefix="select2-selection"
+                                                    isClearable
+                                                    placeholder="Seleccionar opción"
+                                                />
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col sm="12">
+                                                <div className="text-sm-end">
+                                                    <Button
+                                                        color="primary"
+                                                        className="font-16 btn-block btn btn-primary"
+                                                        onClick={search}
+                                                    >
+                                                        <i className="mdi mdi-magnify me-1" />
+                                                        Buscar
+                                                    </Button>
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                </Collapse>
+                                </div>
+                            </div>
+                        </CardBody>
+                      </Card>
+                  </Col>
+              </Row>
+                <Row className="mb-2">
                     <Col lg="12">
                         <Card>
                           <CardBody>
-                          {
-                                loading ?
+                            {
+                                response.loading ?
                                 <Row>
                                     <Col xs="12" xl="12">
                                         <SimpleLoad />
@@ -48,20 +315,20 @@ const EmailTemplateList = props => {
                                     <Col xl="12">                                    
                                         <SimpleTable
                                             columns={columns}
-                                            items={[]} 
+                                            items={response.data} 
                                         />
                                     </Col>
-                                    {/* {
-                                        partners.data !==undefined && partners.data.totalPaginas > 0 && 
+                                    {
+                                        response.totalPaginas > 0 && 
                                         <Paginate
                                             page={page}
-                                            totalPaginas={partners.data.totalPaginas}
-                                            totalRegistros={partners.data.totalRegistros}
+                                            totalPaginas={response.totalPaginas}
+                                            totalRegistros={response.totalRegistros}
                                             handlePageClick={handlePageClick}
                                         />
-                                    } */}
+                                    }
                                 </Row>
-                            } 
+                            }
                           </CardBody>
                         </Card>
                     </Col>
