@@ -123,6 +123,8 @@ $cyan: #50a5f1;
 $bronce: #aa7d30;
 $pink-primary: #d02276;
 $pink-primary-dark: #bd1666;
+$attention: #DD64AE;
+$attention-dark: #D02276;
 // scss-docs-end color-variables
 
 // scss-docs-start colors-map
@@ -141,6 +143,8 @@ $colors: (
   "gray": $gray-600,
   "gray-dark": $gray-800,
   "pink-primary": $pink-primary,
+  "attention": $attention,
+  "attention-dark": $attention-dark,
 );
 // scss-docs-end colors-map
 

@@ -1,4 +1,4 @@
-import { Button, Col, Label, Row } from "reactstrap"
+import { Col, Label, Row } from "reactstrap"
 
 function TabTwoMembership(){
 
@@ -12,9 +12,7 @@ function TabTwoMembership(){
                         <span className="fw-bolder text-primary">Beneficios</span>
                     </div>
                     <div>
-                    <Button color="primary">
-                        Editar
-                    </Button>
+                    <button className="btn btn-pink-primary">Editar</button>
                     </div>
                 </div>
             </Col>

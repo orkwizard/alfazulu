@@ -12,6 +12,7 @@ import TabTwoMembership from "../../components/Partner/TabTwoMembership";
 import TabTreeMembership from "../../components/Partner/TabTreeMembership";
 import { useState } from "react";
 import { getPartnersById } from "../../helpers/backend_helper";
+import TabForMembership from "../../components/Partner/TabForMembership";
 
 const PartnerMembership = props =>{
     const {
@@ -44,7 +45,7 @@ const PartnerMembership = props =>{
         {
             id: 1,
             title: 'Detalles',
-            component: <TabOneMembership partner={partner} isActive={isActive} setReload={setReload}/>
+            component: <TabOneMembership partner={partner} isActive={isActive} setReload={setReload} setActivarUsuario={setActivarUsuario}/>
         },
         {
             id: 2,
@@ -53,8 +54,13 @@ const PartnerMembership = props =>{
         },
         {
             id: 3,
-            title: 'Comentarios',
+            title: 'Actividad',
             component: <TabTreeMembership contractNumber={params.contractNumber} isActive={isActive}/>
+        },
+        {
+            id: 4,
+            title: 'Renovaciones',
+            component: <TabForMembership isActive={isActive}/>
         }
     ]
 
@@ -102,13 +108,6 @@ const PartnerMembership = props =>{
                             </Card>
                         </Col>
                     </Row>
-                    {
-                        !isActive && 
-                        <span className="btn-active-usuario cursor-pointer" onClick={e=>setActivarUsuario(true)}>
-                            <i className="bx bx-power-off" />
-                            Activar usuario
-                        </span>
-                    }
                     <Modal
                         isOpen={activarUsuario}
                         role="dialog"

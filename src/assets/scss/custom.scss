@@ -181,23 +181,6 @@
 .invalid-tooltip {
   position: initial !important;
 }
-.btn-active-usuario {
-  position: fixed;
-  top: 35%;
-  right: 0;
-  padding: 20px 25px;
-  border-bottom-left-radius: 10px;
-  border-top-left-radius: 10px;
-  color: #fff;
-  font-size: 1rem;
-  background-color: $pink-primary-dark;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.btn-active-usuario i {
-  font-size: 1.6rem;
-}
 .cursor-pointer {
   cursor: pointer;
 }
@@ -221,4 +204,10 @@
   width: 100%; /* 100% width */
   text-align: center; /* Centered text/links */
   margin-top: 30px;
+}
+.bg-attention{
+  background-color: $attention;
+}
+.text-attention-dark{
+  color: $attention-dark;
 }

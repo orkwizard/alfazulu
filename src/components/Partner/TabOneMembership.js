@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
-import { Col, Row } from "reactstrap"
+import { Button, Col, Row } from "reactstrap"
 import FormEditMembershipPartner from "./FormEditMembershipPartner"
 
-function TabOneMembership({partner, isActive, setReload}){
+function TabOneMembership({partner, isActive, setReload, setActivarUsuario}){
     const [showForm, setShowForm] = useState(false)
     const [reloadPartner, setReloadPartner] = useState(false)
 
@@ -37,23 +37,40 @@ function TabOneMembership({partner, isActive, setReload}){
                     <span>-</span>
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Precio:</label>
+                    <label className="fw-bold d-block fs-08 mb-0">Club:</label>
                     <span>-</span>
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Fecha compra:</label>
+                    <label className="fw-bold d-block fs-08 mb-0">Anualidad:</label>
                     <span>-</span>
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Años comprada:</label>
+                    <label className="fw-bold d-block fs-08 mb-0">Contraseña:</label>
                     <span>-</span>
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Número de semanas compradas:</label>
+                    <label className="fw-bold d-block fs-08 mb-0">Fecha activación:</label>                    
+                    <span>-</span>
+                    {!isActive && 
+                    <Button
+                      color="success"
+                      outline
+                      size="sm"
+                      className="fw-bold"
+                      onClick={e=>setActivarUsuario(true)}
+                    >Activar usuario
+                    </Button>}
+                </div>
+                <div className="mb-2">
+                    <label className="fw-bold d-block fs-08 mb-0">Fecha registro:</label>
                     <span>-</span>
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Vendida por el asesor:</label>
+                    <label className="fw-bold d-block fs-08 mb-0">Fecha que se procesó:</label>
+                    <span>-</span>
+                </div>
+                <div className="mb-2">
+                    <label className="fw-bold d-block fs-08 mb-0">Fecha renovación:</label>
                     <span>-</span>
                 </div>
             </Col>

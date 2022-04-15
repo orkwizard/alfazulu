@@ -46,13 +46,26 @@ function CardTitular({partner, isActive}){
                 </Col>
             </Row>
             <Row>
-                <Col xs="12" md="4">
+                <Col xs="12" md="6">
                     <div className="mb-2">
                         <label className="fw-bolder mb-0 fs-06 d-block text-dark">Núm. de contrato:</label>
                         <span className="fs-08">-</span>
                     </div>
                 </Col>
-                <Col xs="12" md="8">
+                <Col xs="12" md="6">
+                    <div className="mb-2">
+                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Fecha de renovación:</label>
+                        <span className="fs-08">-</span>
+                    </div>
+                </Col>
+                <Col xs="12" md="6">
+                    <div className="mb-2">
+                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Última visita:</label>
+                        <span className="fs-08">-</span>
+                        <span className="badge bg-attention text-attention-dark fs-08 cursor-pointer">Ver como</span>
+                    </div>
+                </Col>
+                <Col xs="12" md="6">
                     <div className="mb-2">
                         <label className="fw-bolder mb-0 fs-06 d-block text-dark">Co-titular:</label>
                         <span className="fs-08">{cotitular}</span>
@@ -60,7 +73,7 @@ function CardTitular({partner, isActive}){
                 </Col>
                 <Col xs="12" md="4">
                     <div className="mb-2">
-                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Última visita:</label>
+                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Status:</label>
                         <span className="fs-08">-</span>
                     </div>
                 </Col>

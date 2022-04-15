@@ -5,7 +5,7 @@ import { Container, Row, Col, Card, CardBody, Button, Collapse, Label, Input } f
 import Breadcrumbs from '../../components/common/Breadcrumb'
 import SimpleTable from "../../components/Tables/SimpleTable";
 import SimpleLoad from "../../components/Loader/SimpleLoad";
-import { deleteEmailTemplate, getEmailTemplates, getEmailTemplatesTypes } from "../../helpers/backend_helper";
+import { deleteEmailTemplate, getClub, getEmailTemplates, getEmailTemplatesTypes } from "../../helpers/backend_helper";
 import Paginate from "../../components/Tables/Paginate";
 import { toast } from "react-toastify";
 import { ERROR_SERVER } from "../../constant/messages";
@@ -30,6 +30,8 @@ const EmailTemplateList = props => {
     })
 
     //filters
+    const [club, setClub] = useState(null)
+    const [clubOpt, setClubOpt] = useState([])
     const [nombre, setNombre] = useState("")
     const [asunto, setAsunto] = useState("")
     const [emailTemplateTypesOpt, setEmailTemplateTypesOpt] = useState([])
@@ -82,6 +84,13 @@ const EmailTemplateList = props => {
             setEmailTemplateTypesOpt(response.data.response.map(e=>({label: e, value: e})))
         }
         fetccEmailTypeAPI()
+
+        //club
+        async function fetchGetClubAPI() {
+            let response = await getClub()
+            setClubOpt(response.data.response.map(e=>({label: e.nombre, value: e.id})))
+        }
+        fetchGetClubAPI()
     }, [])
 
     const columns  =[
@@ -95,7 +104,7 @@ const EmailTemplateList = props => {
             text: "Nombre",
             dataField: "nombre", 
             style: {
-                width: "40%"
+                width: "30%"
             },       
             formatter: (cell, row) => <Link to={`/email-templates/edit/${row.id}`} className="text-dark"><u><strong>{cell}</strong></u></Link>            
         },
@@ -103,14 +112,21 @@ const EmailTemplateList = props => {
             text: "Asunto del correo",
             dataField: "asunto", 
             style: {
-                width: "40%"
+                width: "30%"
             },         
         },
         {
             text: "Tipo plantilla",
             dataField: "tipoCarta", 
             style: {
-                width: "20%"
+                width: "15%"
+            }         
+        },
+        {
+            text: "Club",
+            dataField: "club", 
+            style: {
+                width: "15%"
             }         
         },
         {
@@ -131,6 +147,9 @@ const EmailTemplateList = props => {
                     ></i>
                 </Link>
             ),
+            style: {
+                width: "15%"
+            }
         },
     ]
 
@@ -170,6 +189,14 @@ const EmailTemplateList = props => {
                 break;
             case "tipoCarta":
                 setEmailTemplateTypes(value)
+                if(value!==null){
+                    query[type] = value.value
+                }else{
+                    delete query[type]
+                }
+                break;
+            case "idClub":
+                setClub(value)
                 if(value!==null){
                     query[type] = value.value
                 }else{
@@ -266,11 +293,24 @@ const EmailTemplateList = props => {
                                             </Col>
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                <Label htmlFor="company">Club/Company:</Label>
+                                                <Label htmlFor="company">Tipo de plantilla:</Label>
                                                 <Select
                                                     value={emailTemplateTypes}
                                                     onChange={(selected) => completeFilter(selected, "tipoCarta")}
                                                     options={emailTemplateTypesOpt}
+                                                    classNamePrefix="select2-selection"
+                                                    isClearable
+                                                    placeholder="Seleccionar opción"
+                                                />
+                                                </div>
+                                            </Col>
+                                            <Col md={3} xs='6'>
+                                                <div className="mb-3">
+                                                <Label htmlFor="company">Club/Company:</Label>
+                                                <Select
+                                                    value={club}
+                                                    onChange={(selected) => completeFilter(selected, "idClub")}
+                                                    options={clubOpt}
                                                     classNamePrefix="select2-selection"
                                                     isClearable
                                                     placeholder="Seleccionar opción"
