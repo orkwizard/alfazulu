@@ -64,7 +64,6 @@ const EmailTemplateList = props => {
                     })
                 }
             }catch(error){
-                console.log('catch')
                 setResponse({
                     data: [],
                     totalPaginas: 0,

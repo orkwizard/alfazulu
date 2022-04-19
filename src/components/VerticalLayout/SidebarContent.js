@@ -96,7 +96,7 @@ const SidebarContent = props => {
             <li>
               <Link to="/dashboard" className="">
                 <i className="bx bx-home-circle"></i>
-                <span>{props.t("Dashboards")}</span>
+                <span>Inicio</span>
               </Link>              
             </li>
             <li>
@@ -123,6 +123,31 @@ const SidebarContent = props => {
                   <Link to="/email-templates/add">Crear plantilla de correo</Link>
                 </li>
               </ul>
+            </li>
+            <li className="menu-title">Catálogos </li>
+            <li>
+              <Link to="/catalogue/club" className="">
+                <i className="bx bx-building-house"></i>
+                <span>Club</span>
+              </Link>              
+            </li>
+            <li>
+              <Link to="/catalogue/language" className="">
+                <i className="mdi mdi-google-translate"></i>
+                <span>Idioma</span>
+              </Link>              
+            </li>
+            <li>
+              <Link to="/catalogue/relationship" className="">
+                <i className="fas fa-people-arrows"></i>
+                <span>Parentesco</span>
+              </Link>              
+            </li>
+            <li>
+              <Link to="/catalogue/phone-type" className="">
+                <i className="fas fa-phone-square-alt"></i>
+                <span>Tipo de teléfono</span>
+              </Link>              
             </li>
           </ul>
         </div>

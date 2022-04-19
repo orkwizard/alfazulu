@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react"
+import { toast } from "react-toastify"
 import { Button, Card, CardBody, CardFooter, Col, Row } from "reactstrap"
 import avatar1 from "../../assets/images/users/avatar-1.jpg"
+import { ERROR_SERVER } from "../../constant/messages"
+import { getLicencia } from "../../helpers/backend_helper"
 
-function CardTitular({partner, isActive}){
+function CardTitular({partner, isActive, contractNumber}){
     const [cotitular, setCotitular] = useState('-') 
 
     useEffect(()=>{
@@ -14,6 +17,20 @@ function CardTitular({partner, isActive}){
             }
         }
     }, [partner])
+
+    const downloadContrato = async () =>{
+        try {
+            let response = await getLicencia(contractNumber)
+            console.log(response)
+            if(response.state){
+
+            }else{
+                toast.error(ERROR_SERVER)
+            }
+        } catch (error) {
+            toast.error(ERROR_SERVER)
+        }
+    }
 
     return (
         <Card className="overflow-hidden rounded-0">
@@ -28,7 +45,6 @@ function CardTitular({partner, isActive}){
                                     {`${partner.informacionPersonal.nombre} ${partner.informacionPersonal.segundoNombre} ${partner.informacionPersonal.primerApellido} ${partner.informacionPersonal.segundoApellido}`}
                                 </h6> 
                             }
-                                               
                         </div>
                     </Col>
                 </Row>
@@ -94,7 +110,7 @@ function CardTitular({partner, isActive}){
             <CardFooter className="p-0">
                 {
                     isActive ? 
-                    <Button block className="rounded-0" color="primary">
+                    <Button block className="rounded-0" color="primary" onClick={downloadContrato}>
                         <i className="fas fa-download" />
                         <span className="d-block">Descargar contrato</span>
                     </Button> :

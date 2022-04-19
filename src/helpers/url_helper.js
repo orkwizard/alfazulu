@@ -38,3 +38,6 @@ export const SAVE_EMAIL_TEMPLATE = "/plantilla_correo/save"
 export const GET_EMAIL_TEMPLATE_TYPES = "/plantilla_correo/tipos"
 export const GET_EMAIL_TEMPLATE = "/plantilla_correo/buscar"
 export const DELETE_EMAIL_TEMPLATE = "/plantilla_correo/delete"
+
+//licencias
+export const GET_LICENCIA_BY_CONTRATO = "/licencia_membresia/nota_membresia"

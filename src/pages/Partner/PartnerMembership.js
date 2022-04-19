@@ -87,7 +87,7 @@ const PartnerMembership = props =>{
                     <Breadcrumbs title="Socio" breadcrumbItem="Membresía del socio" />
                     <Row>
                         <Col xs="12" md="4">
-                            <CardTitular partner={partner} isActive={isActive}/>
+                            <CardTitular partner={partner} isActive={isActive} contractNumber={params.contractNumber}/>
                             <CardMembershipRequest />
                         </Col>
                         <Col xs="12" md="8">

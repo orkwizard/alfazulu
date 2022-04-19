@@ -36,3 +36,6 @@ export const getEmailTemplateById = id => getApi(`${url.GET_EMAIL_TEMPLATE_BY_ID
 export const getEmailTemplatesTypes = () => getApi(url.GET_EMAIL_TEMPLATE_TYPES)
 export const getEmailTemplates = query => getApi(`${url.GET_EMAIL_TEMPLATE}${query}`)
 export const deleteEmailTemplate = (id) => deleteApi(`${url.DELETE_EMAIL_TEMPLATE}/${id}`)
+
+//licencias/contrato
+export const getLicencia = (id) => getApi(`${url.GET_LICENCIA_BY_CONTRATO}/${id}`)
