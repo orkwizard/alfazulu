@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { Button, Card, CardBody, CardFooter, Col, Modal, ModalBody, Row } from "reactstrap"
+import { Button, Card, CardBody, CardFooter, Col, Modal, ModalBody, ModalHeader, Row } from "reactstrap"
 import avatar1 from "../../assets/images/users/avatar-1.jpg"
 import { ERROR_SERVER } from "../../constant/messages"
 import { getLicencia } from "../../helpers/backend_helper"
+import SubmitingForm from "../Loader/SubmitingForm"
 
 function CardTitular({partner, isActive, contractNumber}){
     const [cotitular, setCotitular] = useState('-')
     const [openModalContract, setOpenModalContract] = useState(false)
+    const [loadData, setLoadData] = useState(false)
     const [contrato, setContrato] = useState({
         agreementUrl: null,
         authUrl: null,
@@ -29,8 +31,10 @@ function CardTitular({partner, isActive, contractNumber}){
     }, [partner])
 
     const downloadContrato = async () =>{
+        setLoadData(true)
         try {
             let response = await getLicencia(contractNumber)
+            setLoadData(false)
             if(response.state){
                 setContrato({
                     agreementUrl: response.data.agreementUrl,
@@ -47,11 +51,13 @@ function CardTitular({partner, isActive, contractNumber}){
             }
         } catch (error) {
             toast.error(ERROR_SERVER)
+            setLoadData(false)
         }
     }
 
     return (
         <>
+            {loadData && <SubmitingForm />}
             <Card className="overflow-hidden rounded-0">
                 <div className={`${isActive ? 'bg-primary' : 'bg-secondary'} bg-soft`}>
                     <Row className="mb-4">
@@ -142,12 +148,15 @@ function CardTitular({partner, isActive, contractNumber}){
                 </CardFooter>
             </Card>
             <Modal isOpen={openModalContract} toggle={() => setOpenModalContract(!openModalContract)} centered={true}>
-                <ModalBody className="py-3 px-5">
+                <ModalHeader toggle={() => setOpenModalContract(!openModalContract)} tag="h4">
+                    Contratos
+                </ModalHeader>
+                <ModalBody className="py-3">
                     <Row>
                         <Col lg={12}>
-                        <ul class="list-group list-group-flush">
+                        <ul className="list-group list-group-flush">
                             {contrato.agreementUrl && 
-                            <li class="list-group-item">
+                            <li className="list-group-item px-0">
                                 <a 
                                     href={contrato.agreementUrl} 
                                     className="text-secondary" 
@@ -158,7 +167,7 @@ function CardTitular({partner, isActive, contractNumber}){
                                 </a>
                             </li>}
                             {contrato.authUrl && 
-                            <li class="list-group-item">
+                            <li className="list-group-item px-0">
                                 <a 
                                     href={contrato.authUrl} 
                                     className="text-secondary" 
@@ -168,7 +177,7 @@ function CardTitular({partner, isActive, contractNumber}){
                                 </a>
                             </li>}
                             {contrato.beneficiarioUrl && 
-                            <li class="list-group-item">
+                            <li className="list-group-item px-0">
                                 <a 
                                     href={contrato.beneficiarioUrl} 
                                     className="text-secondary" 
@@ -178,7 +187,7 @@ function CardTitular({partner, isActive, contractNumber}){
                                 </a>
                             </li>}
                             {contrato.contractUrl && 
-                            <li class="list-group-item">
+                            <li className="list-group-item px-0">
                                 <a 
                                     href={contrato.contractUrl} 
                                     className="text-secondary" 
@@ -188,7 +197,7 @@ function CardTitular({partner, isActive, contractNumber}){
                                 </a>
                             </li>}
                             {contrato.licenseUrl && 
-                            <li class="list-group-item">
+                            <li className="list-group-item px-0">
                                 <a 
                                     href={contrato.licenseUrl} 
                                     className="text-secondary" 
@@ -198,7 +207,7 @@ function CardTitular({partner, isActive, contractNumber}){
                                 </a>
                             </li>}
                             {contrato.promisoryUrl && 
-                            <li class="list-group-item">
+                            <li className="list-group-item px-0">
                                 <a 
                                     href={contrato.promisoryUrl} 
                                     className="text-secondary" 
@@ -208,7 +217,7 @@ function CardTitular({partner, isActive, contractNumber}){
                                 </a>
                             </li>}
                             {contrato.villaUrl && 
-                            <li class="list-group-item">
+                            <li className="list-group-item px-0">
                                 <a 
                                     href={contrato.villaUrl} 
                                     className="text-secondary" 
