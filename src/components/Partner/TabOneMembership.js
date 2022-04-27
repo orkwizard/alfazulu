@@ -20,6 +20,7 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario}){
                 <div className="d-flex justify-content-between align-items-center my-2">
                     <div>
                         <span className="fw-bolder text-danger">Fecha de renovación: -</span>
+                        <i className="bx bx-calendar-event text-secondary ms-3"></i>
                     </div>
                     {(!showForm && isActive) &&
                     <div>
@@ -49,6 +50,14 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario}){
                     <span>-</span>
                 </div>
                 <div className="mb-2">
+                    <label className="fw-bold d-block fs-08 mb-0">Fecha registro:</label>
+                    <span>-</span>
+                </div>
+                <div className="mb-2">
+                    <label className="fw-bold d-block fs-08 mb-0">Fecha que se procesó:</label>
+                    <span>-</span>
+                </div>
+                <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha activación:</label>                    
                     <span>-</span>
                     {!isActive && 
@@ -60,18 +69,6 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario}){
                       onClick={e=>setActivarUsuario(true)}
                     >Activar usuario
                     </Button>}
-                </div>
-                <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Fecha registro:</label>
-                    <span>-</span>
-                </div>
-                <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Fecha que se procesó:</label>
-                    <span>-</span>
-                </div>
-                <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Fecha renovación:</label>
-                    <span>-</span>
                 </div>
             </Col>
             {
@@ -119,7 +116,7 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario}){
                             partner?.informacionPersonal?.telefonos.map((item, index)=>(
                                 <div key={item.id} className={`${index > 0 ? 'line-break' : ''}`}>
                                     <span className="d-block">{item.tipoTelefono.nombre}: {item.numero}</span>
-                                    <span className="d-block">Acivo: {item.activo ? 'Si' : 'No'}</span>
+                                    <span className="d-block">Activo: {item.activo ? 'Si' : 'No'}</span>
                                 </div>
                             ))
                         }

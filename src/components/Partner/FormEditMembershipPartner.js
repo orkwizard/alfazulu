@@ -137,7 +137,6 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
             })
         }),
         onSubmit: (values) => {
-            console.log(values)
             //validaciones antes de enviarlo
             //1. Solo tenga un beneficiario como cotitular
             if(values.beneficiarios.filter(item=>item.cotitular).length > 1){
@@ -148,7 +147,6 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
             try {
                 async function savePartnerApi() {
                     let response = await savePartner(values)
-                    console.log(response)
                     if(response.state){
                         toast.success("Actualizado correctamente");
                         setReloadPartner(true)
@@ -159,7 +157,6 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
                 }
                 savePartnerApi()
             }catch(error) {
-                console.log(error)  
                 toast.error(ERROR_SERVER); 
             }
         }
@@ -176,64 +173,68 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
             }}
         >
             <div className="mb-2">
-                <label className="fw-bold d-block fs-08 mb-0">Información del socio:</label>
-                <Row>
-                    <Col xs="12" md="6">
-                        <Label htmlFor="nombre" className="mb-0">Nombre:</Label>
-                        <Input
-                            id="nombre"
-                            name="informacionPersonal.nombre"
-                            className={`form-control ${validation.errors.informacionPersonal?.nombre ? 'is-invalid' : ''}`}
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.informacionPersonal.nombre || ""}  
-                        />
-                        {
-                            (validation.touched.informacionPersonal?.nombre && validation.errors.informacionPersonal?.nombre) &&
-                            <div className="invalid-tooltip" name="validate" id="validate1">{validation.errors.informacionPersonal.nombre}</div>
-                        }
-                    </Col>
-                    <Col xs="12" md="6">
-                        <Label htmlFor="segundoNombre" className="mb-0">Segundo nombre:</Label>
-                        <Input
-                            id="segundoNombre"
-                            name="informacionPersonal.segundoNombre"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.informacionPersonal.segundoNombre || ""}  
-                        />
-                    </Col>
-                    <Col xs="12" md="6">
-                        <Label htmlFor="primerApellido" className="mb-0">Apellido paterno:</Label>
-                        <Input
-                            id="primerApellido"
-                            name="informacionPersonal.primerApellido"
-                            className={`form-control ${validation.errors.informacionPersonal?.primerApellido ? 'is-invalid' : ''}`}
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.informacionPersonal.primerApellido || ""}  
-                        />
-                        {
-                            (validation.touched.informacionPersonal?.primerApellido && validation.errors.informacionPersonal?.primerApellido) &&
-                            <div className="invalid-tooltip" name="validate" id="validate1">{validation.errors.informacionPersonal.primerApellido}</div>
-                        }
-                    </Col>
-                    <Col xs="12" md="6">
-                        <Label htmlFor="segundoApellido" className="mb-0">Apellido materno:</Label>
-                        <Input
-                            id="segundoApellido"
-                            name="informacionPersonal.segundoApellido"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.informacionPersonal.segundoApellido || ""}  
-                        />
-                    </Col>
-                </Row>
+                <label className="fw-bold d-block fs-08 mb-0 ps-125rem">Información del socio:</label>
+                <Card>
+                    <CardBody>
+                        <Row>
+                            <Col xs="12" md="6">
+                                <Label htmlFor="nombre" className="mb-0">Nombre:</Label>
+                                <Input
+                                    id="nombre"
+                                    name="informacionPersonal.nombre"
+                                    className={`form-control ${validation.errors.informacionPersonal?.nombre ? 'is-invalid' : ''}`}
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
+                                    value={validation.values.informacionPersonal.nombre || ""}  
+                                />
+                                {
+                                    (validation.touched.informacionPersonal?.nombre && validation.errors.informacionPersonal?.nombre) &&
+                                    <div className="invalid-tooltip" name="validate" id="validate1">{validation.errors.informacionPersonal.nombre}</div>
+                                }
+                            </Col>
+                            <Col xs="12" md="6">
+                                <Label htmlFor="segundoNombre" className="mb-0">Segundo nombre:</Label>
+                                <Input
+                                    id="segundoNombre"
+                                    name="informacionPersonal.segundoNombre"
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
+                                    value={validation.values.informacionPersonal.segundoNombre || ""}  
+                                />
+                            </Col>
+                            <Col xs="12" md="6">
+                                <Label htmlFor="primerApellido" className="mb-0">Apellido paterno:</Label>
+                                <Input
+                                    id="primerApellido"
+                                    name="informacionPersonal.primerApellido"
+                                    className={`form-control ${validation.errors.informacionPersonal?.primerApellido ? 'is-invalid' : ''}`}
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
+                                    value={validation.values.informacionPersonal.primerApellido || ""}  
+                                />
+                                {
+                                    (validation.touched.informacionPersonal?.primerApellido && validation.errors.informacionPersonal?.primerApellido) &&
+                                    <div className="invalid-tooltip" name="validate" id="validate1">{validation.errors.informacionPersonal.primerApellido}</div>
+                                }
+                            </Col>
+                            <Col xs="12" md="6">
+                                <Label htmlFor="segundoApellido" className="mb-0">Apellido materno:</Label>
+                                <Input
+                                    id="segundoApellido"
+                                    name="informacionPersonal.segundoApellido"
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
+                                    value={validation.values.informacionPersonal.segundoApellido || ""}  
+                                />
+                            </Col>
+                        </Row>
+                    </CardBody>
+                </Card>
             </div>
             <div className="mb-2">
                 {/* {console.log(validation.errors)}
                 {console.log(validation.values)} */}
-                <label className="fw-bold d-block fs-08 mb-0">Direcciones:</label>
+                <label className="fw-bold d-block fs-08 mb-0 ps-125rem">Direcciones:</label>
                 <FormikProvider value={validation}>
                     <FieldArray
                         name="direcciones"
@@ -290,36 +291,40 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
                 </FormikProvider>
             </div>
             <div className="mb-2">
-                <label className="fw-bold d-block fs-08 mb-0">Idioma:</label>
-                <Select
-                    value={idioma}
-                    onChange={(selected) => {
-                        setIdioma(selected)
-                        if(selected){
-                            validation.setFieldValue("idioma.id", selected.value)
-                            validation.setFieldValue("idioma.nombre", selected.label)
-                        }else{
-                            validation.setFieldValue("idioma.id", null)
-                            validation.setFieldValue("idioma.nombre", "")
-                            validation.validateField("idioma")
-                        }
-                    }}
-                    options={idiomasOpt}
-                    classNamePrefix="select2-selection"
-                    className={`${validation.errors.idioma?.nombre ? 'is-invalid' : ''}`}
-                    placeholder="Seleccionar opción"
-                    styles={{
-                        control: (provided, state) => ({
-                            ...provided,
-                            borderColor: validation.errors.idioma?.nombre ? '#f46a6a!important' : '',
-                            boxShadow: validation.errors.idioma?.nombre ? '0 0 0 0.15rem rgb(244 106 106 / 25%)!important' : ''
-                          })
-                        }
-                    }
-                />
+                <Card>
+                    <CardBody>
+                        <label className="fw-bold d-block fs-08 mb-0">Idioma:</label>
+                        <Select
+                            value={idioma}
+                            onChange={(selected) => {
+                                setIdioma(selected)
+                                if(selected){
+                                    validation.setFieldValue("idioma.id", selected.value)
+                                    validation.setFieldValue("idioma.nombre", selected.label)
+                                }else{
+                                    validation.setFieldValue("idioma.id", null)
+                                    validation.setFieldValue("idioma.nombre", "")
+                                    validation.validateField("idioma")
+                                }
+                            }}
+                            options={idiomasOpt}
+                            classNamePrefix="select2-selection"
+                            className={`${validation.errors.idioma?.nombre ? 'is-invalid' : ''}`}
+                            placeholder="Seleccionar opción"
+                            styles={{
+                                control: (provided, state) => ({
+                                    ...provided,
+                                    borderColor: validation.errors.idioma?.nombre ? '#f46a6a!important' : '',
+                                    boxShadow: validation.errors.idioma?.nombre ? '0 0 0 0.15rem rgb(244 106 106 / 25%)!important' : ''
+                                })
+                                }
+                            }
+                        />
+                    </CardBody>
+                </Card>
             </div>
             <div className="mb-2">
-                <label className="fw-bold d-block fs-08 mb-0">Correos electrónicos:</label>
+                <label className="fw-bold d-block fs-08 mb-0 ps-125rem">Correos electrónicos:</label>
                 <FormikProvider value={validation}>
                     <FieldArray
                         name="informacionPersonal.correos"
@@ -368,7 +373,7 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
                 </FormikProvider>
             </div>
             <div className="mb-2">
-                <label className="fw-bold d-block fs-08 mb-0">Teléfonos:</label>
+                <label className="fw-bold d-block fs-08 mb-0 ps-125rem">Teléfonos:</label>
                 <FormikProvider value={validation}>
                     <FieldArray
                         name="informacionPersonal.telefonos"
@@ -438,7 +443,7 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
                 </FormikProvider>
             </div>
             <div className="mb-2">
-                <label className="fw-bold d-block fs-08 mb-0">Beneficiarios:</label>
+                <label className="fw-bold d-block fs-08 mb-0 ps-125rem">Beneficiarios:</label>
                 <FormikProvider value={validation}>
                     <FieldArray
                         name="beneficiarios"

@@ -1,6 +1,27 @@
+import { toast } from "react-toastify";
 import { Button, Card, CardBody, Col, Label, Row } from "reactstrap"
+import { ERROR_SERVER } from "../../constant/messages";
+import { postSendEmail } from "../../helpers/backend_helper"
 
-function CardMembershipRequest(){
+function CardMembershipRequest({contractNumber}){
+
+
+    const sendEmail = () =>{
+        async function sendEmailAPI(){
+            try{
+                let response = postSendEmail(contractNumber);
+                if(response.state){
+                    toast.success("Correo electrónico enviado");
+                }else{
+                    toast.error(response.error.message)
+                }
+            }catch(error){
+                console.log('error')
+                toast.error(ERROR_SERVER)
+            }            
+        }
+        sendEmailAPI();
+    }
 
     return (
         <Card className="rounded-0">
@@ -31,6 +52,7 @@ function CardMembershipRequest(){
                         <Button
                             color="secondary"
                             block
+                            onClick={sendEmail}
                         >
                             Send
                         </Button>

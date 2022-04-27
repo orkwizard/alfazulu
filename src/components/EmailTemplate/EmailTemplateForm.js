@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
-import { Button, Col, Form, Input, Label, Row } from "reactstrap"
+import { Badge, Button, Col, Form, Input, Label, Row } from "reactstrap"
 import * as Yup from "yup";
 import EmailEditor from 'react-email-editor';
 import { toast } from "react-toastify";
 import { ERROR_SERVER } from "../../constant/messages";
-import { getClub, getEmailTemplatesTypes, saveEmailTemplate } from "../../helpers/backend_helper";
+import { getClub, getEmailTemplatesEtiquestas, getEmailTemplatesTypes, saveEmailTemplate } from "../../helpers/backend_helper";
 import { useHistory } from "react-router-dom";
 import SubmitingForm from "../Loader/SubmitingForm";
 import Select from 'react-select'
@@ -18,6 +18,7 @@ function EmailTemplateForm({emailTemplate}){
     const [club, setClub] = useState(emailTemplate ? {value: emailTemplate.club.id, label: emailTemplate.club.nombre} : "")
     const [emailTemplateTypesOpt, setEmailTemplateTypesOpt] = useState([])
     const [emailTemplateTypes, setEmailTemplateTypes] = useState(emailTemplate ? {value: emailTemplate.typeLetter, label: emailTemplate.typeLetter} : "")
+    const [etiquetas, setEtiquetas] = useState([])
 
     useEffect( () => {
         //club
@@ -33,6 +34,13 @@ function EmailTemplateForm({emailTemplate}){
             setEmailTemplateTypesOpt(response.data.response.map(e=>({label: e, value: e})))
         }
         fetccEmailTypeAPI()
+
+        //etiquetas
+        async function fetchEtiquetasAPI(){
+            let response = await getEmailTemplatesEtiquestas();
+            setEtiquetas(response.data.response)
+        }
+        fetchEtiquetasAPI()
     }, [])
 
     const validation = useFormik({
@@ -149,7 +157,7 @@ function EmailTemplateForm({emailTemplate}){
                 </Row>
                 <label className="fw-bold d-block fs-08 mb-0 mt-4">Información de Correo</label>
                 <Row>
-                    <Col xs="12" md="12">
+                    <Col xs="12" md="4">
                         <Label htmlFor="parametroDesde" className="mb-0">Desde:</Label>
                         <Input
                             id="parametroDesde"
@@ -244,6 +252,16 @@ function EmailTemplateForm({emailTemplate}){
                         {
                             (validation.errors?.typeLetter) &&
                             <div className="invalid-tooltip" name="validate" id="validateTypeEmail">{validation.errors.typeLetter}</div>
+                        }
+                    </Col>
+                    <Col xs="12" md="4">
+                        <Label className="mb-0 d-block">Etiquetas:</Label>
+                        {
+                            etiquetas.map((item, index) => (
+                                <Badge pill className="badge-soft-dark me-1" key={index}>
+                                    {`#${item}`}
+                                </Badge>
+                            ))
                         }
                     </Col>
                 </Row>

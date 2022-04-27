@@ -88,7 +88,7 @@ const PartnerMembership = props =>{
                     <Row>
                         <Col xs="12" md="4">
                             <CardTitular partner={partner} isActive={isActive} contractNumber={params.contractNumber}/>
-                            <CardMembershipRequest />
+                            <CardMembershipRequest contractNumber={params.contractNumber}/>
                         </Col>
                         <Col xs="12" md="8">
                             <Card className="rounded-0">
