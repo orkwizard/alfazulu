@@ -43,3 +43,6 @@ export const POST_SEND_EMAIL = "/plantilla_correo/send"
 
 //licencias
 export const GET_LICENCIA_BY_CONTRATO = "/licencia_membresia/nota_membresia"
+
+//membresia
+export const GET_MEMBRESIA_BY_ID = "/membresia"

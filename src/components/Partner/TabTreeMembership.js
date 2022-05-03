@@ -422,7 +422,7 @@ function TabTreeMembership({contractNumber, isActive}){
                         </Col>
                         <Col xs='6' md="8">
                             <div className="mb-2">
-                                <Label htmlFor="texto" className="mb-0">Comentario:</Label>
+                                <Label htmlFor="texto" className="mb-0">Palabra o frase:</Label>
                                 <Input
                                     type="text"
                                     className="form-control"

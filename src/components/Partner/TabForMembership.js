@@ -13,11 +13,6 @@ function TabForMembership({isActive}){
         totalRegistros: 0,
         loading: true
     })
-    const [responseFromServer, setResponseFromServer] = useState({
-        message: '',
-        typeError: '',
-        show: false
-    })
     const columns = [
         {
           text: "id",

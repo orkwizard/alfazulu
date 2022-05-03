@@ -1,24 +1,10 @@
 import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
-import { Button, Card, CardBody, CardFooter, Col, Modal, ModalBody, ModalHeader, Row } from "reactstrap"
+import { Card, CardBody, Col, Row } from "reactstrap"
 import avatar1 from "../../assets/images/users/avatar-1.jpg"
-import { ERROR_SERVER } from "../../constant/messages"
-import { getLicencia } from "../../helpers/backend_helper"
-import SubmitingForm from "../Loader/SubmitingForm"
 
-function CardTitular({partner, isActive, contractNumber}){
+function CardTitular({partner, isActive, contractNumber, membresia}){
     const [cotitular, setCotitular] = useState('-')
-    const [openModalContract, setOpenModalContract] = useState(false)
-    const [loadData, setLoadData] = useState(false)
-    const [contrato, setContrato] = useState({
-        agreementUrl: null,
-        authUrl: null,
-        beneficiarioUrl: null,
-        contractUrl: null,
-        licenseUrl: null,
-        promisoryUrl: null,
-        villaUrl: null
-    }) 
+    
 
     useEffect(()=>{
         if(partner){
@@ -30,34 +16,9 @@ function CardTitular({partner, isActive, contractNumber}){
         }
     }, [partner])
 
-    const downloadContrato = async () =>{
-        setLoadData(true)
-        try {
-            let response = await getLicencia(contractNumber)
-            setLoadData(false)
-            if(response.state){
-                setContrato({
-                    agreementUrl: response.data.agreementUrl,
-                    authUrl: response.data.authUrl,
-                    beneficiarioUrl: response.data.beneficiarioUrl,
-                    contractUrl: response.data.contractUrl,
-                    licenseUrl: response.data.licenseUrl,
-                    promisoryUrl: response.data.promisoryUrl,
-                    villaUrl: response.data.villaUrl
-                })
-                setOpenModalContract(true)
-            }else{
-                toast.error(ERROR_SERVER)
-            }
-        } catch (error) {
-            toast.error(ERROR_SERVER)
-            setLoadData(false)
-        }
-    }
-
+    
     return (
         <>
-            {loadData && <SubmitingForm />}
             <Card className="overflow-hidden rounded-0">
                 <div className={`${isActive ? 'bg-primary' : 'bg-secondary'} bg-soft`}>
                     <Row className="mb-4">
@@ -90,7 +51,7 @@ function CardTitular({partner, isActive, contractNumber}){
                     <Col xs="12" md="6">
                         <div className="mb-2">
                             <label className="fw-bolder mb-0 fs-06 d-block text-dark">Núm. de contrato:</label>
-                            <span className="fs-08">-</span>
+                            <span className="fs-08">{contractNumber}</span>
                         </div>
                     </Col>
                     <Col xs="12" md="6">
@@ -115,7 +76,7 @@ function CardTitular({partner, isActive, contractNumber}){
                     <Col xs="12" md="4">
                         <div className="mb-2">
                             <label className="fw-bolder mb-0 fs-06 d-block text-dark">Status:</label>
-                            <span className="fs-08">-</span>
+                            <span className="fs-08">{membresia?.statusMembresia?.nombre}</span>
                         </div>
                     </Col>
                     <Col xs="12" md="4">
@@ -131,106 +92,8 @@ function CardTitular({partner, isActive, contractNumber}){
                         </div>
                     </Col>
                 </Row>
-                </CardBody>
-                <CardFooter className="p-0">
-                    {
-                        isActive ? 
-                        <Button block className="rounded-0" color="primary" onClick={downloadContrato}>
-                            <i className="fas fa-download" />
-                            <span className="d-block">Descargar contrato</span>
-                        </Button> :
-                        <div className="p-3 text-center">
-                            <i className="fas fa-download" />
-                            <span className="d-block">Descargar contrato</span>
-                        </div>
-                    }
-                    
-                </CardFooter>
+                </CardBody>                
             </Card>
-            <Modal isOpen={openModalContract} toggle={() => setOpenModalContract(!openModalContract)} centered={true}>
-                <ModalHeader toggle={() => setOpenModalContract(!openModalContract)} tag="h4">
-                    Contratos
-                </ModalHeader>
-                <ModalBody className="py-3">
-                    <Row>
-                        <Col lg={12}>
-                        <ul className="list-group list-group-flush">
-                            {contrato.agreementUrl && 
-                            <li className="list-group-item px-0">
-                                <a 
-                                    href={contrato.agreementUrl} 
-                                    className="text-secondary" 
-                                    target="_blank" 
-                                    rel="noreferrer">
-                                        Contrato de acuerdo{' '}
-                                    <i className="bx bx-link-external"></i>
-                                </a>
-                            </li>}
-                            {contrato.authUrl && 
-                            <li className="list-group-item px-0">
-                                <a 
-                                    href={contrato.authUrl} 
-                                    className="text-secondary" 
-                                    target="_blank" 
-                                    rel="noreferrer">Autorización de pago{' '}
-                                    <i className="bx bx-link-external"></i>
-                                </a>
-                            </li>}
-                            {contrato.beneficiarioUrl && 
-                            <li className="list-group-item px-0">
-                                <a 
-                                    href={contrato.beneficiarioUrl} 
-                                    className="text-secondary" 
-                                    target="_blank" 
-                                    rel="noreferrer">Beneficiarios{' '}
-                                    <i className="bx bx-link-external"></i>
-                                </a>
-                            </li>}
-                            {contrato.contractUrl && 
-                            <li className="list-group-item px-0">
-                                <a 
-                                    href={contrato.contractUrl} 
-                                    className="text-secondary" 
-                                    target="_blank" 
-                                    rel="noreferrer">Contrato de adquisición{' '}
-                                    <i className="bx bx-link-external"></i>
-                                </a>
-                            </li>}
-                            {contrato.licenseUrl && 
-                            <li className="list-group-item px-0">
-                                <a 
-                                    href={contrato.licenseUrl} 
-                                    className="text-secondary" 
-                                    target="_blank" 
-                                    rel="noreferrer">Información de membresía{' '}
-                                    <i className="bx bx-link-external"></i>
-                                </a>
-                            </li>}
-                            {contrato.promisoryUrl && 
-                            <li className="list-group-item px-0">
-                                <a 
-                                    href={contrato.promisoryUrl} 
-                                    className="text-secondary" 
-                                    target="_blank" 
-                                    rel="noreferrer">Pagaré{' '}
-                                    <i className="bx bx-link-external"></i>
-                                </a>
-                            </li>}
-                            {contrato.villaUrl && 
-                            <li className="list-group-item px-0">
-                                <a 
-                                    href={contrato.villaUrl} 
-                                    className="text-secondary" 
-                                    target="_blank" 
-                                    rel="noreferrer">Opción de compra de villa{' '}
-                                    <i className="bx bx-link-external"></i>
-                                </a>
-                            </li>}
-                        </ul>
-                        </Col>
-                    </Row>
-                </ModalBody>
-            </Modal>
         </>
     )
 }

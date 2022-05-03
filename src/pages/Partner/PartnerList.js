@@ -37,6 +37,7 @@ const PartnerList = props => {
 
     //filters
     const [creationDate, setCreationdate] = useState()
+    const [procesamientoDate, setProcesamientodate] = useState()
     const [apellido, setApellido] = useState("")
     const [correo, setCorreo] = useState("")
     const [fechaRenovacion, setFechaRenovacion] = useState()
@@ -198,6 +199,14 @@ const PartnerList = props => {
                     delete query[type]
                 }
                 break;
+            case "fechaCompra":
+                setProcesamientodate(value)
+                if(value.length){
+                    query[type] = moment(value[0]).format("YYYY-MM-DD")
+                }else{
+                    delete query[type]
+                }
+                break;
             default: 
                 return;
         }
@@ -208,6 +217,13 @@ const PartnerList = props => {
         setQuery(prev=>({
             ...prev,
             pagina: page
+        }))
+    }
+
+    const handleChangeLimit = (limit) =>{
+        setQuery(prev => ({
+            ...prev,
+            limite: limit
         }))
     }
 
@@ -305,11 +321,21 @@ const PartnerList = props => {
                                             </Col>                                            
                                             <Col md={3} xs='6'>
                                                 <div className="mb-3">
-                                                    <Label htmlFor="creationDate">Fecha creación:</Label>
+                                                    <Label htmlFor="creationDate">Fecha de registro:</Label>
                                                     <SimpleDate 
                                                         date={creationDate}
                                                         setDate={completeFilter}
                                                         element="fechaCreacion"
+                                                    />
+                                                </div>
+                                            </Col>
+                                            <Col md={3} xs='6'>
+                                                <div className="mb-3">
+                                                    <Label htmlFor="creationDate">Fecha de procesamiento:</Label>
+                                                    <SimpleDate 
+                                                        date={procesamientoDate}
+                                                        setDate={completeFilter}
+                                                        element="fechaCompra"
                                                     />
                                                 </div>
                                             </Col>
@@ -406,6 +432,8 @@ const PartnerList = props => {
                                             totalPaginas={partners.data.totalPaginas}
                                             totalRegistros={partners.data.totalRegistros}
                                             handlePageClick={handlePageClick}
+                                            limit={query.limite}
+                                            handleChangeLimit={handleChangeLimit}
                                         />
                                     }
                                 </Row>

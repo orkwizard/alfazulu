@@ -228,6 +228,12 @@ const EmailTemplateList = props => {
         }
         deleteTemplateApi()
     };
+    const handleChangeLimit = (limit) =>{
+        setQuery(prev => ({
+            ...prev,
+            limite: limit
+        }))
+    }
 
     return (
         <>
@@ -364,6 +370,8 @@ const EmailTemplateList = props => {
                                             totalPaginas={response.totalPaginas}
                                             totalRegistros={response.totalRegistros}
                                             handlePageClick={handlePageClick}
+                                            limit={query.limite}
+                                            handleChangeLimit={handleChangeLimit}
                                         />
                                     }
                                 </Row>

@@ -11,8 +11,9 @@ import TabOneMembership from "../../components/Partner/TabOneMembership";
 import TabTwoMembership from "../../components/Partner/TabTwoMembership";
 import TabTreeMembership from "../../components/Partner/TabTreeMembership";
 import { useState } from "react";
-import { getPartnersById } from "../../helpers/backend_helper";
+import { getMembresiById, getPartnersById } from "../../helpers/backend_helper";
 import TabForMembership from "../../components/Partner/TabForMembership";
+import TabFiveMembership from "../../components/Partner/TabFiveMembership";
 
 const PartnerMembership = props =>{
     const {
@@ -20,6 +21,7 @@ const PartnerMembership = props =>{
     } = props;
 
     const [partner, setPartner] = useState(null)
+    const [membresia, setMembresia] = useState(null)
     const [isActive, setIsActive] = useState(true)
     const [activarUsuario, setActivarUsuario] = useState(false);
     const [reload, setReload] = useState(true)
@@ -27,7 +29,6 @@ const PartnerMembership = props =>{
     useEffect(()=>{
         async function fetchParnetAPI() {
             let response = await getPartnersById(params.idPartner)
-            //console.log(response)
             if(response.state){
                 setPartner(response.data)
             }else{
@@ -40,17 +41,35 @@ const PartnerMembership = props =>{
         }
     },[params.idPartner, reload])
 
+    //membresia del socio
+    useEffect(()=>{
+        async function fetchMembresiaAPI(){
+            let response = await getMembresiById(partner.idMembresia);
+            if(response.state){
+                setMembresia(response.data)
+            }
+        }
+        if(partner?.idMembresia) fetchMembresiaAPI();
+    }, [partner?.idMembresia])
+
     const [activeIndex, setActiveIndex] = useState(0)
     const childrenTabs = [
         {
             id: 1,
             title: 'Detalles',
-            component: <TabOneMembership partner={partner} isActive={isActive} setReload={setReload} setActivarUsuario={setActivarUsuario}/>
+            component: <TabOneMembership 
+                            partner={partner} 
+                            membresia={membresia}
+                            isActive={isActive} 
+                            setReload={setReload} 
+                            setActivarUsuario={setActivarUsuario}
+                            contractNumber={params.contractNumber}
+                        />
         },
         {
             id: 2,
             title: 'Beneficios',
-            component: <TabTwoMembership />
+            component: <TabTwoMembership membresia={membresia}/>
         },
         {
             id: 3,
@@ -61,6 +80,11 @@ const PartnerMembership = props =>{
             id: 4,
             title: 'Renovaciones',
             component: <TabForMembership isActive={isActive}/>
+        },
+        {
+            id: 5,
+            title: 'Documentos',
+            component: <TabFiveMembership isActive={isActive} contractNumber={params.contractNumber} />
         }
     ]
 
@@ -87,7 +111,7 @@ const PartnerMembership = props =>{
                     <Breadcrumbs title="Socio" breadcrumbItem="Membresía del socio" />
                     <Row>
                         <Col xs="12" md="4">
-                            <CardTitular partner={partner} isActive={isActive} contractNumber={params.contractNumber}/>
+                            <CardTitular partner={partner} isActive={isActive} contractNumber={params.contractNumber} membresia={membresia}/>
                             <CardMembershipRequest contractNumber={params.contractNumber}/>
                         </Col>
                         <Col xs="12" md="8">

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { Button, Col, Row } from "reactstrap"
 import FormEditMembershipPartner from "./FormEditMembershipPartner"
+import moment from "moment";
 
-function TabOneMembership({partner, isActive, setReload, setActivarUsuario}){
+function TabOneMembership({partner, isActive, setReload, setActivarUsuario, membresia, contractNumber}){
     const [showForm, setShowForm] = useState(false)
     const [reloadPartner, setReloadPartner] = useState(false)
 
@@ -28,34 +29,30 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario}){
                     </div>}
                 </div>
             </Col>
-            <Col xs="6" md="6">
+            <Col xs="5" md="5">
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Número de contrato:</label>
-                    <span>-</span>
+                    <span>{contractNumber}</span>
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Login ID:</label>
-                    <span>-</span>
+                    <span>{membresia?.loginId}</span>
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Club:</label>
-                    <span>-</span>
+                    <span>{membresia?.club?.nombre}</span>
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Anualidad:</label>
                     <span>-</span>
                 </div>
                 <div className="mb-2">
-                    <label className="fw-bold d-block fs-08 mb-0">Contraseña:</label>
-                    <span>-</span>
-                </div>
-                <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha registro:</label>
-                    <span>-</span>
+                    <span>{moment(membresia?.fechaCreacion, "YYYY-MM-DD").format("DD/MM/YYYY")}</span>
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha que se procesó:</label>
-                    <span>-</span>
+                    <span>{moment(membresia?.fechaCompra, "YYYY-MM-DD").format("DD/MM/YYYY")}</span>
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha activación:</label>                    
@@ -73,10 +70,10 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario}){
             </Col>
             {
                 showForm ? 
-                <Col xs="6" md="6">
+                <Col xs="7" md="7">
                     <FormEditMembershipPartner partner={partner} setShowForm={setShowForm} setReloadPartner={setReloadPartner}/>
                 </Col> :
-                <Col xs="6" md="6">
+                <Col xs="7" md="7">
                     <div className="mb-2">
                         <label className="fw-bold d-block fs-08 mb-0">Información del socio:</label>
                         {partner?.informacionPersonal && <span>{`${partner.informacionPersonal.nombre} ${partner.informacionPersonal.segundoNombre} ${partner.informacionPersonal.primerApellido} ${partner.informacionPersonal.segundoApellido}`}</span>}

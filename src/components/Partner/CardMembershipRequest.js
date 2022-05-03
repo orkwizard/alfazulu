@@ -1,26 +1,52 @@
+import { useState, useEffect } from 'react';
 import { toast } from "react-toastify";
-import { Button, Card, CardBody, Col, Label, Row } from "reactstrap"
+import { Button, Card, CardBody, Col, Label, Row, Spinner } from "reactstrap"
+import { isSubmitting } from 'redux-form';
 import { ERROR_SERVER } from "../../constant/messages";
-import { postSendEmail } from "../../helpers/backend_helper"
+import { getEmailTemplatesTypes, postSendEmail } from "../../helpers/backend_helper"
 
 function CardMembershipRequest({contractNumber}){
+    const [tipoCarta, setTipoCarta] = useState('')
+    const [tipoCartaOpt, setTipoCartaOpt] = useState([])
+    const [isSumiting, setIsSubmiting] = useState(false)
 
-
+    useEffect(() => {
+      async function getTipoCarta(){
+          try{
+            let response = await getEmailTemplatesTypes()
+            setTipoCartaOpt(response.data.response)
+          }catch(error){
+              //
+          }
+      }
+      getTipoCarta()
+    }, [])
+    
     const sendEmail = () =>{
         async function sendEmailAPI(){
-            try{
-                let response = postSendEmail(contractNumber);
+            setIsSubmiting(true)
+            try{               
+                let query = `typeLetter=${tipoCarta}`
+                let response = await postSendEmail(contractNumber, query);
                 if(response.state){
-                    toast.success("Correo electrónico enviado");
+                    toast.success(`Correo electrónico ${tipoCarta} enviado`);
+                    setTipoCarta("")
                 }else{
                     toast.error(response.error.message)
                 }
+                setIsSubmiting(false)
             }catch(error){
                 console.log('error')
                 toast.error(ERROR_SERVER)
+                setIsSubmiting(false)
             }            
         }
-        sendEmailAPI();
+        if(tipoCarta === ''){
+            toast.error("Debes seleccionar una opción")
+        }else{
+            sendEmailAPI();
+        }
+        
     }
 
     return (
@@ -29,32 +55,33 @@ function CardMembershipRequest({contractNumber}){
                 <Row>
                     <Col>
                         <div className="mb-3">
-                            <Label>Request</Label>
-                            <select defaultValue="0" className="form-select">
-                                <option value="0">Choose...</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <Label>Enviar correo</Label>
+                            <select 
+                                value={tipoCarta}
+                                className="form-select"
+                                onChange={e=>setTipoCarta(e.target.value)}
+                            >
+                                <option value="">Seleccionar una opción</option>
+                                {
+                                    tipoCartaOpt.map(item=>(
+                                        <option value={item} key={item}>{item}</option>
+                                    ))
+                                }
                             </select>
                         </div>
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs="8" md="8">
-                        <select defaultValue="0" className="form-select">
-                            <option value="0">Choose...</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                    </Col>
-                    <Col xs="4" md="4">
+                    <Col xs="12" md="12">
                         <Button
                             color="secondary"
                             block
                             onClick={sendEmail}
                         >
-                            Send
+                           {
+                               isSumiting ? <Spinner color="dark" size="sm" /> :
+                               'Send'
+                            }
                         </Button>
                     </Col>
                 </Row>

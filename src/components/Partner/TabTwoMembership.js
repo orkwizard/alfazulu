@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { useState } from "react"
 import { Button, Col, Form, Input, Label, Row } from "reactstrap"
 
-function TabTwoMembership(){
+function TabTwoMembership({membresia}){
     const [showForm, setShowForm] = useState(false)
 
     const validation = useFormik({
@@ -43,6 +43,23 @@ function TabTwoMembership(){
                     </div>
                 </Col>
                 <Col xs="12" md="12">
+                    {membresia.servicios.length === 0 && <span>Este socio no tiene beneficios asignados</span>}
+                    {
+                        membresia.servicios((beneficio, index)=>(
+                            <div className="form-check mb-2">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                defaultChecked={true}
+                                />
+                                <label className="form-check-label">
+                                    {beneficio}
+                                </label>
+                            </div>
+                        ))
+                    }
+                </Col>
+                {/* <Col xs="12" md="12">
                     <Label className="fw-bolder">My weeks</Label>
                     <div className="form-check mb-2">
                     <input
@@ -178,7 +195,7 @@ function TabTwoMembership(){
                         >Aceptar
                         </Button>
                     </div>
-                </Col>
+                </Col> */}
             </Row>
         </Form> :
         <Row>

@@ -37,7 +37,10 @@ export const getEmailTemplatesTypes = () => getApi(url.GET_EMAIL_TEMPLATE_TYPES)
 export const getEmailTemplates = query => getApi(`${url.GET_EMAIL_TEMPLATE}${query}`)
 export const deleteEmailTemplate = (id) => deleteApi(`${url.DELETE_EMAIL_TEMPLATE}/${id}`)
 export const getEmailTemplatesEtiquestas = () => getApi(url.GET_ETIQUETAS)
-export const postSendEmail = (id) => postApi(`${url.POST_SEND_EMAIL}/${id}`)
+export const postSendEmail = (id, query) => postApi(`${url.POST_SEND_EMAIL}/${id}?${query}`)
 
 //licencias/contrato
 export const getLicencia = (id) => getApi(`${url.GET_LICENCIA_BY_CONTRATO}/${id}`)
+
+//membresia
+export const getMembresiById = (id) => getApi(`${url.GET_MEMBRESIA_BY_ID}/${id}`)
