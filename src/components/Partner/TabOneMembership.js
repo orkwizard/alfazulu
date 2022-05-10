@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Button, Col, Row } from "reactstrap"
+import { Button, Col, Row, Tooltip } from "reactstrap"
 import FormEditMembershipPartner from "./FormEditMembershipPartner"
 import moment from "moment";
 
@@ -101,8 +101,14 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
                             partner?.informacionPersonal && 
                             partner.informacionPersonal.correos.map(item=>(
                                 <div key={item.id}>
-                                    <span className="d-block">{item.correo}</span>
-                                    <span className="d-block">Principal: {item.principal ? 'Si' : 'No'}</span>
+                                    <span className="d-block">
+                                        {item.correo}{' '}
+                                        {
+                                            item.principal ? 
+                                            <i className="bx bx-check-circle text-success" title="Principal"></i> :
+                                            <i className="mdi mdi-close-circle-outline text-danger" title="No es principal"></i>
+                                        }
+                                    </span>
                                 </div>
                             ))
                         }                    
@@ -111,9 +117,15 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
                         <label className="fw-bold d-block fs-08 mb-0">Teléfonos:</label>
                         {
                             partner?.informacionPersonal?.telefonos.map((item, index)=>(
-                                <div key={item.id} className={`${index > 0 ? 'line-break' : ''}`}>
-                                    <span className="d-block">{item.tipoTelefono.nombre}: {item.numero}</span>
-                                    <span className="d-block">Activo: {item.activo ? 'Si' : 'No'}</span>
+                                <div key={item.id}>
+                                    <span className="d-block">
+                                        {item.tipoTelefono.nombre}: {item.numero}{' '}
+                                        {
+                                            item.activo ? 
+                                            <i className="bx bx-check-circle text-success" title="Activo"></i> :
+                                            <i className="mdi mdi-close-circle-outline text-danger" title="No está activo"></i>
+                                        }
+                                    </span>
                                 </div>
                             ))
                         }

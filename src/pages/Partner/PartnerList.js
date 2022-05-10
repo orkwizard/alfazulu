@@ -27,7 +27,7 @@ const PartnerList = props => {
         loading: state.Partner.loadPartner
     }));
     const [clubOpt, setClubOpt] = useState([])
-    const [accordionSearch, setAccordionSearch] = useState(false);
+    const [accordionSearch, setAccordionSearch] = useState(true);
     const [showModal, setShowModal] = useState(false)
     const [page, setPage] = useState(0)
     const [query, setQuery] = useState({

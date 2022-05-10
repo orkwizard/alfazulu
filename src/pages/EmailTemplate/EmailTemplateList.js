@@ -22,7 +22,7 @@ const EmailTemplateList = props => {
     })
     const [idTemplate, setIdTemplate] = useState()
     const [showModalDelete, setShowModalDelete] = useState(false)
-    const [accordionSearch, setAccordionSearch] = useState(false);
+    const [accordionSearch, setAccordionSearch] = useState(true);
     const [page, setPage] = useState(0)
     const [query, setQuery] = useState({
         limite: 10,
@@ -80,7 +80,10 @@ const EmailTemplateList = props => {
         //tipos de emails
         async function fetccEmailTypeAPI() {
             let response = await getEmailTemplatesTypes();
-            setEmailTemplateTypesOpt(response.data.response.map(e=>({label: e, value: e})))
+            if(response.state){
+                const entries = Object.entries(response.data.response);
+                setEmailTemplateTypesOpt(entries.map(e=>({label: e[1], value: e[0]})))
+            }
         }
         fetccEmailTypeAPI()
 

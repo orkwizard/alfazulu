@@ -63,6 +63,10 @@ function TabFiveMembership({isActive, contractNumber}){
                                 contrato.error && 
                                 <Alert color="danger">{contrato.error}</Alert>
                             }
+                            {
+                                Object.entries(contrato).filter(e=>e[1] !== null).length === 0 &&
+                                <Alert color="info">No existen documentos asociados.</Alert>
+                            }
                             <ul className="list-group list-group-flush">
                                 {contrato.agreementUrl && 
                                 <li className="list-group-item px-0">

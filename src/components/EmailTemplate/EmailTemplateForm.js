@@ -31,7 +31,10 @@ function EmailTemplateForm({emailTemplate}){
         //tipos de emails
         async function fetccEmailTypeAPI() {
             let response = await getEmailTemplatesTypes();
-            setEmailTemplateTypesOpt(response.data.response.map(e=>({label: e, value: e})))
+            if(response.state){
+                const entries = Object.entries(response.data.response);
+                setEmailTemplateTypesOpt(entries.map(e=>({label: e[1], value: e[0]})))
+            }
         }
         fetccEmailTypeAPI()
 
