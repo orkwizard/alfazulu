@@ -36,7 +36,7 @@ function Paginate({page, totalPaginas, handlePageClick, totalRegistros, limit, h
               {
                 totalRegistros < 10 ? <option value={totalRegistros}>{totalRegistros}</option> :
                 limites.map((item) => (
-                  <option value={item}>{item}</option>
+                  <option value={item} key={item}>{item}</option>
                 ))
 
               }

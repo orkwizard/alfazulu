@@ -28,16 +28,6 @@ function EmailTemplateForm({emailTemplate}){
         }
         fetchMyAPI()
 
-        //tipos de emails
-        async function fetccEmailTypeAPI() {
-            let response = await getEmailTemplatesTypes();
-            if(response.state){
-                const entries = Object.entries(response.data.response);
-                setEmailTemplateTypesOpt(entries.map(e=>({label: e[1], value: e[0]})))
-            }
-        }
-        fetccEmailTypeAPI()
-
         //etiquetas
         async function fetchEtiquetasAPI(){
             let response = await getEmailTemplatesEtiquestas();
@@ -45,6 +35,23 @@ function EmailTemplateForm({emailTemplate}){
         }
         fetchEtiquetasAPI()
     }, [])
+
+    useEffect(()=>{
+        //tipos de emails
+        async function fetccEmailTypeAPI() {
+            let response = await getEmailTemplatesTypes();
+            if(response.state){
+                const entries = Object.entries(response.data.response);
+                setEmailTemplateTypesOpt(entries.map(e=>({label: e[1], value: e[0]})))
+
+                const filterTypeLetter = entries.filter(e=>e[0] === emailTemplate.typeLetter);
+                if(filterTypeLetter.length > 0){
+                    setEmailTemplateTypes({value: filterTypeLetter[0][0], label: filterTypeLetter[0][1]})
+                }
+            }
+        }
+        fetccEmailTypeAPI()
+    },[])
 
     const validation = useFormik({
         enableReinitialize: true,

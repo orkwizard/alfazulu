@@ -129,10 +129,14 @@ const PartnerList = props => {
         switch(type){
             case "fechaCreacion":
                 setCreationdate(value)
-                if(value.length){
-                    query[type] = moment(value[0]).format("YYYY-MM-DD")
+                if(value.length > 1){
+                    let fechaCreacionInicio = moment(value[0]).format("YYYY-MM-DD")
+                    let fechaCreacionFin = moment(value[1]).format("YYYY-MM-DD")
+                    query["fechaCreacionInicio"] =fechaCreacionInicio
+                    query["fechaCreacionFin"] =fechaCreacionFin
                 }else{
-                    delete query[type]
+                    delete query["fechaCreacionInicio"]
+                    delete query["fechaCreacionFin"]
                 }                
                 break;
             case "apellido":
@@ -153,10 +157,14 @@ const PartnerList = props => {
                 break;
             case "fechaRenovacion":
                 setFechaRenovacion(value)
-                if(value.length){
-                    query[type] = moment(value[0]).format("YYYY-MM-DD")
+                if(value.length > 1){
+                    let fechaRenovacionInicio = moment(value[0]).format("YYYY-MM-DD")
+                    let fechaRenovacionFin = moment(value[1]).format("YYYY-MM-DD")
+                    query["fechaRenovacionInicio"] =fechaRenovacionInicio
+                    query["fechaRenovacionFin"] =fechaRenovacionFin
                 }else{
-                    delete query[type]
+                    delete query["fechaRenovacionInicio"]
+                    delete query["fechaRenovacionFin"]
                 }
                 break;
             case "loginId":
@@ -326,6 +334,10 @@ const PartnerList = props => {
                                                         date={creationDate}
                                                         setDate={completeFilter}
                                                         element="fechaCreacion"
+                                                        options={{
+                                                            mode: "range"
+                                                        }}
+                                                        placeholder="dd-MM-YYYY a dd-MM-YYYY"
                                                     />
                                                 </div>
                                             </Col>
@@ -346,6 +358,10 @@ const PartnerList = props => {
                                                         date={fechaRenovacion}
                                                         setDate={completeFilter}
                                                         element="fechaRenovacion"
+                                                        options={{
+                                                            mode: "range"
+                                                        }}
+                                                        placeholder="dd-MM-YYYY a dd-MM-YYYY"
                                                     />
                                                 </div>
                                             </Col>

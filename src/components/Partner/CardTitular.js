@@ -6,7 +6,6 @@ function CardTitular({partner, isActive, contractNumber, membresia}){
     const [cotitular, setCotitular] = useState('-')
     const [correo, setCorreo] = useState(null)
     const [telefono, setTelefono] = useState(null)
-    console.log(partner)
 
     useEffect(()=>{
         if(partner){
