@@ -2,16 +2,26 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react"
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import SimpleLoad from "../Loader/SimpleLoad";
-import SimpleTable from "../Tables/SimpleTable";
 import * as Yup from "yup";
-import Select from "react-select";
+import moment from 'moment';
+import { getRenovacionByMembresiaId, saveRenovacion } from "../../helpers/backend_helper";
+import Datatable from "../Tables/DataTable";
+import SimpleDate from "../DatePicker/SimpleDate";
+import { ERROR_SERVER } from "../../constant/messages";
+import { toast } from "react-toastify";
 
-function TabForMembership({isActive}){
+function TabForMembership({isActive, membresiaId}){
+    const [reloadList, setReloadList] = useState(true)
     const [response, setResponse] = useState({
         data: [],
         totalPaginas: 0,
         totalRegistros: 0,
         loading: true
+    })
+    const [responseFromServer, setResponseFromServer] = useState({
+        message: '',
+        typeError: '',
+        show: false
     })
     const columns = [
         {
@@ -21,45 +31,57 @@ function TabForMembership({isActive}){
           hidden: true,
         },
         {
-            text: "Fecha renovación",
-            dataField: "fechaRenovacion" ,
-            style: {
-                width: "30%"
-            }      
+          text: "Detalle",
+          dataField: "fechaRenovacion", 
+          style: {
+            whiteSpace: 'pre-line',
+            width: "40%"
+          }, 
+          formatter: (cell, row) => (
+              <div>
+                  <span className="d-block"><strong>Fecha renovación: </strong>{moment(cell, "YYYY-MM-DDTHH:mm:ss").format("DD/MM/YYYY HH:mm")} hrs</span>
+                  <span className="d-block"><strong>Fecha activación: </strong>{moment(row.fechaActivacion, "YYYY-MM-DDTHH:mm:ss").format("DD/MM/YYYY HH:mm")} hrs</span>
+                  <span className="d-block"><strong>Costo: </strong>{row.costo}</span>
+              </div>
+          )          
         },
         {
-            text: "Años",
-            dataField: "anios" ,
+            text: "Comentario",
+            dataField: "comentarios" ,
             style: {
-                width: "10%"
-            }      
-        },
-        {
-            text: "Club",
-            dataField: "club" ,
-            style: {
-                width: "40%"
-            }      
-        },
-        {
-            text: "Pago",
-            dataField: "pago" ,
-            style: {
-                width: "20%"
+                whiteSpace: 'pre-line',
+                width: "60%"
             }      
         }
     ];
 
     //form
     const [showForm, setShowForm] = useState(false)
-    const [anio, setAnio] = useState(null)
+    const [fechaRenovacion, setFechaRenovacion] = useState()
 
     useEffect(()=>{
         setResponse(prev=>({
             ...prev,
             loading: false
         }))
-    },[]);
+        if(membresiaId && reloadList){
+            async function fetchMyAPI() {
+                let response = await getRenovacionByMembresiaId(membresiaId)
+                //console.log(response)
+                if(response.state){
+                    let data = {
+                        data: response.data.response,
+                        totalPaginas: 0,
+                        totalRegistros: 0,
+                        loading: false
+                    }
+                    setResponse(data)
+                    setReloadList(false)
+                }
+            }
+            fetchMyAPI()
+        }
+    },[membresiaId, reloadList]);
 
     //form add comments
     const validation = useFormik({
@@ -67,27 +89,71 @@ function TabForMembership({isActive}){
         enableReinitialize: true,
     
         initialValues: {
-          anios: "",
-          reference: "",
-          club: "",
-          switchcompany: false,
-          comentario: "",
+          costo: "",
+          fechaRenovacion: "",
+          membresiaId: membresiaId,
+          comentarios: "",
+          //switchcompany: false,
+          pagos: [],
+          solicitud: 0,
+          fechaActivacion: null
         },
         validationSchema: Yup.object({
-            anios: Yup.string().required("Campo requerido"),
-            comentario: Yup.string().required("Campo requerido"),
+            costo: Yup.string().required("Campo requerido"),
+            fechaRenovacion: Yup.string().required("Campo requerido"),
         }),
-        onSubmit: (values) => {
-          console.log(values)
-
+        onSubmit: async (values) => {
           //service here
+          try {
+            let response = await saveRenovacion(values)
+            if(response.state){
+                setResponseFromServer(prev=>({
+                    show: true,
+                    typeError: 'success',
+                    message: ''
+                })) 
+                setReloadList(true)
+                cleanForm();
+            }else{
+                setResponseFromServer(prev=>({
+                    show: true,
+                    typeError: 'error',
+                    message: ''
+                }))
+            }
+          } catch (error) {
+            setResponseFromServer(prev=>({
+                show: true,
+                typeError: 'error',
+                message: ERROR_SERVER
+            }))
+          }
         }
     });
 
     const cleanForm = () =>{
         setShowForm(false)
-        setAnio(null)
+        setFechaRenovacion()
     }
+
+    //update toast show message info
+    useEffect(()=>{
+        if(responseFromServer.show){
+            switch(responseFromServer.typeError){
+                case 'success':
+                    toast.success("Salvado correctamente")
+                    break;
+                case 'error':
+                    toast.error(responseFromServer.message)
+                    break;
+                default:
+                    break;
+            }
+            setResponseFromServer(prev=>({
+                show: false,
+            }))
+        }
+    }, [responseFromServer])
 
     return (
         showForm ?
@@ -102,47 +168,44 @@ function TabForMembership({isActive}){
         >
             <Row>
                 <Col xs="12" md="6">
-                    <Label htmlFor="anios" className="mb-0">Años:</Label>
-                    <Select
-                        value={anio}
-                        onChange={(selected) => {
-                            setAnio(selected)
-                        }}
-                        options={[]}
-                        classNamePrefix="select2-selection"
-                        isClearable
-                        className={`${validation.errors.anios ? 'is-invalid' : ''}`} 
-                        placeholder="Seleccionar opción"
-                        styles={{
-                            control: (provided, state) => ({
-                                ...provided,
-                                borderColor: validation.errors.anios ? '#f46a6a!important' : '',
-                                boxShadow: validation.errors.anios ? '0 0 0 0.15rem rgb(244 106 106 / 25%)!important' : ''
-                                })
+                    <Label  htmlFor="fechaRenovacion" className="mb-0">Fecha renovación</Label>
+                    <SimpleDate 
+                        date={fechaRenovacion}
+                        setDate={date=>{
+                            setFechaRenovacion(date)
+                            if(date.length > 0){
+                                let dateParse = moment(date[0]).format("YYYY-MM-DD")
+                                validation.setFieldValue("fechaRenovacion", dateParse)
+                            }else{
+                                validation.setFieldValue("fechaRenovacion", "")
+                                validation.validateField("fechaRenovacion")
                             }
-                        }
+                        }}
+                        element="fechaRenovacion"
                     />
                     {
-                        validation.errors.anios &&
-                        <div className="invalid-tooltip" name="validate" id="validate1">{validation.errors.anios}</div>
+                        validation.errors?.fechaRenovacion &&
+                        <div className="invalid-tooltip" name="validate" id="validate1">{validation.errors.fechaRenovacion}</div>
                     }
                 </Col>
                 <Col xs="12" md="6">
-                  <Label htmlFor="anios" className="mb-0">Referencia:</Label>
+                  <Label htmlFor="costo" className="mb-0">Costo:</Label>
                   <Input
-                    id="referene"
-                    name="referene"
-                    className={`form-control ${validation.errors.referene ? 'is-invalid' : ''}`}
+                    id="costo"
+                    name="costo"
+                    className={`form-control ${validation.errors.costo ? 'is-invalid' : ''}`}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.referene || ""}  
+                    value={validation.values.costo || ""} 
+                    type="number" 
                   />
                   {
-                    (validation.errors?.referene) &&
-                    <div className="invalid-tooltip" name="validate" id="validate3">{validation.errors.referene}</div>
+                    (validation.errors?.costo) &&
+                    <div className="invalid-tooltip" name="validate" id="validate3">{validation.errors.costo}</div>
                   }
                 </Col>
-                <Col xs="12" md="6" className="my-2">
+                
+                {/* <Col xs="12" md="6" className="my-2">
                     <Label htmlFor="club" className="mb-0 d-block">Club:</Label>
                     <Input
                         id="check_switch_company"
@@ -154,23 +217,19 @@ function TabForMembership({isActive}){
                         value={validation.values.activo || false}  
                     />
                     <Label htmlFor={`check_switch_company`} className="mb-0 ms-2 text-success text-decoration-underline">Cambiar de su compañía a Vacancy: </Label>
-                </Col>
+                </Col> */}
                 <Col xs="12" md="12">
                     <div className="mb-2">
                         <Label htmlFor="comentario" className="mb-0">Comentario:</Label>
                         <textarea 
-                            className={`form-control ${validation.errors.comentario ? 'is-invalid' : ''}`} 
-                            id="comentario" 
+                            className={`form-control ${validation.errors.comentarios ? 'is-invalid' : ''}`} 
+                            id="comentarios" 
                             rows="9"
-                            name="comentario"
+                            name="comentarios"
                             onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
-                            value={validation.values.comentario || ""}                            
+                            value={validation.values.comentarios || ""}                            
                         />
-                        {
-                            (validation.errors.comentario) &&
-                            <div className="invalid-tooltip" name="validate" id="validate1">{validation.errors.comentario}</div>
-                        }
                     </div>
                 </Col>
                 <Col xs="12" md="12">
@@ -201,10 +260,11 @@ function TabForMembership({isActive}){
                         </Col>
                     </Row> :
                     <Row>
-                        <Col xl="12">                                    
-                            <SimpleTable
+                        <Col xl="12">   
+                            <Datatable
                                 columns={columns}
-                                items={response.data} 
+                                itemsData={response.data} 
+                                enableSearch={false}
                             />
                         </Col>
                     </Row>

@@ -3,7 +3,7 @@ import paginationFactory, { PaginationListStandalone, PaginationProvider, SizePe
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit";
 import { Col, Row } from "reactstrap";
 
-function Datatable({columns, itemsData}){
+function Datatable({columns, itemsData, enableSearch}){
 
     const pageOptions = {
         sizePerPage: 10,
@@ -29,7 +29,7 @@ function Datatable({columns, itemsData}){
                 >
                 {toolkitProps => (
                     <>
-                        <Row className="mb-2">
+                        {enableSearch && <Row className="mb-2">
                             <Col md="4">
                             <div className="search-box me-2 mb-2 d-inline-block">
                                 <div className="position-relative">
@@ -41,7 +41,7 @@ function Datatable({columns, itemsData}){
                                 </div>
                             </div>
                             </Col>
-                        </Row>
+                        </Row>}
 
                         <Row>
                             <Col xl="12">

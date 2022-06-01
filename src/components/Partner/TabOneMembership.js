@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
-import { Button, Col, Row, Tooltip } from "reactstrap"
+import { Button, Col, Row } from "reactstrap"
 import FormEditMembershipPartner from "./FormEditMembershipPartner"
 import moment from "moment";
 
 function TabOneMembership({partner, isActive, setReload, setActivarUsuario, membresia, contractNumber}){
     const [showForm, setShowForm] = useState(false)
     const [reloadPartner, setReloadPartner] = useState(false)
-
+    
     useEffect(()=>{
         if(reloadPartner){
             setReload(true)
@@ -44,7 +44,7 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Anualidad:</label>
-                    <span>-</span>
+                    <span>{membresia?.informacionMembresia?.precio}</span>
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha registro:</label>
@@ -52,11 +52,11 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha que se procesó:</label>
-                    <span>{moment(membresia?.fechaCompra, "YYYY-MM-DD").format("DD/MM/YYYY")}</span>
+                    <span>{membresia?.informacionMembresia?.fechaProcesable ? moment(membresia?.informacionMembresia?.fechaProcesable, "YYYY-MM-DD").format("DD/MM/YYYY") : '-'}</span>
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha activación:</label>                    
-                    <span>-</span>
+                    <span>{moment(membresia?.fechaCompra, "YYYY-MM-DD").format("DD/MM/YYYY")}</span>
                     {!isActive && 
                     <Button
                       color="success"

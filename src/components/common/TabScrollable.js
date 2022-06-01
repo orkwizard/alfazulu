@@ -22,7 +22,7 @@ function TabScrollable({items, activeIndex, setActiveIndex}){
                     items.map((item, index)=>(
                         <button 
                             className={`btn-scroller ${index===activeIndex ? 'active' : ''}`}
-                            key={index}
+                            key={item.id}
                             onClick={e=>onHandleClick(index)}
                         >
                             {item.title}

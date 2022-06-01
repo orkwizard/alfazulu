@@ -50,7 +50,7 @@ const PartnerMembership = props =>{
             }
         }
         if(partner?.idMembresia) fetchMembresiaAPI();
-    }, [partner?.idMembresia])
+    }, [partner?.idMembresia, reload])
 
     const [activeIndex, setActiveIndex] = useState(0)
     const childrenTabs = [
@@ -69,7 +69,7 @@ const PartnerMembership = props =>{
         {
             id: 2,
             title: 'Beneficios',
-            component: <TabTwoMembership membresia={membresia}/>
+            component: <TabTwoMembership membresia={membresia} setReload={setReload}/>
         },
         {
             id: 3,
@@ -79,7 +79,7 @@ const PartnerMembership = props =>{
         {
             id: 4,
             title: 'Renovaciones',
-            component: <TabForMembership isActive={isActive}/>
+            component: <TabForMembership isActive={isActive} membresiaId={membresia?.id}/>
         },
         {
             id: 5,

@@ -214,8 +214,6 @@ function TabTreeMembership({contractNumber, isActive}){
             tipoNota: {id: values.tipoNota}
           }
           //console.log(data)
-
-          //service here
           try {
             async function sendCommentsAp() {
                 let response = await postComments(data)
@@ -234,8 +232,6 @@ function TabTreeMembership({contractNumber, isActive}){
                         message: ''
                     }))
                 }
-                console.log(response)
-                
             }
             sendCommentsAp()
           } catch (error) {

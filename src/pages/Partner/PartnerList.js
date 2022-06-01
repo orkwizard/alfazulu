@@ -207,12 +207,16 @@ const PartnerList = props => {
                     delete query[type]
                 }
                 break;
-            case "fechaCompra":
+            case "fechaProcesable":
                 setProcesamientodate(value)
-                if(value.length){
-                    query[type] = moment(value[0]).format("YYYY-MM-DD")
+                if(value.length > 1){
+                    let fechaProcesableInicio = moment(value[0]).format("YYYY-MM-DD")
+                    let fechaProcesableFin = moment(value[1]).format("YYYY-MM-DD")
+                    query["fechaProcesableInicio"] =fechaProcesableInicio
+                    query["fechaProcesableFin"] =fechaProcesableFin
                 }else{
-                    delete query[type]
+                    delete query["fechaProcesableInicio"]
+                    delete query["fechaProcesableFin"]
                 }
                 break;
             default: 
@@ -347,7 +351,11 @@ const PartnerList = props => {
                                                     <SimpleDate 
                                                         date={procesamientoDate}
                                                         setDate={completeFilter}
-                                                        element="fechaCompra"
+                                                        element="fechaProcesable"
+                                                        options={{
+                                                            mode: "range"
+                                                        }}
+                                                        placeholder="dd-MM-YYYY a dd-MM-YYYY"
                                                     />
                                                 </div>
                                             </Col>

@@ -38,9 +38,15 @@ export const getEmailTemplates = query => getApi(`${url.GET_EMAIL_TEMPLATE}${que
 export const deleteEmailTemplate = (id) => deleteApi(`${url.DELETE_EMAIL_TEMPLATE}/${id}`)
 export const getEmailTemplatesEtiquestas = () => getApi(url.GET_ETIQUETAS)
 export const postSendEmail = (id, query) => postApi(`${url.POST_SEND_EMAIL}/${id}?${query}`)
+export const postSendListEmail = (id, to, query) => postApi(`${url.POST_SEND_LIST_EMAIL}/${id}/${to}?${query}`)
 
 //licencias/contrato
 export const getLicencia = (id) => getApi(`${url.GET_LICENCIA_BY_CONTRATO}/${id}`)
 
 //membresia
 export const getMembresiById = (id) => getApi(`${url.GET_MEMBRESIA_BY_ID}/${id}`)
+export const saveMembresia = (data) => postApi(url.SAVE_MEMBRESIA, data)
+
+//renovaciones
+export const getRenovacionByMembresiaId = (id) => getApi(`${url.GET_RENOVACION_BY_MEMBRESIA_ID}/${id}`)
+export const saveRenovacion = (data) => postApi(url.SAVE_RENOVACION, data)

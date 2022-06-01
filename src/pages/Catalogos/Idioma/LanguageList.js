@@ -83,6 +83,7 @@ function LanguageList(){
                                                 <Datatable
                                                     columns={columns}
                                                     itemsData={response.data} 
+                                                    enableSearch={true}
                                                 />
                                             </Col>
                                         </Row>

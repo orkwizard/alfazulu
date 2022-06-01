@@ -83,6 +83,7 @@ function TipoTelefonoList(){
                                                 <Datatable
                                                     columns={columns}
                                                     itemsData={response.data} 
+                                                    enableSearch={true}
                                                 />
                                             </Col>
                                         </Row>

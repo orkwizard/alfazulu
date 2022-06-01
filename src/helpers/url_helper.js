@@ -40,9 +40,15 @@ export const GET_EMAIL_TEMPLATE = "/plantilla_correo/buscar"
 export const DELETE_EMAIL_TEMPLATE = "/plantilla_correo/delete"
 export const GET_ETIQUETAS = "/plantilla_correo/etiquetas"
 export const POST_SEND_EMAIL = "/plantilla_correo/send"
+export const POST_SEND_LIST_EMAIL = "/plantilla_correo/sendList"
 
 //licencias
 export const GET_LICENCIA_BY_CONTRATO = "/licencia_membresia/nota_membresia"
 
 //membresia
 export const GET_MEMBRESIA_BY_ID = "/membresia"
+export const SAVE_MEMBRESIA = "/membresia/save"
+
+//renovaciones
+export const GET_RENOVACION_BY_MEMBRESIA_ID = "/renovaciones/membresia"
+export const SAVE_RENOVACION = "/renovaciones/salvar"
