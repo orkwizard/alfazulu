@@ -3,12 +3,12 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify";
 import { Alert, Button, Col, Form, Label, Row } from "reactstrap"
 import { ERROR_SERVER } from "../../constant/messages";
-import { saveMembresia } from "../../helpers/backend_helper";
+import { getSerivicios, updateMembresia } from "../../helpers/backend_helper";
 
 function TabTwoMembership({membresia, setReload}){
     const [showForm, setShowForm] = useState(false)
-    const [servicios, setServicios] = useState([])
     const [serviciosAsignados, setServiciosAsignados] = useState([])
+    const [allServicios, setAllServicios] = useState([])
     const [responseFromServer, setResponseFromServer] = useState({
         message: '',
         typeError: '',
@@ -16,17 +16,24 @@ function TabTwoMembership({membresia, setReload}){
     })
 
     useEffect(()=>{
+        async function fetchMyAPI() {
+            let response = await getSerivicios()
+            if(response.state){
+                setAllServicios(response.data.response)
+            }
+        }
+        fetchMyAPI()
+    },[])
+
+    useEffect(()=>{
         if(membresia?.servicios !== undefined){
-            setServicios(membresia.servicios.map(item=>({
-                id: item.id,
-                nombre: item.nombre
-            })))
             setServiciosAsignados(membresia.servicios.map(item=>({
                 id: item.id,
                 nombre: item.nombre
             })))
         }
     }, [membresia?.servicios])
+    console.log(serviciosAsignados)
 
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
@@ -40,12 +47,12 @@ function TabTwoMembership({membresia, setReload}){
         },
         onSubmit: async (values) => {
           //console.log(values)
-          //console.log(serviciosAsignados)  
+          console.log(serviciosAsignados)  
           const data = Object.assign({}, membresia)
           data.servicios = serviciosAsignados
           //console.log(data)
           try {
-            let response = await saveMembresia(data)
+            let response = await updateMembresia(membresia.id, data)
             if(response.state){
                 setResponseFromServer(prev=>({
                     show: true,
@@ -92,9 +99,10 @@ function TabTwoMembership({membresia, setReload}){
 
     const handleChecked = (checked, id, index) =>{
         let indexF = serviciosAsignados.map(item=>item.id).indexOf(id);
+        console.log(indexF)
         if(checked){
             if(indexF === -1){
-                let newService = servicios[index];
+                let newService = allServicios[index];
                 setServiciosAsignados(prev=>([...prev, newService]))
             }
         }else{
@@ -126,14 +134,13 @@ function TabTwoMembership({membresia, setReload}){
                     </div>
                 </Col>
                 <Col xs="12" md="12">
-                    {membresia.servicios.length === 0 && <span>Este socio no tiene beneficios asignados</span>}
                     {
-                        servicios.map((item, index)=>(
+                        allServicios.map((item, index)=>(
                             <div className="form-check mb-2" key={index}>
                             <input
                                 className="form-check-input"
                                 type="checkbox"
-                                defaultChecked={true}
+                                defaultChecked={serviciosAsignados.map(e=>(e.id)).includes(item.id) ? true : false}
                                 onChange={e=>handleChecked(e.target.checked, item.id, index)}
                                 />
                                 <label className="form-check-label">
@@ -151,12 +158,12 @@ function TabTwoMembership({membresia, setReload}){
                             onClick={() => setShowForm(false)}
                         >Cancelar
                         </Button>
-                        {membresia.servicios.length > 0 && <Button
+                        <Button
                             color="primary"
                             className="font-16 btn-block btn btn-primary"
                             type="submit"
                         >Aceptar
-                        </Button>}
+                        </Button>
                     </div>
                 </Col>
             </Row>
@@ -173,22 +180,22 @@ function TabTwoMembership({membresia, setReload}){
                 </div>
             </Col>
             <Col xs="12" md="12">
-                {membresia?.servicios.length === 0 && <Alert color="info">Este socio no tiene beneficios asignados</Alert>}
+                {(membresia?.servicios.length === 0 && allServicios.length === 0) && <Alert color="info">Este socio no tiene beneficios asignados</Alert>}
                 {
-                        membresia?.servicios.map((beneficio, index)=>(
-                            <div className="form-check mb-2" key={index}>
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                                defaultChecked={true}
-                                disabled
+                    allServicios.map((item, index)=>(
+                        <div className="form-check mb-2" key={index}>
+                        <input
+                            className="form-check-input"
+                            type="checkbox"
+                            defaultChecked={serviciosAsignados.map(e=>(e.id)).includes(item.id) ? true : false}
+                            disabled
                             />
                             <label className="form-check-label">
-                                {beneficio.nombre}
+                                {item.nombre}
                             </label>
-                            </div>
-                        ))
-                    }
+                        </div>
+                    ))
+                }
             </Col>
             <Col xs="12" md="12" className="mt-3">
                 <div className="mb-2">

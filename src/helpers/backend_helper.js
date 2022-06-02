@@ -1,5 +1,5 @@
 import axios from "axios";
-import { deleteApi, getApi, postApi } from "./api_helper";
+import { deleteApi, getApi, postApi, putApi } from "./api_helper";
 import * as url from "./url_helper";
 
 // get partners
@@ -46,7 +46,11 @@ export const getLicencia = (id) => getApi(`${url.GET_LICENCIA_BY_CONTRATO}/${id}
 //membresia
 export const getMembresiById = (id) => getApi(`${url.GET_MEMBRESIA_BY_ID}/${id}`)
 export const saveMembresia = (data) => postApi(url.SAVE_MEMBRESIA, data)
+export const updateMembresia = (id, data) => putApi(`${url.UPDATE_MEMBRESIA}/${id}`, data)
 
 //renovaciones
 export const getRenovacionByMembresiaId = (id) => getApi(`${url.GET_RENOVACION_BY_MEMBRESIA_ID}/${id}`)
 export const saveRenovacion = (data) => postApi(url.SAVE_RENOVACION, data)
+
+//SERVICOSO O BENEFINCIOS
+export const getSerivicios = () => getApi(url.GET_SERVICIOS)

@@ -62,6 +62,11 @@ export async function postApi(url, data, config = {}) {
       .post(url, { ...data }, { ...config })
       .then(response => response.data);
 }
+export async function putApi(url, data, config = {}) {
+    return axiosApiDefault
+      .put(url, { ...data }, { ...config })
+      .then(response => response.data);
+}
 export async function deleteApi(url, config = {}) {
     return await axiosApiDefault.delete(url, { ...config }).then(response => response.data);
 }
