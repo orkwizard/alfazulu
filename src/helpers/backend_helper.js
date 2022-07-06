@@ -47,6 +47,7 @@ export const getLicencia = (id) => getApi(`${url.GET_LICENCIA_BY_CONTRATO}/${id}
 export const getMembresiById = (id) => getApi(`${url.GET_MEMBRESIA_BY_ID}/${id}`)
 export const saveMembresia = (data) => postApi(url.SAVE_MEMBRESIA, data)
 export const updateMembresia = (id, data) => putApi(`${url.UPDATE_MEMBRESIA}/${id}`, data)
+export const activateMembresia = (data) => postApi(url.ACTIVATE_MEMBRESIA, data);
 
 //renovaciones
 export const getRenovacionByMembresiaId = (id) => getApi(`${url.GET_RENOVACION_BY_MEMBRESIA_ID}/${id}`)

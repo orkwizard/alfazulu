@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { MetaTags } from "react-meta-tags";
 import { withRouter } from "react-router";
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalHeader, Row } from "reactstrap";
+import { Button, Card, CardBody, CardHeader, Col, Container, Form, Modal, ModalHeader, Row } from "reactstrap";
 import Breadcrumbs from '../../components/common/Breadcrumb'
 import TabScrollable from "../../components/common/TabScrollable";
 import TabScrollableSection from "../../components/common/TabScrollableSection";
@@ -11,9 +11,14 @@ import TabOneMembership from "../../components/Partner/TabOneMembership";
 import TabTwoMembership from "../../components/Partner/TabTwoMembership";
 import TabTreeMembership from "../../components/Partner/TabTreeMembership";
 import { useState } from "react";
-import { getMembresiById, getPartnersById } from "../../helpers/backend_helper";
+import { activateMembresia, getMembresiById, getPartnersById, getTopicos } from "../../helpers/backend_helper";
 import TabForMembership from "../../components/Partner/TabForMembership";
 import TabFiveMembership from "../../components/Partner/TabFiveMembership";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { ERROR_SERVER } from "../../constant/messages";
+import CreateNote from "../../components/Partner/CreateNote";
+import { toast } from "react-toastify";
 
 const PartnerMembership = props =>{
     const {
@@ -25,6 +30,8 @@ const PartnerMembership = props =>{
     const [isActive, setIsActive] = useState(true)
     const [activarUsuario, setActivarUsuario] = useState(false);
     const [reload, setReload] = useState(true)
+    const [topicoForm, setTopicoForm] = useState(null)
+    const [topicoOpt, setTopicoOpt] = useState([])
 
     useEffect(()=>{
         async function fetchParnetAPI() {
@@ -47,6 +54,9 @@ const PartnerMembership = props =>{
             let response = await getMembresiById(partner.idMembresia);
             if(response.state){
                 setMembresia(response.data)
+                if(response.data.statusMembresia?.nombre === 'PROCESABLE'){
+                    setIsActive(false)
+                }
             }
         }
         if(partner?.idMembresia) fetchMembresiaAPI();
@@ -69,7 +79,7 @@ const PartnerMembership = props =>{
         {
             id: 2,
             title: 'Beneficios',
-            component: <TabTwoMembership membresia={membresia} setReload={setReload}/>
+            component: <TabTwoMembership membresia={membresia} setReload={setReload} isActive={isActive}/>
         },
         {
             id: 3,
@@ -79,7 +89,7 @@ const PartnerMembership = props =>{
         {
             id: 4,
             title: 'Renovaciones',
-            component: <TabForMembership isActive={isActive} membresiaId={membresia?.id}/>
+            component: <TabForMembership isActive={isActive} membresiaId={membresia?.id} setReload={setReload}/>
         },
         {
             id: 5,
@@ -96,10 +106,58 @@ const PartnerMembership = props =>{
         }
       }, [isActive]);
 
-      const onHandleActivarUsuario = () =>{
-          setActivarUsuario(false)
-          setIsActive(true)
-      }
+      useEffect(()=>{
+            //topicos
+            async function fetchTopicoAPI() {
+                let response = await getTopicos()
+                if(response.state){
+                    setTopicoOpt(response.data.response.map(e=>({label: e.nombre, value: e.id, visible: e.visible})))
+                }
+            }
+            fetchTopicoAPI()
+      },[])
+
+      //activate membresia
+      const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+    
+        initialValues: {
+          nota: "",
+          tipoNota: "",
+        },
+        validationSchema: Yup.object({
+            nota: Yup.string().required("Campo requerido"),
+            tipoNota: Yup.string().required("Campo requerido"),
+        }),
+        onSubmit: (values) => {
+          let data = {
+            membresiaDTO: {  
+                numeroContrato: params.contractNumber
+            },
+            nota: values.nota,
+            tipoNota: {id: values.tipoNota}
+          }
+          try {
+            async function sendCommentsAp() {
+                let response = await activateMembresia(data)
+                if(response.state){
+                    toast.success("Socio activado")
+                    toast.success("Correo de Bienvenida enviado")
+                    validation.resetForm()
+                    setTopicoForm(null)
+                    setActivarUsuario(false)
+                    setIsActive(true)
+                }else{
+                    toast.error(ERROR_SERVER)
+                }
+            }
+            sendCommentsAp()
+          } catch (error) {
+            toast.error(ERROR_SERVER)
+          }
+        }
+    });
 
     return (
         <>
@@ -154,15 +212,40 @@ const PartnerMembership = props =>{
                             <div className="text-center mb-4">
                                 <div className="row justify-content-center">
                                     <div className="col-xl-10">
-                                        <h4 className="text-dark">Usuario inactivo</h4>
+                                        <h4 className="text-dark">Socio inactivo</h4>
                                         <p className="text-muted font-size-14 mb-4">
-                                            Este usuario se encuentra inactivo para dar acceso al usuario,
+                                            Este socio se encuentra inactivo
                                         </p>
-                    
+                                        <Form
+                                            className="needs-validation"
+                                            id="tooltipForm"
+                                            onSubmit={(e) => {
+                                                e.preventDefault();
+                                                validation.handleSubmit();
+                                                return false;
+                                            }}
+                                        >
+                                            <Row>
+                                                <Col xs="12" md="12">
+                                                <CreateNote 
+                                                    validation={validation} 
+                                                    topicoOpt={topicoOpt} 
+                                                    topicoForm={topicoForm} 
+                                                    setTopicoForm={setTopicoForm}
+                                                />
+                                                </Col>
+                                                <Col xs="12" md="12">
+                                                    <div className="mb-2">
+                                                        <Button color="success" type="submit">
+                                                            Click aquí para activar socio
+                                                        </Button>
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                        </Form>
+
                                         <div>                                        
-                                            <Button color="success" type="button" onClick={onHandleActivarUsuario}>
-                                                Click aquí para activar usuario
-                                            </Button>
+                                            
                                         </div>
                                     </div>
                                 </div>

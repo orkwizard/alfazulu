@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import { Card, CardBody, Col, Row } from "reactstrap"
-import avatar1 from "../../assets/images/users/avatar-1.jpg"
+import avatar1 from "../../assets/images/users/avatar-default.jpg"
 
 function CardTitular({partner, isActive, contractNumber, membresia}){
     const [cotitular, setCotitular] = useState('-')
     const [correo, setCorreo] = useState(null)
     const [telefono, setTelefono] = useState(null)
-
+    console.log(membresia)
     useEffect(()=>{
         if(partner){
             let cot = partner.beneficiarios.filter(benef=>benef.cotitular);
@@ -35,11 +35,21 @@ function CardTitular({partner, isActive, contractNumber, membresia}){
                     <Row>
                         <Col sm="4">
                             <div className={`${isActive ? 'text-primary' : 'text-secondary'} p-3`}>
-                                <img
-                                    src={avatar1}
-                                    alt=""
-                                    className="img-thumbnail rounded-circle"
-                                />
+                                {
+                                    membresia?.club?.imagen ?
+                                    <img
+                                        src={`https://generico.vacancyrewards.com/imgUPLOAD/${membresia?.club?.imagen}`}
+                                        alt=""
+                                        className="img-thumbnail rounded-circle img-adjust-socio"
+                                    /> :
+                                    <img
+                                        src={avatar1}
+                                        alt=""
+                                        className="img-thumbnail rounded-circle"
+                                    />
+
+                                }
+                                
                             </div>
                         </Col>
                     </Row>
@@ -47,30 +57,30 @@ function CardTitular({partner, isActive, contractNumber, membresia}){
                 <CardBody className="pt-2">
                 <Row className="mb-2">
                     <Col xs="12" md="6">
-                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Información del socio:</label>
+                        <label className="fw-bolder mb-0  d-block text-dark">Titular:</label>
                         {
                             partner?.informacionPersonal && 
-                            <span className="fs-06">
+                            <span className="">
                                 {`${partner.informacionPersonal.nombre} ${partner.informacionPersonal.segundoNombre} ${partner.informacionPersonal.primerApellido} ${partner.informacionPersonal.segundoApellido}`}
                             </span> 
                         }
                     </Col>
                     <Col xs="12" md="6">
-                        <label className="fw-bolder mb-0 fs-06 d-block text-dark">Co-titular:</label>
-                        <span className="fs-06">{cotitular}</span>
+                        <label className="fw-bolder mb-0  d-block text-dark">Co-titular:</label>
+                        <span className="">{cotitular}</span>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs="12" md="6">
                         <div className="mb-2">
-                            <label className="fw-bolder mb-0 fs-06 d-block text-dark">Correo electrónico:</label>
-                            {correo ? <span className="fs-06 text-primary">{correo}</span> : <span className="fs-06">No tiene</span>}
+                            <label className="fw-bolder mb-0  d-block text-dark">Correo electrónico:</label>
+                            {correo ? <span className=" text-primary">{correo}</span> : <span className="">No tiene</span>}
                         </div>
                     </Col>
                     <Col xs="12" md="6">
                         <div className="mb-2">
-                            <label className="fw-bolder mb-0 fs-06 d-block text-dark">Teléfono:</label>
-                            {telefono ? <span className="fs-06 text-primary">{telefono}</span> : <span className="fs-06">No tiene</span>}
+                            <label className="fw-bolder mb-0  d-block text-dark">Teléfono:</label>
+                            {telefono ? <span className=" text-primary">{telefono}</span> : <span className="">No tiene</span>}
                         </div>
                     </Col>
                 </Row>
@@ -78,45 +88,45 @@ function CardTitular({partner, isActive, contractNumber, membresia}){
                     <Col>
                         <div className="mb-2">
                             <label className="fw-bolder mb-0 me-3 text-dark">Fecha de renovación:</label>
-                            <span className="fs-06">-</span>
+                            <span className="">-</span>
                         </div>
                     </Col>
                 </Row>
                 <Row>
                 <Col>
                     <div className="mb-2">
-                        <label className="fw-bolder mb-0 fs-06 me-3 text-dark">Status:</label>
-                        <span className="fs-06">{membresia?.statusMembresia?.nombre}</span>
+                        <label className="fw-bolder mb-0  me-3 text-dark">Status:</label>
+                        <span className="">{membresia?.statusMembresia?.nombre}</span>
                     </div>
                 </Col>
                 </Row>
                 <Row>
                     <Col xs="12" md="4">
                         <div className="mb-2">
-                            <label className="fw-bolder mb-0 fs-06 d-block text-dark">Última visita:</label>
-                            <span className="fs-06">-</span>
+                            <label className="fw-bolder mb-0  d-block text-dark">Última visita:</label>
+                            <span className="">-</span>
                         </div>
                     </Col>
                     <Col xs="12" md="4">
                         <div className="mb-2">
-                            <label className="fw-bolder mb-0 fs-06 d-block text-dark">Primera visita:</label>
-                            <span className="fs-06">-</span>
+                            <label className="fw-bolder mb-0  d-block text-dark">Primera visita:</label>
+                            <span className="">-</span>
                         </div>
                     </Col>
                     <Col xs="12" md="4">
                         <div className="mb-2">
-                            <label className="fw-bolder mb-0 fs-06 d-block text-dark">Térm. & Cond.</label>
-                            <span className="fs-06 text-success fw-bold">Si</span>
+                            <label className="fw-bolder mb-0  d-block text-dark">Térm. & Cond.</label>
+                            <span className=" text-success fw-bold">Si</span>
                         </div>
                     </Col>
                 </Row>
-                <Row>
+                {/* <Row>
                     <Col>
                         <span className="badge bg-attention text-attention-dark fs-08 cursor-pointer" style={{backgroundColor: '#F0BFD7'}}>
                             Ver como <i className="bx bx-face"></i>
                         </span>
                     </Col>
-                </Row>
+                </Row> */}
                 </CardBody>                
             </Card>
         </>

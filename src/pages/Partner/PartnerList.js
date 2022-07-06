@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { MetaTags } from "react-meta-tags";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import { Button, Card, CardBody, Col, Collapse, Container, Label, Row, Input } from "reactstrap";
+import { Button, Card, CardBody, Col, Collapse, Container, Label, Row, Input, Form } from "reactstrap";
 import Breadcrumbs from '../../components/common/Breadcrumb'
 import SimpleDate from "../../components/DatePicker/SimpleDate";
 import PartnerModal from "./PartnerModal";
@@ -60,7 +60,8 @@ const PartnerList = props => {
         }
         fetchMyAPI()
     }, [])
-    const search = () =>{
+    const search = (e) =>{
+        e.preventDefault();
         setPage(0)
         setQuery(prev=>({
             ...prev,
@@ -84,7 +85,7 @@ const PartnerList = props => {
         {
           text: "Login ID",
           dataField: "loginId",
-          formatter: (cell, row) => <Link to={`partner-membership/${row.numeroContrato}/${row.id}`} className="text-dark"><u><strong>{cell}</strong></u></Link>          
+          formatter: (cell, row) => <Link to={`partner-membership/${row.numeroContrato}/${row.id}`} className="text-dark" target={'_blank'}><u><strong>{cell}</strong></u></Link>          
         },
         {
             text: "Número contrato",
@@ -106,22 +107,26 @@ const PartnerList = props => {
             text: "Club",
             dataField: "club",          
         },
-        {
-            text: "Fecha registro",
-            dataField: "fechaCreacion",
-            formatter: (cell) => moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")          
-        },
+        // {
+        //     text: "Fecha registro",
+        //     dataField: "fechaCreacion",
+        //     formatter: (cell) => moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")          
+        // },
         {
             text: "Fecha renovación",
             dataField: "fechaRenovacion",
-            formatter: (cell, row) => 
-                row.vencimientoSemaforo === 'ROJO' ?
-                <span className="fw-bold text-danger">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
-                row.vencimientoSemaforo === 'VERDE' ?
-                <span className="fw-bold text-success">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
-                row.vencimientoSemaforo === 'AMARILLO' ?
-                <span className="fw-bold text-warning">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
-                <span className="fw-bold">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span>
+            formatter: (cell, row) => (cell !== undefined && cell) ?
+                <>
+                    {
+                        row.vencimientoSemaforo === 'ROJO' ?
+                        <span className="fw-bold text-danger">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
+                        row.vencimientoSemaforo === 'VERDE' ?
+                        <span className="fw-bold text-success">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
+                        row.vencimientoSemaforo === 'AMARILLO' ?
+                        <span className="fw-bold text-warning">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span> :
+                        <span className="fw-bold">{moment(cell, "YYYY-MM-DD").format("DD-MM-YYYY")}</span>
+                    }
+                </> : ''
         }
     ];
 
@@ -271,158 +276,160 @@ const PartnerList = props => {
 
                                 <Collapse isOpen={accordionSearch} className="accordion-collapse">
                                     <div className="accordion-body">
-                                        <Row>
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="loginID">Login ID:</Label>
+                                        <Form onSubmit={e=>search(e)}>
+                                            <Row>
+                                                <Col md={3} xs='6'>
+                                                    <div className="mb-3">
+                                                        <Label htmlFor="loginID">Login ID:</Label>
+                                                        <Input
+                                                            type="text"
+                                                            className="form-control"
+                                                            id="loginID"
+                                                            value={loginId}
+                                                            onChange={e=>completeFilter(e.target.value, "loginId")}
+                                                        />
+                                                    </div>
+                                                </Col>
+                                                <Col md={3} xs='6'>
+                                                    <div className="mb-3">
+                                                        <Label>No. Contrato:</Label>
+                                                        <Input
+                                                            type="text"
+                                                            className="form-control"
+                                                            value={numeroContrato}
+                                                            onChange={e=>completeFilter(e.target.value, "numeroContrato")}
+                                                        />
+                                                    </div>
+                                                </Col>
+                                                <Col md={3} xs='6'>
+                                                    <div className="mb-3">
+                                                    <Label htmlFor="name">Nombre:</Label>
                                                     <Input
                                                         type="text"
                                                         className="form-control"
-                                                        id="loginID"
-                                                        value={loginId}
-                                                        onChange={e=>completeFilter(e.target.value, "loginId")}
+                                                        id="name"
+                                                        autoComplete="off"
+                                                        value={nombre}
+                                                        onChange={e=>completeFilter(e.target.value, "nombre")}
                                                     />
-                                                </div>
-                                            </Col>
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                    <Label>No. Contrato:</Label>
+                                                    </div>
+                                                </Col>
+                                                <Col md={3} xs='6'>
+                                                    <div className="mb-3">
+                                                    <Label>Apellido:</Label>
                                                     <Input
                                                         type="text"
                                                         className="form-control"
-                                                        value={numeroContrato}
-                                                        onChange={e=>completeFilter(e.target.value, "numeroContrato")}
+                                                        value={apellido}
+                                                        onChange={e=>completeFilter(e.target.value, "apellido")}
                                                     />
-                                                </div>
-                                            </Col>
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                <Label htmlFor="name">Nombre:</Label>
-                                                <Input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="name"
-                                                    autoComplete="off"
-                                                    value={nombre}
-                                                    onChange={e=>completeFilter(e.target.value, "nombre")}
-                                                />
-                                                </div>
-                                            </Col>
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                <Label>Apellido:</Label>
-                                                <Input
-                                                    type="text"
-                                                    className="form-control"
-                                                    value={apellido}
-                                                    onChange={e=>completeFilter(e.target.value, "apellido")}
-                                                />
-                                                </div>
-                                            </Col>
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                <Label htmlFor="email">Correo electrónico:</Label>
-                                                <Input
-                                                    type="email"
-                                                    className="form-control"
-                                                    id="email"
-                                                    value={correo}
-                                                    onChange={e=>completeFilter(e.target.value, "correo")}
-                                                />
-                                                </div>
-                                            </Col>                                            
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="creationDate">Fecha de registro:</Label>
-                                                    <SimpleDate 
-                                                        date={creationDate}
-                                                        setDate={completeFilter}
-                                                        element="fechaCreacion"
-                                                        options={{
-                                                            mode: "range"
-                                                        }}
-                                                        placeholder="dd-MM-YYYY a dd-MM-YYYY"
+                                                    </div>
+                                                </Col>
+                                                <Col md={3} xs='6'>
+                                                    <div className="mb-3">
+                                                    <Label htmlFor="email">Correo electrónico:</Label>
+                                                    <Input
+                                                        type="email"
+                                                        className="form-control"
+                                                        id="email"
+                                                        value={correo}
+                                                        onChange={e=>completeFilter(e.target.value, "correo")}
                                                     />
-                                                </div>
-                                            </Col>
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="creationDate">Fecha de procesamiento:</Label>
-                                                    <SimpleDate 
-                                                        date={procesamientoDate}
-                                                        setDate={completeFilter}
-                                                        element="fechaProcesable"
-                                                        options={{
-                                                            mode: "range"
-                                                        }}
-                                                        placeholder="dd-MM-YYYY a dd-MM-YYYY"
+                                                    </div>
+                                                </Col>                                            
+                                                <Col md={3} xs='6'>
+                                                    <div className="mb-3">
+                                                        <Label htmlFor="creationDate">Fecha de registro:</Label>
+                                                        <SimpleDate 
+                                                            date={creationDate}
+                                                            setDate={completeFilter}
+                                                            element="fechaCreacion"
+                                                            options={{
+                                                                mode: "range"
+                                                            }}
+                                                            placeholder="dd-MM-YYYY a dd-MM-YYYY"
+                                                        />
+                                                    </div>
+                                                </Col>
+                                                <Col md={3} xs='6'>
+                                                    <div className="mb-3">
+                                                        <Label htmlFor="creationDate">Fecha de procesamiento:</Label>
+                                                        <SimpleDate 
+                                                            date={procesamientoDate}
+                                                            setDate={completeFilter}
+                                                            element="fechaProcesable"
+                                                            options={{
+                                                                mode: "range"
+                                                            }}
+                                                            placeholder="dd-MM-YYYY a dd-MM-YYYY"
+                                                        />
+                                                    </div>
+                                                </Col>
+                                                <Col md={3} xs='6'>
+                                                    <div className="mb-3">
+                                                        <Label htmlFor="creationDate">Fecha Renovación:</Label>
+                                                        <SimpleDate 
+                                                            date={fechaRenovacion}
+                                                            setDate={completeFilter}
+                                                            element="fechaRenovacion"
+                                                            options={{
+                                                                mode: "range"
+                                                            }}
+                                                            placeholder="dd-MM-YYYY a dd-MM-YYYY"
+                                                        />
+                                                    </div>
+                                                </Col>
+                                                <Col md={3} xs='6'>
+                                                    <div className="mb-3">
+                                                    <Label htmlFor="company">Club/Company:</Label>
+                                                    <Select
+                                                        value={club}
+                                                        onChange={(selected) => completeFilter(selected, "idClub")}
+                                                        options={clubOpt}
+                                                        classNamePrefix="select2-selection"
+                                                        isClearable
+                                                        placeholder="Seleccionar opción"
                                                     />
-                                                </div>
-                                            </Col>
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="creationDate">Fecha Renovación:</Label>
-                                                    <SimpleDate 
-                                                        date={fechaRenovacion}
-                                                        setDate={completeFilter}
-                                                        element="fechaRenovacion"
-                                                        options={{
-                                                            mode: "range"
-                                                        }}
-                                                        placeholder="dd-MM-YYYY a dd-MM-YYYY"
+                                                    </div>
+                                                </Col>
+                                                <Col md={3} xs='6'>
+                                                    <div className="mb-3">
+                                                    <Label htmlFor="company">Estado de la membresía:</Label>
+                                                    <Select
+                                                        value={membresiaEstado}
+                                                        onChange={(selected) => completeFilter(selected, "estaVigente")}
+                                                        options={[
+                                                            {
+                                                                value: 'true',
+                                                                label: 'Membresía vigente'
+                                                            },
+                                                            {
+                                                                value: 'false',
+                                                                label: 'Membresía expirada'
+                                                            }
+                                                        ]}
+                                                        classNamePrefix="select2-selection"
+                                                        isClearable
+                                                        placeholder="Seleccionar opción"
                                                     />
-                                                </div>
-                                            </Col>
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                <Label htmlFor="company">Club/Company:</Label>
-                                                <Select
-                                                    value={club}
-                                                    onChange={(selected) => completeFilter(selected, "idClub")}
-                                                    options={clubOpt}
-                                                    classNamePrefix="select2-selection"
-                                                    isClearable
-                                                    placeholder="Seleccionar opción"
-                                                />
-                                                </div>
-                                            </Col>
-                                            <Col md={3} xs='6'>
-                                                <div className="mb-3">
-                                                <Label htmlFor="company">Estado de la membresía:</Label>
-                                                <Select
-                                                    value={membresiaEstado}
-                                                    onChange={(selected) => completeFilter(selected, "estaVigente")}
-                                                    options={[
-                                                        {
-                                                            value: 'true',
-                                                            label: 'Membresía vigente'
-                                                        },
-                                                        {
-                                                            value: 'false',
-                                                            label: 'Membresía expirada'
-                                                        }
-                                                    ]}
-                                                    classNamePrefix="select2-selection"
-                                                    isClearable
-                                                    placeholder="Seleccionar opción"
-                                                />
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col sm="12">
-                                                <div className="text-sm-end">
-                                                    <Button
-                                                        color="primary"
-                                                        className="font-16 btn-block btn btn-primary"
-                                                        onClick={search}
-                                                    >
-                                                        <i className="mdi mdi-magnify me-1" />
-                                                        Buscar
-                                                    </Button>
-                                                </div>
-                                            </Col>
-                                        </Row>
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col sm="12">
+                                                    <div className="text-sm-end">
+                                                        <Button
+                                                            color="primary"
+                                                            className="font-16 btn-block btn btn-primary"
+                                                            type="submit"
+                                                        >
+                                                            <i className="mdi mdi-magnify me-1" />
+                                                            Buscar
+                                                        </Button>
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                        </Form>
                                     </div>
                                 </Collapse>
                                 </div>

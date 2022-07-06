@@ -5,7 +5,7 @@ import { Alert, Button, Col, Form, Label, Row } from "reactstrap"
 import { ERROR_SERVER } from "../../constant/messages";
 import { getSerivicios, updateMembresia } from "../../helpers/backend_helper";
 
-function TabTwoMembership({membresia, setReload}){
+function TabTwoMembership({membresia, setReload, isActive}){
     const [showForm, setShowForm] = useState(false)
     const [serviciosAsignados, setServiciosAsignados] = useState([])
     const [allServicios, setAllServicios] = useState([])
@@ -14,6 +14,7 @@ function TabTwoMembership({membresia, setReload}){
         typeError: '',
         show: false
     })
+    //console.log(membresia)
 
     useEffect(()=>{
         async function fetchMyAPI() {
@@ -33,7 +34,6 @@ function TabTwoMembership({membresia, setReload}){
             })))
         }
     }, [membresia?.servicios])
-    console.log(serviciosAsignados)
 
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
@@ -47,10 +47,14 @@ function TabTwoMembership({membresia, setReload}){
         },
         onSubmit: async (values) => {
           //console.log(values)
-          console.log(serviciosAsignados)  
+          //console.log(serviciosAsignados)  
+        //   const data = {
+        //       id: membresia.id,
+        //       servicios: serviciosAsignados
+        //   }
           const data = Object.assign({}, membresia)
           data.servicios = serviciosAsignados
-          //console.log(data)
+          console.log(data)
           try {
             let response = await updateMembresia(membresia.id, data)
             if(response.state){
@@ -65,7 +69,7 @@ function TabTwoMembership({membresia, setReload}){
                 setResponseFromServer(prev=>({
                     show: true,
                     typeError: 'error',
-                    message: ''
+                    message: response.error.message
                 }))
             }
           } catch (error) {
@@ -99,7 +103,7 @@ function TabTwoMembership({membresia, setReload}){
 
     const handleChecked = (checked, id, index) =>{
         let indexF = serviciosAsignados.map(item=>item.id).indexOf(id);
-        console.log(indexF)
+        //console.log(indexF)
         if(checked){
             if(indexF === -1){
                 let newService = allServicios[index];
@@ -174,7 +178,7 @@ function TabTwoMembership({membresia, setReload}){
                     <div>
                         <span className="fw-bolder text-primary">Beneficios</span>
                     </div>
-                    {!showForm && <div>
+                    {(!showForm && isActive) && <div>
                         <button className="btn btn-pink-primary" onClick={() => setShowForm(true)}>Editar</button>
                     </div>}
                 </div>
@@ -184,11 +188,12 @@ function TabTwoMembership({membresia, setReload}){
                 {
                     allServicios.map((item, index)=>(
                         <div className="form-check mb-2" key={index}>
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            defaultChecked={serviciosAsignados.map(e=>(e.id)).includes(item.id) ? true : false}
-                            disabled
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                checked={serviciosAsignados.map(e=>(e.id)).includes(item.id)}
+                                onChange={()=>{}}
+                                disabled
                             />
                             <label className="form-check-label">
                                 {item.nombre}
@@ -209,6 +214,12 @@ function TabTwoMembership({membresia, setReload}){
                     <div>{membresia?.informacionMembresia?.agente ?? '-'}</div>    
                 </div>
             </Col>
+            <Col xs="12" md="12">
+            <div className="mb-2">
+                <Label htmlFor="comentario" className="mb-0">Anualidad:</Label>
+                <div>{membresia?.informacionMembresia?.precio ?? '-'}</div>    
+            </div>
+        </Col>
             
         </Row>
     )

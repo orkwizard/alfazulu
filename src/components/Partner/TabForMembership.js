@@ -10,7 +10,7 @@ import SimpleDate from "../DatePicker/SimpleDate";
 import { ERROR_SERVER } from "../../constant/messages";
 import { toast } from "react-toastify";
 
-function TabForMembership({isActive, membresiaId}){
+function TabForMembership({isActive, membresiaId, setReload}){
     const [reloadList, setReloadList] = useState(true)
     const [response, setResponse] = useState({
         data: [],
@@ -39,8 +39,7 @@ function TabForMembership({isActive, membresiaId}){
           }, 
           formatter: (cell, row) => (
               <div>
-                  <span className="d-block"><strong>Fecha renovación: </strong>{moment(cell, "YYYY-MM-DDTHH:mm:ss").format("DD/MM/YYYY HH:mm")} hrs</span>
-                  <span className="d-block"><strong>Fecha activación: </strong>{moment(row.fechaActivacion, "YYYY-MM-DDTHH:mm:ss").format("DD/MM/YYYY HH:mm")} hrs</span>
+                  <span className="d-block"><strong>Fecha renovación: </strong>{moment(cell, "YYYY-MM-DDTHH:mm:ss").format("DD/MM/YYYY HH:mm")} hrs</span>                  
                   <span className="d-block"><strong>Costo: </strong>{row.costo}</span>
               </div>
           )          
@@ -112,6 +111,7 @@ function TabForMembership({isActive, membresiaId}){
                     typeError: 'success',
                     message: ''
                 })) 
+                setReload(true);
                 setReloadList(true)
                 cleanForm();
             }else{

@@ -49,6 +49,7 @@ export const GET_LICENCIA_BY_CONTRATO = "/licencia_membresia/nota_membresia"
 export const GET_MEMBRESIA_BY_ID = "/membresia"
 export const SAVE_MEMBRESIA = "/membresia/save"
 export const UPDATE_MEMBRESIA = "/membresia/actualizar"
+export const ACTIVATE_MEMBRESIA = "/membresia/activate"
 
 //renovaciones
 export const GET_RENOVACION_BY_MEMBRESIA_ID = "/renovaciones/membresia"

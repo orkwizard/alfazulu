@@ -2,11 +2,13 @@ import { useEffect, useState } from "react"
 import { Button, Col, Row } from "reactstrap"
 import FormEditMembershipPartner from "./FormEditMembershipPartner"
 import moment from "moment";
+import { getFechaFromRenovaciones } from "../../utils/Membership/getFechaFromRenovaciones";
+import { formatDate } from "../../utils/Date/formatDate";
 
 function TabOneMembership({partner, isActive, setReload, setActivarUsuario, membresia, contractNumber}){
     const [showForm, setShowForm] = useState(false)
     const [reloadPartner, setReloadPartner] = useState(false)
-    
+
     useEffect(()=>{
         if(reloadPartner){
             setReload(true)
@@ -20,8 +22,7 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
             <Col md="12" xs="12">
                 <div className="d-flex justify-content-between align-items-center my-2">
                     <div>
-                        <span className="fw-bolder text-danger">Fecha de renovación: -</span>
-                        <i className="bx bx-calendar-event text-secondary ms-3"></i>
+                        <span className="fw-bolder text-danger">Fecha de renovación: {formatDate(getFechaFromRenovaciones(membresia?.renovaciones, 'fechaRenovacion'), "YYYY-MM-DD", "DD-MM-YYYY")}</span>
                     </div>
                     {(!showForm && isActive) &&
                     <div>
@@ -48,21 +49,21 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha registro:</label>
-                    <span>{moment(membresia?.fechaCreacion, "YYYY-MM-DD").format("DD/MM/YYYY")}</span>
+                    <span>{moment(membresia?.fechaCreacion, "YYYY-MM-DD").format("DD-MM-YYYY")}</span>
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha que se procesó:</label>
-                    <span>{membresia?.informacionMembresia?.fechaProcesable ? moment(membresia?.informacionMembresia?.fechaProcesable, "YYYY-MM-DD").format("DD/MM/YYYY") : '-'}</span>
+                    <span>{membresia?.informacionMembresia?.fechaProcesable ? moment(membresia?.informacionMembresia?.fechaProcesable, "YYYY-MM-DD").format("DD-MM-YYYY") : '-'}</span>
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha activación:</label>                    
-                    <span>{moment(membresia?.fechaCompra, "YYYY-MM-DD").format("DD/MM/YYYY")}</span>
+                    <span>{formatDate(getFechaFromRenovaciones(membresia?.renovaciones, 'fechaActivacion'), "YYYY-MM-DD", "DD-MM-YYYY")}</span>
                     {!isActive && 
                     <Button
                       color="success"
                       outline
                       size="sm"
-                      className="fw-bold"
+                      className="fw-bold d-block"
                       onClick={e=>setActivarUsuario(true)}
                     >Activar usuario
                     </Button>}
