@@ -89,7 +89,7 @@ const PartnerMembership = props =>{
         {
             id: 4,
             title: 'Renovaciones',
-            component: <TabForMembership isActive={isActive} membresiaId={membresia?.id} setReload={setReload}/>
+            component: <TabForMembership isActive={isActive} membresiaId={membresia?.id} setReload={setReload} club={membresia?.club}/>
         },
         {
             id: 5,

@@ -54,7 +54,6 @@ function TabTwoMembership({membresia, setReload, isActive}){
         //   }
           const data = Object.assign({}, membresia)
           data.servicios = serviciosAsignados
-          console.log(data)
           try {
             let response = await updateMembresia(membresia.id, data)
             if(response.state){

@@ -76,7 +76,7 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
                 </Col> :
                 <Col xs="7" md="7">
                     <div className="mb-2">
-                        <label className="fw-bold d-block fs-08 mb-0">Información del socio:</label>
+                        <label className="fw-bold d-block fs-08 mb-0">Titular:</label>
                         {partner?.informacionPersonal && <span>{`${partner.informacionPersonal.nombre} ${partner.informacionPersonal.segundoNombre} ${partner.informacionPersonal.primerApellido} ${partner.informacionPersonal.segundoApellido}`}</span>}
                     </div>
                     <div className="mb-2">

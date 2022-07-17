@@ -173,7 +173,7 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
             }}
         >
             <div className="mb-2">
-                <label className="fw-bold d-block fs-08 mb-0 ps-125rem">Información del socio:</label>
+                <label className="fw-bold d-block fs-08 mb-0 ps-125rem">Titular:</label>
                 <Card>
                     <CardBody>
                         <Row>
