@@ -25,7 +25,7 @@ function TopActionDashboard({t}){
                     </CardBody>
                 </Card>
             </Col>
-            <Col xs="4" md="4">
+            {/* <Col xs="4" md="4">
                 <Card className="bg-red-1 card-shadow--animation" onClick={e=>navigate.push("/partner-asigned-call")}>
                     <CardBody>
                         <div className="d-flex align-items-center">
@@ -52,7 +52,7 @@ function TopActionDashboard({t}){
                         </div>
                     </CardBody>
                 </Card>
-            </Col>
+            </Col> */}
         </Row>
     )
 }

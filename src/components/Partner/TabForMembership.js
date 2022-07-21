@@ -1,12 +1,11 @@
-import { Field, Formik, useFormik } from "formik";
+import { Field, Formik } from "formik";
 import { useEffect, useState } from "react"
-import { Button, Col, Form, Input, Label, Row } from "reactstrap";
+import { Button, Col, Form, Label, Row } from "reactstrap";
 import SimpleLoad from "../Loader/SimpleLoad";
 import * as Yup from "yup";
 import moment from 'moment';
 import { getRenovacionByMembresiaId, saveRenovacion } from "../../helpers/backend_helper";
 import Datatable from "../Tables/DataTable";
-import { ERROR_SERVER } from "../../constant/messages";
 import { toast } from "react-toastify";
 
 function TabForMembership({isActive, membresiaId, setReload, club}){
@@ -44,6 +43,7 @@ function TabForMembership({isActive, membresiaId, setReload, club}){
                   <span className="d-block"><strong>Años comprados: </strong>{row.annosComprado}</span>                 
                   <span className="d-block"><strong>Costo: </strong>{row.costo} usd</span>
                   <span className="d-block"><strong>Confirmación pago: </strong>{row.pagos.map(e=> e.referencia).join(' ')}</span>
+                  <span className="d-block"><strong>Agente: </strong>{`${row.agente?.nombre ?? ''} ${row.agente?.apellidos ?? ''}`}</span>
               </div>
           )          
         },
@@ -91,75 +91,6 @@ function TabForMembership({isActive, membresiaId, setReload, club}){
         }
     }, [club])
 
-    //form add comments
-    const validation = useFormik({
-        // enableReinitialize : use this flag when initial values needs to be changed
-        enableReinitialize: true,
-    
-        initialValues: {
-          annosComprado: '',
-          costo: 0,
-          fechaRenovacion: moment().format("YYYY-MM-DD"),
-          fechaActivacion: moment().format("YYYY-MM-DD"),
-          membresiaId: membresiaId,
-          comentarios: "",
-          pagos: 
-            {
-                referencia: "",
-                tarjetaHabiente: '',
-                formaPago: 'CREDITO',
-                importe: 0,
-                moneda: {
-                    id: 1
-                }
-
-            }
-          ,
-        },
-        validationSchema: Yup.object({
-            annosComprado: Yup.string().required("Campo requerido"),
-            pagos: Yup.object().shape(
-                {
-                    referencia: Yup.string().required("Campo requerido"),
-                    tarjetaHabiente: Yup.string().required("Campo requerido"),
-                }
-            ),
-        }),
-        onSubmit: async (values) => {
-          //service here
-          console.log(values)
-          const data = {...values}
-          data.pagos = [values.pagos]
-          console.log(data)
-        //   try {
-        //     let response = await saveRenovacion(data)
-        //     console.log(response)
-        //     if(response.state){
-        //         setResponseFromServer(prev=>({
-        //             show: true,
-        //             typeError: 'success',
-        //             message: ''
-        //         })) 
-        //         setReload(true);
-        //         setReloadList(true)
-        //         cleanForm();
-        //     }else{
-        //         setResponseFromServer(prev=>({
-        //             show: true,
-        //             typeError: 'error',
-        //             message: response.error?.message
-        //         }))
-        //     }
-        //   } catch (error) {
-        //     setResponseFromServer(prev=>({
-        //         show: true,
-        //         typeError: 'error',
-        //         message: ERROR_SERVER
-        //     }))
-        //   }
-        }
-    });
-
     const cleanForm = () =>{
         setShowForm(false)
     }
@@ -193,6 +124,7 @@ function TabForMembership({isActive, membresiaId, setReload, club}){
                 fechaActivacion: moment().format("YYYY-MM-DD"),
                 membresiaId: membresiaId,
                 comentarios: "",
+                agente: {id: 380},
                 pagos: 
                   {
                       referencia: "",
@@ -209,7 +141,6 @@ function TabForMembership({isActive, membresiaId, setReload, club}){
                 pagos: Yup.object().shape(
                     {
                         referencia: Yup.string().required("Campo requerido"),
-                        tarjetaHabiente: Yup.string().required("Campo requerido"),
                     }
                 ),
             })}
@@ -218,7 +149,7 @@ function TabForMembership({isActive, membresiaId, setReload, club}){
                 data.pagos = [values.pagos]
                   try {
                     let response = await saveRenovacion(data)
-                    console.log(response)
+                    //console.log(response)
                     if(response.state){
                         setResponseFromServer(prev=>({
                             show: true,
@@ -309,7 +240,7 @@ function TabForMembership({isActive, membresiaId, setReload, club}){
                     { errors.pagos?.referencia && <div className="invalid-tooltip" name="validate" id="validate3">{errors.pagos?.referencia}</div> }
                     
                     </Col>
-                    <Col xs="12" md="12">
+                    {/* <Col xs="12" md="12">
                         <div className="my-2">
                             <Label htmlFor="tarjetaHabiente" className="mb-0">Nombre titular de la tarjeta:</Label>
                             <Field 
@@ -320,7 +251,7 @@ function TabForMembership({isActive, membresiaId, setReload, club}){
                             { errors.pagos?.tarjetaHabiente && <div className="invalid-tooltip" name="validate" id="validate3">{errors.pagos?.tarjetaHabiente}</div> }
                             
                         </div>
-                    </Col>
+                    </Col> */}
                     
                     <Col xs="12" md="12">
                         <div className="my-2">

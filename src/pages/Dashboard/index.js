@@ -48,11 +48,11 @@ const Dashboard = props => {
               </Col>
             </Row>
 
-            <Row>
+            {/* <Row>
               <TopLLamadas />
 
               <ProductivityChart />
-            </Row>
+            </Row> */}
   
             {/* <Row>
               <Col xl="4">

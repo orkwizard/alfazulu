@@ -331,7 +331,7 @@ function TabTreeMembership({contractNumber, isActive}){
                     onSubmit={search}
                 >
                     <Row className="align-items-end">
-                        <Col xs='6' md="4">
+                        {/* <Col xs='6' md="4">
                             <div className="mb-2">
                                 <Label htmlFor="creationDate" className="mb-0">Fecha creación por rango:</Label>
                                 <SimpleDate 
@@ -357,7 +357,7 @@ function TabTreeMembership({contractNumber, isActive}){
                                     placeholder="Seleccionar opción"
                                 />
                             </div>
-                        </Col>
+                        </Col> */}
                         <Col xs='6' md="4">
                             <div className="mb-2">
                                 <Label htmlFor="company" className="mb-0">Tópico:</Label>
@@ -372,7 +372,7 @@ function TabTreeMembership({contractNumber, isActive}){
                                 />
                             </div>
                         </Col>
-                        <Col xs='6' md="8">
+                        {/* <Col xs='6' md="8">
                             <div className="mb-2">
                                 <Label htmlFor="texto" className="mb-0">Palabra o frase:</Label>
                                 <Input
@@ -383,7 +383,7 @@ function TabTreeMembership({contractNumber, isActive}){
                                     onChange={e=>completeFilter(e.target.value, "texto")}
                                 />
                             </div>
-                        </Col>
+                        </Col> */}
                         <Col xs="12" md={{offset: 2, size: 2}}>
                             <div className="text-sm-end mb-2">
                                 <Button
