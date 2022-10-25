@@ -264,6 +264,13 @@ function TabTreeMembership({contractNumber, isActive}){
         }
     }, [responseFromServer])
 
+    const handleChangeLimit = (limit) =>{
+        setQuery(prev => ({
+            ...prev,
+            limite: limit
+        }))
+    }
+
     return (
 
         showForm ?
@@ -422,6 +429,8 @@ function TabTreeMembership({contractNumber, isActive}){
                                 totalPaginas={notasResponse.totalPaginas}
                                 totalRegistros={notasResponse.totalRegistros}
                                 handlePageClick={handlePageClick}
+                                limit={query.limite}
+                                handleChangeLimit={handleChangeLimit}
                             />
                         }
                     </Row>

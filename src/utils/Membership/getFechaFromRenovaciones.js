@@ -1,4 +1,4 @@
-export const getFechaFromRenovaciones = (renovaciones, type) => {
+export const getDataFromRenovaciones = (renovaciones, type) => {
 
     if(renovaciones!==undefined &&renovaciones !==null &&  renovaciones.length > 0){
         const lastRenovacion = renovaciones[renovaciones.length - 1]
@@ -7,6 +7,8 @@ export const getFechaFromRenovaciones = (renovaciones, type) => {
                 return lastRenovacion.fechaRenovacion;
             case 'fechaActivacion':
                 return lastRenovacion.fechaActivacion;
+            case 'anualidad':
+                return lastRenovacion.costo
             default:
                 return;
         }

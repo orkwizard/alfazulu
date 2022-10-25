@@ -337,7 +337,7 @@ const PartnerList = props => {
                                                     />
                                                     </div>
                                                 </Col>                                            
-                                                {/* <Col md={3} xs='6'>
+                                                <Col md={3} xs='6'>
                                                     <div className="mb-3">
                                                         <Label htmlFor="creationDate">Fecha de registro:</Label>
                                                         <SimpleDate 
@@ -378,7 +378,7 @@ const PartnerList = props => {
                                                             placeholder="dd-MM-YYYY a dd-MM-YYYY"
                                                         />
                                                     </div>
-                                                </Col> */}
+                                                </Col>
                                                 <Col md={3} xs='6'>
                                                     <div className="mb-3">
                                                     <Label htmlFor="company">Club/Company:</Label>
@@ -392,7 +392,7 @@ const PartnerList = props => {
                                                     />
                                                     </div>
                                                 </Col>
-                                                {/* <Col md={3} xs='6'>
+                                                <Col md={3} xs='6'>
                                                     <div className="mb-3">
                                                     <Label htmlFor="company">Estado de la membresía:</Label>
                                                     <Select
@@ -413,7 +413,7 @@ const PartnerList = props => {
                                                         placeholder="Seleccionar opción"
                                                     />
                                                     </div>
-                                                </Col> */}
+                                                </Col>
                                             </Row>
                                             <Row>
                                                 <Col sm="12">

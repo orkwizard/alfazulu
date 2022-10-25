@@ -110,7 +110,7 @@ const SidebarContent = props => {
                 </li>
               </ul>
             </li>
-            {/* <li>
+            <li>
               <Link to="/#" className="has-arrow ">
                 <i className='mdi mdi-email-search-outline'></i>
                 <span>Plantillas de correo</span>
@@ -123,8 +123,8 @@ const SidebarContent = props => {
                   <Link to="/email-templates/add">Crear plantilla de correo</Link>
                 </li>
               </ul>
-            </li> */}
-            {/* <li className="menu-title">Catálogos </li>
+            </li>
+            <li className="menu-title">Catálogos </li>
             <li>
               <Link to="/catalogue/club" className="">
                 <i className="bx bx-building-house"></i>
@@ -148,7 +148,7 @@ const SidebarContent = props => {
                 <i className="fas fa-phone-square-alt"></i>
                 <span>Tipo de teléfono</span>
               </Link>              
-            </li> */}
+            </li>
           </ul>
         </div>
       </SimpleBar>

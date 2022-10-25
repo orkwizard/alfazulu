@@ -80,14 +80,14 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
                     numero: item.numero,
                     activo: item.activo,
                     tipoTelefono: item.tipoTelefono
+                })),
+                direcciones: partner.informacionPersonal.direcciones.map(item=>({
+                    id:  item.id,
+                    calle: item.calle,
+                    codigoPostal: item.codigoPostal,
+                    activo: item.activo
                 }))
             },
-            direcciones: partner.direcciones.map(item=>({
-                id:  item.id,
-                calle: item.calle,
-                codigoPostal: item.codigoPostal,
-                activo: item.activo
-            })),
             beneficiarios: partner.beneficiarios.map(item=>({
                 id: item.id,
                 idSocio: item.idSocio,
@@ -116,14 +116,14 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
                     Yup.object().shape({
                         numero: Yup.string().required("Campo requerido")
                     })
-                )
-            }),
-            direcciones: Yup.array().of(
-                Yup.object().shape({
-                    calle: Yup.string().required("Campo requerido"),
-                    codigoPostal: Yup.string().required("Campo requerido"),
-                })
-            ),
+                ),
+                direcciones: Yup.array().of(
+                    Yup.object().shape({
+                        calle: Yup.string().required("Campo requerido"),
+                        codigoPostal: Yup.string().required("Campo requerido"),
+                    })
+                ),
+            }),            
             beneficiarios: Yup.array().of(
                 Yup.object().shape({
                     informacionPersonal: Yup.object().shape({
@@ -241,8 +241,8 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
                         render={arrayHelper=>(
                             <div>
                                 {
-                                    (validation.values.direcciones && validation.values.direcciones.length > 0) &&
-                                    validation.values.direcciones.map((item, index) => (
+                                    (validation.values.informacionPersonal.direcciones && validation.values.informacionPersonal.direcciones.length > 0) &&
+                                    validation.values.informacionPersonal.direcciones.map((item, index) => (
                                         <div key={index}>
                                             <Card>
                                                 <CardBody>
@@ -251,15 +251,15 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
                                                     {/* <Button color="danger" size="sm" onClick={() => arrayHelper.remove(index)}>Eliminar</Button> */}
                                                     </div>
                                                     <Field
-                                                        className={`form-control ${validation.errors?.direcciones?.length > 0 && validation.errors.direcciones[index]?.calle ? 'is-invalid' : ''}`}
-                                                        name={`direcciones.${index}.calle`} 
+                                                        className={`form-control ${validation.errors?.informacionPersonal?.direcciones?.length > 0 && validation.errors.informacionPersonal?.direcciones[index]?.calle ? 'is-invalid' : ''}`}
+                                                        name={`informacionPersonal.direcciones.${index}.calle`} 
                                                     />
                                                     <Row>
                                                         <Col xs="12" md="8">
                                                             <Label className="mb-0">Código postal:</Label>
                                                             <Field
-                                                                className={`form-control ${validation.errors?.direcciones?.length > 0 && validation.errors.direcciones[index]?.codigoPostal ? 'is-invalid' : ''}`}
-                                                                name={`direcciones.${index}.codigoPostal`} 
+                                                                className={`form-control ${validation.errors?.informacionPersonal?.direcciones?.length > 0 && validation.errors.informacionPersonal?.direcciones[index]?.codigoPostal ? 'is-invalid' : ''}`}
+                                                                name={`informacionPersonal.direcciones.${index}.codigoPostal`} 
                                                             />
                                                         </Col>
                                                         <Col xs="12" md="4" className="align-self-end">
@@ -267,7 +267,7 @@ function FormEditMembershipPartner({partner, setShowForm, setReloadPartner}){
                                                                 className="form-check-Input form-check-input"
                                                                 id={`check_${index}`} 
                                                                 type="checkbox"
-                                                                name={`direcciones.${index}.activo`} 
+                                                                name={`informacionPersonal.direcciones.${index}.activo`} 
                                                             />
                                                             <Label htmlFor={`check_${index}`} className="mb-0 ms-2">Activa: </Label>
                                                         </Col>

@@ -38,8 +38,8 @@ function TabForMembership({isActive, membresiaId, setReload, club}){
           }, 
           formatter: (cell, row) => (
               <div>
-                  <span className="d-block"><strong>Fecha activación: </strong>{moment(row.fechaActivacion, "YYYY-MM-DDTHH:mm:ss").format("DD/MM/YYYY HH:mm")} hrs</span> 
-                  <span className="d-block"><strong>Fecha renovación: </strong>{moment(cell, "YYYY-MM-DDTHH:mm:ss").format("DD/MM/YYYY HH:mm")} hrs</span> 
+                  <span className="d-block"><strong>Fecha inicio: </strong>{moment(row.fechaActivacion, "YYYY-MM-DDTHH:mm:ss").format("DD/MM/YYYY HH:mm")} hrs</span> 
+                  <span className="d-block"><strong>Fecha fin: </strong>{moment(cell, "YYYY-MM-DDTHH:mm:ss").format("DD/MM/YYYY HH:mm")} hrs</span> 
                   <span className="d-block"><strong>Años comprados: </strong>{row.annosComprado}</span>                 
                   <span className="d-block"><strong>Costo: </strong>{row.costo} usd</span>
                   <span className="d-block"><strong>Confirmación pago: </strong>{row.pagos.map(e=> e.referencia).join(' ')}</span>
@@ -68,7 +68,7 @@ function TabForMembership({isActive, membresiaId, setReload, club}){
         if(membresiaId && reloadList){
             async function fetchMyAPI() {
                 let response = await getRenovacionByMembresiaId(membresiaId)
-                console.log(response)
+                //console.log(response)
                 if(response.state){
                     let data = {
                         data: response.data.response,

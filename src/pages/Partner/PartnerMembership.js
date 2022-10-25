@@ -5,7 +5,6 @@ import { Button, Card, CardBody, CardHeader, Col, Container, Form, Modal, ModalH
 import Breadcrumbs from '../../components/common/Breadcrumb'
 import TabScrollable from "../../components/common/TabScrollable";
 import TabScrollableSection from "../../components/common/TabScrollableSection";
-import CardMembershipRequest from "../../components/Partner/CardMembershipRequest";
 import CardTitular from "../../components/Partner/CardTitular";
 import TabOneMembership from "../../components/Partner/TabOneMembership";
 import TabTwoMembership from "../../components/Partner/TabTwoMembership";
@@ -19,6 +18,8 @@ import * as Yup from "yup";
 import { ERROR_SERVER } from "../../constant/messages";
 import CreateNote from "../../components/Partner/CreateNote";
 import { toast } from "react-toastify";
+import CardMembershipRequest from "../../components/Partner/CardMembershipRequest";
+import CardCotizaciones from "../../components/Cotizaciones/CardCotizaciones";
 
 const PartnerMembership = props =>{
     const {
@@ -170,7 +171,8 @@ const PartnerMembership = props =>{
                     <Row>
                         <Col xs="12" md="4">
                             <CardTitular partner={partner} isActive={isActive} contractNumber={params.contractNumber} membresia={membresia}/>
-                            {/* <CardMembershipRequest partner={partner}/> */}
+                            <CardMembershipRequest partner={partner}/>
+                            <CardCotizaciones />
                         </Col>
                         <Col xs="12" md="8">
                             <Card className="rounded-0">

@@ -2,8 +2,9 @@ import { useEffect, useState } from "react"
 import { Button, Col, Row } from "reactstrap"
 import FormEditMembershipPartner from "./FormEditMembershipPartner"
 import moment from "moment";
-import { getFechaFromRenovaciones } from "../../utils/Membership/getFechaFromRenovaciones";
+import { getDataFromRenovaciones } from "../../utils/Membership/getFechaFromRenovaciones";
 import { formatDate } from "../../utils/Date/formatDate";
+import { compareDate } from "../../utils/Date/compareDate";
 
 function TabOneMembership({partner, isActive, setReload, setActivarUsuario, membresia, contractNumber}){
     const [showForm, setShowForm] = useState(false)
@@ -22,7 +23,16 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
             <Col md="12" xs="12">
                 <div className="d-flex justify-content-between align-items-center my-2">
                     <div>
-                        <span className="fw-bolder text-danger">Fecha de renovación: {formatDate(getFechaFromRenovaciones(membresia?.renovaciones, 'fechaRenovacion'), "YYYY-MM-DD", "DD-MM-YYYY")}</span>
+                        {
+                            membresia?.renovaciones.length > 0 ? 
+                            <span className={`fw-bolder ${compareDate(moment(getDataFromRenovaciones(membresia?.renovaciones, 'fechaRenovacion'), 'YYYY-MM-DD'), moment()) === "menor" ? "text-danger" : "text-success"}`}>
+                                Fecha de renovación: {formatDate(getDataFromRenovaciones(membresia?.renovaciones, 'fechaRenovacion'), "YYYY-MM-DD", "DD-MM-YYYY")}
+                            </span> :
+                            <span className={`fw-bolder`}>
+                                Fecha de renovación: {formatDate(getDataFromRenovaciones(membresia?.renovaciones, 'fechaRenovacion'), "YYYY-MM-DD", "DD-MM-YYYY")}
+                            </span>
+                        }
+                        
                     </div>
                     {(!showForm && isActive) &&
                     <div>
@@ -45,7 +55,8 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Anualidad:</label>
-                    <span>{membresia?.informacionMembresia?.precio}</span>
+                    {/* <span>{getDataFromRenovaciones(membresia?.renovaciones, 'anualidad')} usd</span> */}
+                    <span>{membresia?.club?.tarifaAnualidad} usd</span>
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha registro:</label>
@@ -57,7 +68,7 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
                 </div>
                 <div className="mb-2">
                     <label className="fw-bold d-block fs-08 mb-0">Fecha activación:</label>                    
-                    <span>{formatDate(getFechaFromRenovaciones(membresia?.renovaciones, 'fechaActivacion'), "YYYY-MM-DD", "DD-MM-YYYY")}</span>
+                    <span>{formatDate(getDataFromRenovaciones(membresia?.renovaciones, 'fechaActivacion'), "YYYY-MM-DD", "DD-MM-YYYY")}</span>
                     {!isActive && 
                     <Button
                       color="success"
@@ -82,12 +93,18 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
                     <div className="mb-2">
                         <label className="fw-bold d-block fs-08 mb-0">Direcciones:</label>
                         {
-                            partner?.direcciones && 
-                            partner.direcciones.map((item) => (
+                            partner?.informacionPersonal?.direcciones && 
+                            partner?.informacionPersonal.direcciones.map((item) => (
                                 <div key={item.id}>
-                                    <span className="d-block">Calle: {item.calle}</span>
-                                    <span className="d-block">CP: {item.codigoPostal}</span>
-                                    <span className="d-block">Activa: {item.activo ? 'Si' : 'No'}</span>
+                                    <span>
+                                        {`Calle: ${item.calle ?? '-'} Ciudad: ${item.ciudad ?? '-'} País: ${item.pais ?? '-'} CP: ${item.codigoPostal ?? '-'}`}
+                                        {' '}
+                                        {
+                                            item.activo ? 
+                                            <i className="bx bx-check-circle text-success" title="Activo"></i> :
+                                            <i className="mdi mdi-close-circle-outline text-danger" title="No está activo"></i>
+                                        }
+                                    </span>
                                 </div>
                             ))
                         }

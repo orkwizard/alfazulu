@@ -177,9 +177,9 @@ function TabTwoMembership({membresia, setReload, isActive}){
                     <div>
                         <span className="fw-bolder text-primary">Beneficios</span>
                     </div>
-                    {(!showForm && isActive) && <div>
+                    {/* {(!showForm && isActive) && <div>
                         <button className="btn btn-pink-primary" onClick={() => setShowForm(true)}>Editar</button>
-                    </div>}
+                    </div>} */}
                 </div>
             </Col>
             <Col xs="12" md="12">
@@ -212,14 +212,7 @@ function TabTwoMembership({membresia, setReload, isActive}){
                     <Label htmlFor="comentario" className="mb-0">Vendedor:</Label>
                     <div>{membresia?.informacionMembresia?.agente ?? '-'}</div>    
                 </div>
-            </Col>
-            <Col xs="12" md="12">
-            <div className="mb-2">
-                <Label htmlFor="comentario" className="mb-0">Anualidad:</Label>
-                <div>{membresia?.informacionMembresia?.precio ?? '-'}</div>    
-            </div>
-        </Col>
-            
+            </Col>            
         </Row>
     )
 }
