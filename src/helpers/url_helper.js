@@ -57,3 +57,6 @@ export const SAVE_RENOVACION = "/renovaciones/salvar"
 
 //sevicios o beneficios
 export const GET_SERVICIOS = "/servicios"
+
+//Facturas
+export const GET_FACTURAS_BY_MEMBRESIA_ID = "/factura/membresia"

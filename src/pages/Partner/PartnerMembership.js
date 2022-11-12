@@ -20,6 +20,7 @@ import CreateNote from "../../components/Partner/CreateNote";
 import { toast } from "react-toastify";
 import CardMembershipRequest from "../../components/Partner/CardMembershipRequest";
 import CardCotizaciones from "../../components/Cotizaciones/CardCotizaciones";
+import ListFacturas from "../../components/Partner/ListFacturas";
 
 const PartnerMembership = props =>{
     const {
@@ -89,11 +90,16 @@ const PartnerMembership = props =>{
         },
         {
             id: 4,
+            title: 'Estado de cuenta',
+            component: <ListFacturas isActive={isActive} membresiaId={membresia?.id} />
+        },
+        {
+            id: 5,
             title: 'Renovaciones',
             component: <TabForMembership isActive={isActive} membresiaId={membresia?.id} setReload={setReload} club={membresia?.club}/>
         },
         {
-            id: 5,
+            id: 6,
             title: 'Documentos',
             component: <TabFiveMembership isActive={isActive} contractNumber={params.contractNumber} />
         }
@@ -172,7 +178,7 @@ const PartnerMembership = props =>{
                         <Col xs="12" md="4">
                             <CardTitular partner={partner} isActive={isActive} contractNumber={params.contractNumber} membresia={membresia}/>
                             <CardMembershipRequest partner={partner}/>
-                            <CardCotizaciones />
+                            <CardCotizaciones partner={partner}/>
                         </Col>
                         <Col xs="12" md="8">
                             <Card className="rounded-0">

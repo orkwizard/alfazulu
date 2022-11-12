@@ -55,3 +55,6 @@ export const saveRenovacion = (data) => postApi(url.SAVE_RENOVACION, data)
 
 //SERVICOSO O BENEFINCIOS
 export const getSerivicios = () => getApi(url.GET_SERVICIOS)
+
+//Facturas
+export const getFacturasByMembresiaId = membresiaId => getApi(`${url.GET_FACTURAS_BY_MEMBRESIA_ID}/${membresiaId}`)

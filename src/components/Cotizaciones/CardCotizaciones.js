@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Button, Card, CardBody, CardHeader, Col, Row } from "reactstrap";
+import { Button, Card, CardBody, Col, Row } from "reactstrap";
 import OffCanvasCotizador from "./OffCanvasCotizador";
 
-export default function CardCotizaciones(){
+export default function CardCotizaciones({partner}){
     const [open, setOpen] = useState(false)
 
 
@@ -24,7 +24,7 @@ export default function CardCotizaciones(){
                     </Row>
                 </CardBody>
             </Card>
-            <OffCanvasCotizador open={open} setOpen={setOpen}/>
+            <OffCanvasCotizador open={open} setOpen={setOpen} partner={partner}/>
         </>
         
     )

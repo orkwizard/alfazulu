@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Col, Nav, NavItem, NavLink, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, TabContent, TabPane } from "reactstrap";
-import CondominioCotizador from "./CondominioCotizador";
 import classnames from "classnames";
+import CardPartner from "../Partner/CardPartner";
+import CondominioCotizador from "./condos/CondominioCotizador";
 
-export default function OffCanvasCotizador({open, setOpen}){
+export default function OffCanvasCotizador({open, setOpen, partner}){
     const togglePreviewPDF = () => setOpen(!open)
     const [customActiveTab, setcustomActiveTab] = useState("1");
 
@@ -11,7 +12,7 @@ export default function OffCanvasCotizador({open, setOpen}){
         if (customActiveTab !== tab) {
           setcustomActiveTab(tab);
         }
-      };
+    };
 
     return (
         <Offcanvas 
@@ -22,10 +23,15 @@ export default function OffCanvasCotizador({open, setOpen}){
             className="w-100"
             backdrop={false}
         >
-            <OffcanvasHeader toggle={togglePreviewPDF}>
+            <OffcanvasHeader toggle={togglePreviewPDF} className="bg-light">
                 Cotizador
             </OffcanvasHeader>
             <OffcanvasBody>
+                <Row className="mt-2 mb-4">
+                    <Col>
+                        <CardPartner partner={partner}/>
+                    </Col>
+                </Row>
                 <Row>
                     <Col>
                         <Nav tabs className="nav-tabs-custom nav-justified">
