@@ -35,11 +35,11 @@ export default function ListFacturas({isActive, membresiaId}){
             text: "Fecha vencimiento",
             dataField: "fechaVencimiento" 
         },
-        // {
-        //     text: "Pago",
-        //     dataField: "total",
-        //     formatter: (cell) => ( <span>{formatNumber(cell)}</span>)
-        // },
+        {
+            text: "Pago",
+            dataField: "total",
+            formatter: (cell) => ( <span>{formatNumber(cell)}</span>)
+        },
         {
             text: "Estatus",
             dataField: "estatus",
@@ -49,6 +49,8 @@ export default function ListFacturas({isActive, membresiaId}){
                         return <span className="badge bg-info">{cell}</span>
                     case 'OVERDUE':
                         return <span className="badge bg-danger">{cell}</span>
+                    case 'PAID':
+                        return <span className="badge bg-success">{cell}</span>
                     default:
                         return <span className="">{cell}</span>
                 }

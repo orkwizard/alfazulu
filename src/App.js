@@ -8,6 +8,8 @@ import { authProtectedRoutes, publicRoutes } from "./routes"
 import Authmiddleware from "./routes/route"
 
 // Import scss
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 import 'react-toastify/dist/ReactToastify.css';
 import "./assets/scss/theme.scss"
 

@@ -4,6 +4,7 @@ import { Col, Container, Modal, ModalHeader, Row } from "reactstrap";
 import { CONDOS_DETAIL } from "../../../helpers/sunapi_url";
 import useGetTokenSunApi from "../../../hooks/useGetTokenSunApi";
 import GalleryPhotos from "../../common/GalleryPhotos";
+import TarifaCondominios from "./TarifaCondominios";
 
 export default function CondominioDetalle({open, setOpen, condo}){
     const tokenSunApi = useGetTokenSunApi();
@@ -33,14 +34,12 @@ export default function CondominioDetalle({open, setOpen, condo}){
                 })
                 const condosData = await response.json()
                 setItem(condosData)
-                console.log(condosData)
             } catch (error) {
                 console.log(error)
             }
         }
             
         if(open) fecthCondoDetail(); 
-        console.log(open)
         if(!open){
             setItem(null)
         }
@@ -80,7 +79,7 @@ export default function CondominioDetalle({open, setOpen, condo}){
                     </Row>
                     <GalleryPhotos images={item.photos}/>
                     <div className="mb-4"></div>
-                    {/* <TarifaCondominios /> */}
+                    <TarifaCondominios rates={item.rates}/>
                 </Container>
             }            
           </div>

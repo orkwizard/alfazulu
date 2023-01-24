@@ -106,7 +106,7 @@ const SidebarContent = props => {
               </Link>
               <ul className="sub-menu">
                 <li>
-                  <Link to="/partner-list">Lisado de socios</Link>
+                  <Link to="/partner-list">Listado de socios</Link>
                 </li>
               </ul>
             </li>

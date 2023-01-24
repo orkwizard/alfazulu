@@ -1,11 +1,14 @@
+import moment from "moment"
 import { useEffect, useState } from "react"
 import { Card, CardBody, Col, Row } from "reactstrap"
 import avatar1 from "../../assets/images/users/avatar-default.jpg"
+import { compareDate } from "../../utils/Date/compareDate"
+import { getDataFromRenovaciones } from "../../utils/Membership/getFechaFromRenovaciones"
 
 function CardTitular({partner, isActive, contractNumber, membresia}){
     const [cotitular, setCotitular] = useState('-')
     const [correo, setCorreo] = useState(null)
-    const [telefono, setTelefono] = useState(null)
+    const [telefonos, setTelefonos] = useState([])
     useEffect(()=>{
         if(partner){
             let cot = partner.beneficiarios.filter(benef=>benef.cotitular);
@@ -17,13 +20,14 @@ function CardTitular({partner, isActive, contractNumber, membresia}){
     }, [partner])
 
     useEffect(()=>{
+        console.log(partner)
         if(partner?.informacionPersonal?.correos.filter(e=>e.principal === true).length > 0){
             setCorreo(partner?.informacionPersonal?.correos.filter(e=>e.principal === true)[0].correo)
         }
-
         if(partner?.informacionPersonal?.telefonos.filter(e=>e.activo === true).length > 0){
-            setTelefono(partner?.informacionPersonal?.telefonos.filter(e=>e.activo === true)[0].numero)
+            setTelefonos(partner?.informacionPersonal?.telefonos?.filter(e=>e.activo === true)?.map(it=>it.numero))
         }
+        
     }, [partner])
 
     
@@ -79,15 +83,20 @@ function CardTitular({partner, isActive, contractNumber, membresia}){
                     <Col xs="12" md="6">
                         <div className="mb-2">
                             <label className="fw-bolder mb-0  d-block text-dark">Teléfono:</label>
-                            {telefono ? <span className=" text-primary">{telefono}</span> : <span className="">No tiene</span>}
+                            {
+                                telefonos?.length === 0 ? <span className="">No tiene</span> :
+                                telefonos.map((it, idx)=>(
+                                    <span className="badge bg-light">{it}</span>
+                                ))
+                            }                            
                         </div>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
                         <div className="mb-2">
-                            <label className="fw-bolder mb-0 me-3 text-dark">Fecha de renovación:</label>
-                            <span className="">-</span>
+                            <label className="fw-bolder mb-0 me-1 text-dark">Fecha de renovación:</label>
+                            {membresia?.renovaciones.length > 0 && <span className={`fw-bolder ${compareDate(moment(getDataFromRenovaciones(membresia?.renovaciones, 'fechaRenovacion'), 'YYYY-MM-DD'), moment()) === "menor" ? "text-danger" : "text-success"}`}>{getDataFromRenovaciones(membresia?.renovaciones, 'fechaRenovacion').format("DD-MM-YYYY")}</span>}
                         </div>
                     </Col>
                 </Row>

@@ -3,8 +3,6 @@ import 'photoswipe/dist/photoswipe.css'
 import noImage from '../../assets/images/no-image.png'
 
 export default function GalleryPhotos({images}){
-    console.log(images)
-
     return (
         <Gallery>
             <div

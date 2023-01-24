@@ -16,7 +16,7 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
             setReloadPartner(false)
         }
     }, [reloadPartner])
-
+    
     return (
 
         <Row>
@@ -26,10 +26,10 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
                         {
                             membresia?.renovaciones.length > 0 ? 
                             <span className={`fw-bolder ${compareDate(moment(getDataFromRenovaciones(membresia?.renovaciones, 'fechaRenovacion'), 'YYYY-MM-DD'), moment()) === "menor" ? "text-danger" : "text-success"}`}>
-                                Fecha de renovación: {formatDate(getDataFromRenovaciones(membresia?.renovaciones, 'fechaRenovacion'), "YYYY-MM-DD", "DD-MM-YYYY")}
+                                Fecha de renovación: {getDataFromRenovaciones(membresia?.renovaciones, 'fechaRenovacion').format("DD-MM-YYYY")}
                             </span> :
                             <span className={`fw-bolder`}>
-                                Fecha de renovación: {formatDate(getDataFromRenovaciones(membresia?.renovaciones, 'fechaRenovacion'), "YYYY-MM-DD", "DD-MM-YYYY")}
+                                Fecha de renovación: No disponible
                             </span>
                         }
                         
@@ -97,7 +97,7 @@ function TabOneMembership({partner, isActive, setReload, setActivarUsuario, memb
                             partner?.informacionPersonal.direcciones.map((item) => (
                                 <div key={item.id}>
                                     <span>
-                                        {`Calle: ${item.calle ?? '-'} Ciudad: ${item.ciudad ?? '-'} País: ${item.pais ?? '-'} CP: ${item.codigoPostal ?? '-'}`}
+                                        {`Calle: ${item.calle ?? '-'}, Ciudad: ${item.ciudad ?? '-'}, Estado: ${item.estado?.codigo ?? '-'}, País: ${item.pais?.nombre ?? '-'}, CP: ${item.codigoPostal ?? '-'}`}
                                         {' '}
                                         {
                                             item.activo ? 

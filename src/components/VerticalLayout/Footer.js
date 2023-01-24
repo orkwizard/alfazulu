@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <>
       <footer className="footer">
-        <Container fluid={true}>
+        <Container fluid>
           <Row>
             <Col md={6}>{new Date().getFullYear()} © AlphaZulu.</Col>
             <Col md={6}>
