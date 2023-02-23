@@ -15,7 +15,7 @@ export const GET_COMMENTS_PARTNER = "/notas/buscar"
 export const SAVE_COMMENTS_PARTNER = "/notas/save"
 
 //CLUB
-export const GET_CLUB = "/clubes/"
+export const GET_CLUB = "/clubes"
 
 //topicos
 export const GET_TOPICOS = "/notas/topicos"

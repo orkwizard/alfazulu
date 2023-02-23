@@ -7,6 +7,8 @@ import Datatable from "../../../components/Tables/DataTable";
 import { ERROR_SERVER } from "../../../constant/messages";
 import { getClub } from "../../../helpers/backend_helper";
 import Breadcrumbs from '../../../components/common/Breadcrumb';
+import CreateEntity from "../../../components/common/CreateEntity";
+import { Link } from "react-router-dom";
 
 function ClubList(){
     const [response, setResponse] = useState({
@@ -28,6 +30,21 @@ function ClubList(){
         {
             text: "Descripción",
             dataField: "descripcion" 
+        },
+        {
+            dataField: "menu",
+            isDummyField: true,
+            editable: false,
+            text: "Accines",
+            // eslint-disable-next-line react/display-name
+            formatter: (cellContent, row) => (
+                <Link className="text-info" to={`/catalogue/club/edit/${row.id}`}>
+                    <i className="mdi mdi-square-edit-outline font-size-18"></i>
+                </Link>
+            ),
+            style: {
+                width: "15%"
+            }
         },
     ]
 
@@ -71,6 +88,10 @@ function ClubList(){
                 </MetaTags>
                 <Container fluid>
                     <Breadcrumbs title="Club" breadcrumbItem="Listado de club" />
+                    <CreateEntity
+                        text="Crear Nuevo"
+                        link="/catalogue/club/create" 
+                    />
                     <Row className="mb-2">
                         <Col lg="12">
                             <Card>

@@ -1,6 +1,8 @@
 import { Redirect } from "react-router"
 import Login from "../pages/Authentication/Login"
 import Logout from "../pages/Authentication/Logout"
+import ClubCreate from "../pages/Catalogos/Club/ClubCreate"
+import ClubEdit from "../pages/Catalogos/Club/ClubEdit"
 import ClubList from "../pages/Catalogos/Club/ClubList"
 import LanguageList from "../pages/Catalogos/Idioma/LanguageList"
 import ParentescoList from "../pages/Catalogos/Parentesco/ParentescoList"
@@ -32,9 +34,18 @@ const authProtectedRoutes = [
     { path: "/email-templates/edit/:id", exact: true, component:  EmailTemplateCreate},
 
     //catalogos
+    //club
     { path: "/catalogue/club", exact: true, component:  ClubList},
+    { path: "/catalogue/club/create", exact: true, component:  ClubCreate},
+    { path: "/catalogue/club/edit/:id", exact: true, component:  ClubEdit},
+
+    //language
     { path: "/catalogue/language", exact: true, component:  LanguageList},
+
+    //relationship
     { path: "/catalogue/relationship", exact: true, component:  ParentescoList},
+
+    //phonetype
     { path: "/catalogue/phone-type", exact: true, component:  TipoTelefonoList},
 
 ]

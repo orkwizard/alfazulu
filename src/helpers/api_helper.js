@@ -63,6 +63,8 @@ export async function postApi(url, data, config = {}) {
       .then(response => response.data);
 }
 export async function putApi(url, data, config = {}) {
+    console.log(url)
+    console.log(data)
     return axiosApiDefault
       .put(url, { ...data }, { ...config })
       .then(response => response.data);

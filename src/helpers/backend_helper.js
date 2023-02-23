@@ -7,9 +7,11 @@ export const getPartners = query => getApi(`${url.GET_PARTNER}${query}`);
 export const getPartnersById = id => getApi(`${url.GET_PARTNER_BY_ID}/${id}`)
 export const savePartner = data => postApi(url.SAVE_PARTNER, data)
 
-//get club
-export const getClub = () => getApi(url.GET_CLUB)
-//https://api-alphazulu.vacancyrewards.com/api/clubes/
+//club
+export const getClub = () => getApi(`${url.GET_CLUB}/`)
+export const getClubById = (id) => getApi(`${url.GET_CLUB}/${id}`)
+export const createClub = (data) => postApi(`${url.GET_CLUB}/save`, data)
+export const updateClub = (id, data) => putApi(`${url.GET_CLUB}/${id}`, data)
 
 //coments from membership
 export const getCommentsMembership = query => getApi(`${url.GET_COMMENTS_PARTNER}${query}`)
