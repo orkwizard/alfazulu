@@ -32,6 +32,15 @@ function ClubList(){
             dataField: "descripcion" 
         },
         {
+            text: "Activo",
+            dataField: "activo",
+            formatter: (cell) => (
+                cell ?
+                <span className="badge bg-success">Activo</span> :
+                <span className="badge bg-danger">No Activo</span>
+            ) 
+        },
+        {
             dataField: "menu",
             isDummyField: true,
             editable: false,

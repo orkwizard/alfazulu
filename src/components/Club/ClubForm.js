@@ -21,6 +21,12 @@ function ClubForm({item}){
             imagen: item?.imagen || '',
             nombre: item?.nombre || '',
             tarifaAnualidad: item?.tarifaAnualidad || '',
+            direccion: item?.direccion || '',
+            email: item?.email || '',
+            telefono: item?.telefono || '',
+            urlPagina: item?.urlPagina || '',
+            activo: item?.activo || false,
+            codigo: item?.codigo || ''
         },
         validationSchema: Yup.object({
             nombre: Yup.string().required('Campo requerido'),
@@ -75,7 +81,7 @@ function ClubForm({item}){
                 }}
             >
                 <Row>
-                    <Col xs="12" md="6">
+                    <Col xs="12" md="4">
                         <Label htmlFor="nombre" className="mb-0">Nombre</Label>
                         <Input
                             id="nombre"
@@ -88,6 +94,21 @@ function ClubForm({item}){
                         {
                             (validation.errors?.nombre) &&
                             <div className="invalid-tooltip" name="validate" id="validate3">{validation.errors.nombre}</div>
+                        }
+                    </Col>
+                    <Col xs="12" md="3">
+                        <Label htmlFor="nombre" className="mb-0">Url Página</Label>
+                        <Input
+                            id="urlPagina"
+                            name="urlPagina"
+                            className={`form-control ${validation.errors.urlPagina ? 'is-invalid' : ''}`}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.urlPagina || ""}  
+                        />
+                        {
+                            (validation.errors?.urlPagina) &&
+                            <div className="invalid-tooltip" name="validate" id="validate3">{validation.errors.urlPagina}</div>
                         }
                     </Col>
                     <Col xs="12" md="3">
@@ -105,7 +126,7 @@ function ClubForm({item}){
                             <div className="invalid-tooltip" name="validate" id="validate3">{validation.errors.imagen}</div>
                         }
                     </Col>
-                    <Col xs="12" md="3">
+                    <Col xs="12" md="2">
                         <Label htmlFor="tarifaAnualidad" className="mb-0">Anualidad</Label>
                         <Input
                             id="tarifaAnualidad"
@@ -121,7 +142,67 @@ function ClubForm({item}){
                             <div className="invalid-tooltip" name="validate" id="validate3">{validation.errors.tarifaAnualidad}</div>
                         }
                     </Col>
-                    <Col xs="12" md="6">
+                    <Col xs="12" md="4">
+                        <Label htmlFor="direccion" className="mb-0">Dirección</Label>
+                        <Input
+                            id="direccion"
+                            name="direccion"
+                            className={`form-control ${validation.errors.direccion ? 'is-invalid' : ''}`}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.direccion || ""}  
+                        />
+                        {
+                            (validation.errors?.direccion) &&
+                            <div className="invalid-tooltip" name="validate" id="validate3">{validation.errors.direccion}</div>
+                        }
+                    </Col>
+                    <Col xs="12" md="3">
+                        <Label htmlFor="codigo" className="mb-0">Código</Label>
+                        <Input
+                            id="codigo"
+                            name="codigo"
+                            className={`form-control ${validation.errors.codigo ? 'is-invalid' : ''}`}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.codigo || ""}  
+                        />
+                        {
+                            (validation.errors?.codigo) &&
+                            <div className="invalid-tooltip" name="validate" id="validate3">{validation.errors.codigo}</div>
+                        }
+                    </Col>
+                    <Col xs="12" md="3">
+                        <Label htmlFor="email" className="mb-0">Correo electrónico</Label>
+                        <Input
+                            id="email"
+                            name="email"
+                            className={`form-control ${validation.errors.email ? 'is-invalid' : ''}`}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.email || ""}  
+                        />
+                        {
+                            (validation.errors?.email) &&
+                            <div className="invalid-tooltip" name="validate" id="validate3">{validation.errors.email}</div>
+                        }
+                    </Col>
+                    <Col xs="12" md="2">
+                        <Label htmlFor="telefono" className="mb-0">Teléfono</Label>
+                        <Input
+                            id="telefono"
+                            name="telefono"
+                            className={`form-control ${validation.errors.telefono ? 'is-invalid' : ''}`}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.telefono || ""}  
+                        />
+                        {
+                            (validation.errors?.telefono) &&
+                            <div className="invalid-tooltip" name="validate" id="validate3">{validation.errors.telefono}</div>
+                        }
+                    </Col>
+                    <Col xs="12" md="4">
                         <Label htmlFor="descripcion" className="mb-0">Descripción</Label>
                         <textarea 
                             className={`form-control ${validation.errors.descripcion ? 'is-invalid' : ''}`} 
@@ -136,6 +217,19 @@ function ClubForm({item}){
                             (validation.errors?.descripcion) &&
                             <div className="invalid-tooltip" name="validate" id="validate3">{validation.errors.descripcion}</div>
                         }
+                    </Col>
+                    <Col xs="12" md="3">
+                        <Label className="mb-0 opacity-0 d-block">placeholder</Label>
+                        <Input
+                            id="check_activo"
+                            name="activo"
+                            type="checkbox"
+                            className={`form-check-Input form-check-input`}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            checked={validation.values.activo || false}  
+                        />
+                        <Label htmlFor={`check_activo`} className="mb-0 ms-2">Activo</Label>
                     </Col>
                 </Row>
                 <div className="mt-5">
